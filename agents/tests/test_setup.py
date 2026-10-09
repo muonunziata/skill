@@ -237,3 +237,52 @@ def test_wizard_interactive_paste_path_other_redactor_and_image_choice(tmp_path,
     assert rc == 0, con.log
     assert env["REDACCTOR_MODEL"] == "claude-sonnet-5-5" and env["ANTHROPIC_API_KEY"] == "A-KEY"
     assert env["IMAGE_PROVIDER"] == "replicate" and env["IMAGE_API_KEY"] == "R-KEY" and env["WP_AUTH_TOKEN"] == "bot:pass word 1234"
+
+
+# ───────────────────────── production sites (WordPress rejects http:// return URLs) ─────────────────────────
+def test_local_site_detection():
+    for site in ("http://localhost:8080", "http://127.0.0.1", "https://news.local", "https://x.test", "https://a.ddev.site"):
+        assert sw.is_local_site(site), site
+    for site in ("https://lehighnews.com", "https://example.com.au", "http://192.0.2.10"):
+        assert not sw.is_local_site(site), site
+
+
+def test_remote_site_uses_the_on_screen_password_flow(fake_wp):
+    info = info_for(fake_wp)
+    info.site = "https://news.example.com"          # pretend it is a public site
+    opened = []
+    answers = iter(["editor1", "abcd efgh ijkl"])
+    user, pw = sw.authorize_in_browser(info, open_url=opened.append, say=lambda *_: None, ask=lambda *a, **k: next(answers))
+    assert (user, pw) == ("editor1", "abcd efgh ijkl")
+    time_url = opened[0] if opened else ""
+    q = urllib.parse.parse_qs(urllib.parse.urlsplit(time_url).query) if time_url else {}
+    assert "success_url" not in q and "reject_url" not in q and q.get("app_name")   # no http:// callback is sent
+    with pytest.raises(SetupError, match="producción"):
+        sw.authorize_in_browser(info, open_url=opened.append, say=lambda *_: None, ask=None)
+    with pytest.raises(SetupError, match="Faltó"):
+        sw.authorize_in_browser(info, open_url=opened.append, say=lambda *_: None, ask=lambda *a, **k: "")
+
+
+def test_wizard_remote_non_interactive_without_credentials_explains_what_to_do(tmp_path, fake_wp, monkeypatch):
+    monkeypatch.setattr(sw, "is_local_site", lambda s: False)
+    logs = []
+    con = Console(interactive=False)
+    con.say = logs.append
+    rc = sw.run_wizard(wiz_args(tmp_path, fake_wp), con, open_url=lambda u: pytest.fail("no browser"), list_models=lambda k: MODELS)
+    assert rc == 2 and any("Generar credenciales" in l for l in logs)
+
+
+def test_wizard_remote_interactive_paste_flow(tmp_path, fake_wp, monkeypatch):
+    monkeypatch.setattr(sw, "is_local_site", lambda s: False)
+    # Enter on the redactor question, method 1 (browser, on screen), user, password, image choice 1 (none)
+    con = Scripted(["", "1", "bot", "pass word 1234", "1"])
+    rc = sw.run_wizard(wiz_args(tmp_path, fake_wp, image_provider=None, non_interactive=False), con, open_url=lambda u: None, list_models=lambda k: MODELS)
+    assert rc == 0, con.log
+    assert sw.read_env(tmp_path / ".env")["WP_AUTH_TOKEN"] == "bot:pass word 1234"
+
+
+def test_application_password_names_are_unique_per_authorisation(monkeypatch):
+    monkeypatch.setattr(sw.time, "strftime", lambda fmt: "2026-10-09 10:00")
+    first = sw.app_name()
+    monkeypatch.setattr(sw.time, "strftime", lambda fmt: "2026-10-09 10:01")
+    assert first != sw.app_name() and first.startswith(sw.APP_NAME)

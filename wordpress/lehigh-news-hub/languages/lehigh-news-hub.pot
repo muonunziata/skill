@@ -339,7 +339,7 @@ msgstr ""
 msgid "Application Passwords are disabled for the agents’ account."
 msgstr ""
 
-#: includes/class-lnh-connect.php:77
+#: includes/class-lnh-connect.php:76
 msgid "Lehigh agents – %s"
 msgstr ""
 

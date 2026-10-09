@@ -341,7 +341,7 @@ msgstr "Las contraseñas de aplicación no están disponibles en este sitio. Req
 msgid "Application Passwords are disabled for the agents’ account."
 msgstr "Las contraseñas de aplicación están desactivadas para la cuenta de los agentes."
 
-#: includes/class-lnh-connect.php:77
+#: includes/class-lnh-connect.php:76
 msgid "Lehigh agents – %s"
 msgstr "Agentes Lehigh – %s"
 

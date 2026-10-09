@@ -55,7 +55,7 @@ Crea el entorno de Python, instala las dependencias y arranca **`python main.py 
 
 * te pide **solo la clave de Gemini** (https://aistudio.google.com/apikey) y la valida;
 * **elige automáticamente el mejor modelo Gemini disponible** (así no importa que `gemini-1.5-flash` ya no exista);
-* busca tu sitio, confirma que el plugin está activo y consigue la contraseña de aplicación **abriendo el navegador: tú pulsas «Aprobar»** (o reutiliza la del paso 2 si ya la pusiste en el `.env`);
+* busca tu sitio y confirma que el plugin está activo; para la contraseña de aplicación **reutiliza la del paso 2** si ya está en el `.env`, o abre WordPress para que la apruebes: en un sitio local el retorno es automático, y en un sitio público WordPress te muestra la contraseña en pantalla y la pegas en el asistente (WordPress no permite el retorno automático por `http://` fuera de entornos locales);
 * te deja elegir imágenes con IA (Nano Banana reutiliza tu clave de Gemini);
 * escribe el `.env` (permisos solo para tu usuario) y ejecuta la comprobación final.
 
@@ -100,7 +100,7 @@ Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`
 
 ```bash
 # Agentes (no consumen APIs: usan dobles de prueba)
-cd agents && pip install -r requirements.txt && python -m pytest
+cd agents && pip install -r requirements-dev.txt && python -m pytest
 
 # Plugin dentro de un WordPress de pruebas (¡no en producción!)
 php wordpress/tests/run.php /ruta/a/wordpress
@@ -112,7 +112,7 @@ php wordpress/tests/run.php /ruta/a/wordpress
 agents/                      Agentes en Python (Gemini · Claude · OpenAI · imágenes)
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
-  tests/                       57 pruebas
+  tests/                       62 pruebas
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
 wordpress/tests/run.php      92 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones

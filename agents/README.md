@@ -8,7 +8,7 @@ python main.py setup         # asistente guiado: crea/actualiza el .env automát
 python main.py check | run [--dry-run] [--no-images] | watch
 ```
 
-`setup` valida la clave de Gemini, elige el mejor modelo disponible, localiza el sitio y obtiene la contraseña de aplicación mediante la pantalla de aprobación de WordPress (o reutiliza la del botón «Generar credenciales» del plugin). Módulo: `setup_wizard.py`.
+`setup` valida la clave de Gemini, elige el mejor modelo disponible, localiza el sitio y obtiene la contraseña de aplicación: reutiliza la del botón «Generar credenciales» del plugin si ya está en el `.env`, o usa la pantalla de aprobación de WordPress (automática en sitios locales; en sitios públicos WordPress muestra la contraseña y se pega en el asistente). Módulo: `setup_wizard.py`.
 
 ## Módulos
 

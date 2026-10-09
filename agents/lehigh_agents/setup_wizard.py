@@ -31,6 +31,13 @@ import requests
 from .wordpress import normalize_root
 
 APP_NAME = "Lehigh News Hub agents"
+
+
+def app_name() -> str:
+    """WordPress requires every Application Password name of a user to be unique, so each authorisation gets its own."""
+    import platform
+
+    return f"{APP_NAME} ({platform.node() or 'pc'}, {time.strftime('%Y-%m-%d %H:%M')})"
 APP_ID = "5f6d0f0e-7c3a-4a53-9a2e-1b1c2d3e4f50"  # fixed, so WordPress recognises repeat authorisations
 
 # Names that look like text models but are not suitable for the agents.
@@ -110,13 +117,18 @@ def render_env(template: str, values: dict[str, str]) -> str:
 
 
 def write_env(path: Path, values: dict[str, str], template_path: Path | None = None) -> None:
-    template = template_path.read_text() if template_path and template_path.is_file() else ""
-    existing = path.read_text() if path.is_file() else ""
+    # Always UTF-8 (python-dotenv reads UTF-8; the platform default on Windows is not).
+    template = template_path.read_text(encoding="utf-8") if template_path and template_path.is_file() else ""
+    existing = path.read_text(encoding="utf-8") if path.is_file() else ""
     # Re-running keeps the user's file (and their comments) as the base.
     base = existing or template
-    path.write_text(render_env(base, values))
+    data = render_env(base, values).encode("utf-8")
+    # Create the file owner-only from the start (it contains secrets); no window where it is world-readable.
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "wb") as fh:
+        fh.write(data)
     try:
-        path.chmod(0o600)  # contains secrets
+        path.chmod(0o600)  # also tightens a pre-existing file
     except OSError:
         pass
 
@@ -179,16 +191,48 @@ def _free_port() -> int:
         return s.getsockname()[1]
 
 
+def is_local_site(site: str) -> bool:
+    """WordPress only accepts an http:// return address for sites running in its 'local' environment."""
+    host = (urllib.parse.urlsplit(site).hostname or "").lower()
+    return host in ("localhost", "127.0.0.1", "::1") or host.endswith((".local", ".test", ".localhost", ".ddev.site"))
+
+
+def authorize_on_screen(info: SiteInfo, open_url: Callable[[str], object], ask: Callable[..., str],
+                        say: Callable[[str], None] = print) -> tuple[str, str]:
+    """Production sites: WordPress rejects http:// return URLs, so it shows the new password on screen instead."""
+    params = urllib.parse.urlencode({"app_name": app_name(), "app_id": APP_ID})
+    url = info.authorize_url + ("&" if "?" in info.authorize_url else "?") + params
+    say("Abriendo WordPress en el navegador. Inicia sesión, pulsa «Sí, aprobar esta conexión» y copia la contraseña que te muestra.")
+    say(f"Si no se abre solo, entra a:\n  {url}")
+    threading.Thread(target=lambda: open_url(url), daemon=True).start()
+    user = ask("Usuario de WordPress con el que iniciaste sesión", "")
+    password = ask("Contraseña que muestra WordPress (se ve una sola vez)", "", secret=True)
+    if not user or not password:
+        raise SetupError("Faltó el usuario o la contraseña.")
+    return user, password
+
+
 def authorize_in_browser(info: SiteInfo, open_url: Callable[[str], object] = webbrowser.open, timeout: int = 300,
-                         say: Callable[[str], None] = print) -> tuple[str, str]:
-    """WordPress' standard approval flow. Returns (user_login, application_password)."""
+                         say: Callable[[str], None] = print, ask: Callable[..., str] | None = None) -> tuple[str, str]:
+    """WordPress' standard approval flow. Returns (user_login, application_password).
+
+    Local sites: automatic, through a one-shot callback on 127.0.0.1. Other sites: the password is shown by WordPress and
+    pasted here (needs `ask`, i.e. an interactive session).
+    """
     if not info.authorize_url:
         raise SetupError("Este sitio no ofrece contraseñas de aplicación (necesitan HTTPS, o están desactivadas).")
+    if not is_local_site(info.site):
+        if ask is None:
+            raise SetupError("En un sitio en producción WordPress no permite el retorno automático. Usa el botón «Generar credenciales» del plugin "
+                             "y pasa --wp-user/--wp-password, o ejecuta el asistente en modo interactivo.")
+        return authorize_on_screen(info, open_url, ask, say)
     token = secrets.token_urlsafe(16)
     port = _free_port()
     result: dict[str, str] = {}
 
     class Handler(http.server.BaseHTTPRequestHandler):
+        timeout = 5  # browsers open idle speculative connections; never let one block the wait loop
+
         def log_message(self, *a):  # noqa: D401 - silence
             pass
 
@@ -216,7 +260,7 @@ def authorize_in_browser(info: SiteInfo, open_url: Callable[[str], object] = web
     server = http.server.HTTPServer(("127.0.0.1", port), Handler)
     server.timeout = 1
     params = urllib.parse.urlencode({
-        "app_name": APP_NAME, "app_id": APP_ID,
+        "app_name": app_name(), "app_id": APP_ID,
         "success_url": f"http://127.0.0.1:{port}/{token}/ok", "reject_url": f"http://127.0.0.1:{port}/{token}/no",
     })
     url = info.authorize_url + ("&" if "?" in info.authorize_url else "?") + params
@@ -227,6 +271,8 @@ def authorize_in_browser(info: SiteInfo, open_url: Callable[[str], object] = web
     try:
         while time.time() < deadline and "password" not in result and "rejected" not in result:
             server.handle_request()
+    except KeyboardInterrupt as exc:
+        raise SetupError("Interrumpido por el usuario.") from exc
     finally:
         server.server_close()
     if result.get("rejected"):
@@ -241,7 +287,10 @@ def test_wordpress(info: SiteInfo, user: str, password: str, http=requests, time
     r = http.get(info.rest_root + "/wp/v2/users/me", params={"context": "edit"}, auth=(user, password), timeout=timeout)
     if r.status_code != 200:
         raise SetupError(f"WordPress rechazó las credenciales (HTTP {r.status_code}).")
-    return str(r.json().get("name", user))
+    try:
+        return str(r.json().get("name", user))
+    except (ValueError, AttributeError) as exc:
+        raise SetupError("WordPress respondió algo que no es JSON al comprobar las credenciales.") from exc
 
 
 # ───────────────────────── console abstraction ─────────────────────────
@@ -314,11 +363,17 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
         con.say("  ✗ La clave funciona pero no hay modelos Gemini Flash disponibles.")
         return 2
     con.say(f"  ✓ Clave válida. Modelo elegido automáticamente: {text_model}")
+    available = {n for n, _ in _model_rows(models)}
     for var in ("RASTREADOR_MODEL", "REDACCTOR_MODEL", "AUDITOR_MODEL"):
-        new[var] = text_model
+        old_model = values.get(var, "")  # keep a previous choice that is still available
+        new[var] = old_model if old_model in available else text_model
+    old_red = values.get("REDACCTOR_MODEL", "")
+    prev_other = old_red if old_red and not old_red.startswith("gemini") else ""
     other = args.redactor_model or ""
     if con.interactive and not other:
-        other = con.ask("¿Otro modelo para el Redactor? (p. ej. claude-sonnet-5-5 o gpt-4o-mini; Enter = el mismo)", "")
+        other = con.ask("¿Otro modelo para el Redactor? (p. ej. claude-sonnet-5-5 o gpt-4o-mini; Enter = el mismo)", prev_other)
+    elif not other:
+        other = prev_other
     if other:
         new["REDACCTOR_MODEL"] = other
         if other.startswith("claude"):
@@ -349,7 +404,7 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
 
     user, password = args.wp_user or "", args.wp_password or ""
     token_old = values.get("WP_AUTH_TOKEN", "")
-    if not (user and password) and ":" in token_old and values.get("WP_REST_URL", "").startswith(info.site):
+    if not (user and password) and ":" in token_old and normalize_root(values.get("WP_REST_URL", "") or "x") == info.rest_root:
         ou, op = token_old.split(":", 1)
         try:
             who = test_wordpress(info, ou, op, http=http)
@@ -358,15 +413,19 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
         except (SetupError, requests.RequestException):
             pass
     if not (user and password):
-        mode = 1 if info.authorize_url else 2
+        local = is_local_site(info.site)
+        mode = 1 if (info.authorize_url and (local or not con.interactive)) else 2
         if con.interactive:
+            if not local:
+                con.say("  Lo más rápido: en WordPress, News Hub → «Generar credenciales de los agentes», y pega aquí el usuario y la contraseña.")
             mode = con.choose("¿Cómo conectamos los agentes?", [
-                "Autorizar en el navegador (recomendado: pulsas «Aprobar» y listo)",
-                "Pegar usuario y contraseña de aplicación",
+                "Autorizar en el navegador" + (" (automático)" if local else " (WordPress te muestra la contraseña y la pegas aquí)"),
+                "Pegar usuario y contraseña de aplicación (p. ej. los del botón «Generar credenciales» del plugin)",
             ], mode)
         if mode == 1:
             try:
-                user, password = authorize_in_browser(info, open_url=open_url, say=con.say, timeout=args.timeout)
+                user, password = authorize_in_browser(info, open_url=open_url, say=con.say, timeout=args.timeout,
+                                                      ask=con.ask if con.interactive else None)
             except SetupError as exc:
                 con.say(f"  ✗ {exc}")
                 if not con.interactive:
@@ -387,6 +446,9 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
     # 3 · Images -----------------------------------------------------------------------
     con.say("\n3/4 · Imagen destacada con IA (opcional)")
     provider = args.image_provider
+    if provider is None and not con.interactive and (values.get("IMAGE_PROVIDER") or values.get("IMAGE_API_KEY")):
+        con.say("  – Se conserva la configuración de imágenes existente.")
+        provider = "keep"
     if provider is None and con.interactive:
         n = con.choose("¿Generar la imagen destacada con IA?", [
             "No, usar solo fotos con licencia abierta",
@@ -396,7 +458,9 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
         ], 1)
         provider = {1: "none", 2: "gemini", 3: "replicate", 4: "openai"}[n]
     provider = provider or "none"
-    if provider == "none":
+    if provider == "keep":
+        pass
+    elif provider == "none":
         con.say("  – Sin imágenes con IA (se pueden activar luego en el .env).")
         new["IMAGE_PROVIDER"] = ""
         new["IMAGE_API_KEY"] = ""
