@@ -1,0 +1,352 @@
+<title>GoLehighAcres Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+
+<style>
+  /* Layout: editorial magazine page. Wide photo blocks alternate with narrow text columns, hairline rules, lots of air. Photos are colour placeholders. */
+  :root {
+    --bg: #F6F7F7;
+    --surface: #FFFFFF;
+    --ink: #14181B;
+    --muted: #5F686D;
+    --line: #D6DCDE;
+    --accent: #1F6F78;
+    --accent-ink: #FFFFFF;
+    --ph1: #C7D5D2;
+    --ph2: #E2D3C0;
+    --ph3: #B7C5D5;
+    --ph4: #D8C5C5;
+    --ph5: #C2D2BC;
+    --ph6: #CFC9DD;
+    --ph-label: rgba(20, 24, 27, 0.55);
+    --display: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Georgia', serif;
+    --body: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Segoe UI', system-ui, sans-serif;
+    --gutter: clamp(16px, 4vw, 56px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1315; --surface: #161B1E; --ink: #ECEFF0; --muted: #9AA4A9; --line: #2B3337;
+      --accent: #5FB3BC; --accent-ink: #0F1315;
+      --ph1: #2E4340; --ph2: #46392A; --ph3: #2D3C4D; --ph4: #4A3535; --ph5: #34452F; --ph6: #3B3650;
+      --ph-label: rgba(236, 239, 240, 0.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1315; --surface: #161B1E; --ink: #ECEFF0; --muted: #9AA4A9; --line: #2B3337;
+    --accent: #5FB3BC; --accent-ink: #0F1315;
+    --ph1: #2E4340; --ph2: #46392A; --ph3: #2D3C4D; --ph4: #4A3535; --ph5: #34452F; --ph6: #3B3650;
+    --ph-label: rgba(236, 239, 240, 0.6);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.85; letter-spacing: 0.02em; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .wrap { max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+
+  /* Header */
+  .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; flex-wrap: wrap; }
+  .logo { font-family: var(--display); font-size: 1.25rem; font-weight: 500; letter-spacing: 0.04em; }
+  .logo span { color: var(--accent); }
+  .nav { display: flex; gap: clamp(14px, 2.4vw, 32px); font-size: 0.8rem; letter-spacing: 0.12em; flex-wrap: wrap; }
+  .nav a { padding-block: 4px; border-bottom: 1px solid transparent; transition: border-color .25s; }
+  .nav a:hover { border-color: var(--ink); }
+
+  /* Photo placeholders */
+  .ph { position: relative; width: 100%; background: var(--c, var(--ph1)); display: grid; place-items: end start; padding: 16px; overflow: hidden; transform-style: preserve-3d; transition: transform .25s ease-out; will-change: transform; }
+  .ph::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.28), transparent 55%); pointer-events: none; }
+  .ph span { position: relative; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ph-label); }
+  .r-43 { aspect-ratio: 4 / 3; } .r-45 { aspect-ratio: 4 / 5; } .r-169 { aspect-ratio: 16 / 9; } .r-21 { aspect-ratio: 21 / 9; } .r-11 { aspect-ratio: 1 / 1; }
+  .stage { perspective: 1100px; }
+
+  /* Hero */
+  .hero { padding-block: clamp(40px, 7vw, 96px) clamp(32px, 5vw, 64px); }
+  .hero-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: end; }
+  .hero-title { grid-column: 1 / span 7; }
+  .hero-title h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2.2rem, 5.6vw, 4.6rem); line-height: 1.25; letter-spacing: 0.01em; text-wrap: balance; margin-top: 20px; }
+  .hero-side { grid-column: 9 / span 4; color: var(--muted); font-size: 0.95rem; }
+  .hero-side p + p { margin-top: 14px; }
+  .hero-photo { margin-top: clamp(32px, 5vw, 64px); }
+
+  /* Statement */
+  .statement { padding-block: clamp(56px, 9vw, 128px); border-top: 1px solid var(--line); margin-top: clamp(40px, 6vw, 88px); }
+  .statement-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
+  .vertical { grid-column: 1 / span 1; writing-mode: vertical-rl; letter-spacing: 0.4em; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; justify-self: start; }
+  .statement p.big { grid-column: 3 / span 8; font-family: var(--display); font-size: clamp(1.4rem, 3vw, 2.2rem); line-height: 1.7; text-wrap: pretty; }
+
+  /* Feature rows */
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; margin-bottom: clamp(32px, 5vw, 72px); }
+  .section-head h2 { font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
+  .feature { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: center; margin-bottom: clamp(56px, 9vw, 128px); }
+  .feature .media { grid-column: 1 / span 7; }
+  .feature .copy { grid-column: 9 / span 4; }
+  .feature:nth-of-type(even) .media { grid-column: 6 / span 7; grid-row: 1; }
+  .feature:nth-of-type(even) .copy { grid-column: 1 / span 4; grid-row: 1; }
+  .copy h3 { font-family: var(--display); font-weight: 500; font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.45; margin: 12px 0 16px; text-wrap: balance; }
+  .copy p { color: var(--muted); font-size: 0.95rem; }
+  .more { display: inline-flex; align-items: center; gap: 12px; margin-top: 24px; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; }
+  .more::after { content: ''; width: 40px; height: 1px; background: currentColor; transition: width .3s; }
+  .more:hover::after { width: 72px; }
+
+  /* Founders band */
+  .band { background: var(--surface); border-block: 1px solid var(--line); padding-block: clamp(56px, 9vw, 120px); }
+  .band-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: center; }
+  .band .copy { grid-column: 1 / span 5; }
+  .band .media { grid-column: 7 / span 6; }
+  .perks { list-style: none; margin-top: 24px; border-top: 1px solid var(--line); }
+  .perks li { padding-block: 14px; border-bottom: 1px solid var(--line); font-size: 0.95rem; display: flex; gap: 16px; }
+  .perks li b { font-weight: 500; min-width: 7.5em; color: var(--ink); }
+  .perks li span { color: var(--muted); }
+
+  /* Path (sequence, so numbered) */
+  .path { padding-block: clamp(56px, 9vw, 120px); }
+  .steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+  .step { padding: 24px 20px 0 0; border-right: 1px solid var(--line); margin-right: 20px; }
+  .step:last-child { border-right: 0; margin-right: 0; }
+  .step .n { font-family: var(--display); font-size: 1.6rem; color: var(--accent); }
+  .step h4 { font-family: var(--display); font-weight: 500; font-size: 1.15rem; margin: 8px 0; }
+  .step p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+
+  /* WhatsApp */
+  .channel { padding-bottom: clamp(56px, 9vw, 128px); }
+  .channel-card { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: center; background: var(--accent); color: var(--accent-ink); padding: clamp(24px, 5vw, 64px); }
+  .channel-card .copy { grid-column: 1 / span 6; }
+  .channel-card .copy p { color: inherit; opacity: .85; }
+  .channel-card .media { grid-column: 8 / span 5; }
+  .channel-card .eyebrow { color: inherit; opacity: .75; }
+  .btn { display: inline-block; margin-top: 24px; padding: 14px 28px; border: 1px solid currentColor; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; transition: background .25s, color .25s; }
+  .btn:hover { background: var(--accent-ink); color: var(--accent); }
+
+  /* Footer */
+  .site-footer { border-top: 1px solid var(--line); padding-block: 48px; font-size: 0.82rem; color: var(--muted); }
+  .foot-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; }
+  .foot-grid p { max-width: 62ch; }
+  .foot-grid .logo { color: var(--ink); margin-bottom: 12px; display: block; }
+
+  /* Scroll reveal (content is visible at rest; only position shifts) */
+  .rise { transform: translateY(28px); transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+  .rise.in { transform: none; }
+
+  @media (max-width: 860px) {
+    .hero-title, .hero-side { grid-column: 1 / -1; }
+    .vertical { display: none; }
+    .statement p.big { grid-column: 1 / -1; }
+    .feature .media, .feature:nth-of-type(even) .media, .feature .copy, .feature:nth-of-type(even) .copy,
+    .band .copy, .band .media, .channel-card .copy, .channel-card .media { grid-column: 1 / -1; grid-row: auto; }
+    .steps { grid-template-columns: 1fr; }
+    .step { border-right: 0; border-bottom: 1px solid var(--line); margin: 0; padding: 20px 0; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .perks li { flex-direction: column; gap: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .rise { transform: none; transition: none; }
+    .ph { transition: none; }
+  }
+</style>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#top">Go<span>Lehigh</span>Acres</a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#guia">Guía</a>
+      <a href="#comercios">Comercios</a>
+      <a href="#camino">Camino</a>
+      <a href="#whatsapp">WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="hero-title rise">
+        <p class="eyebrow">Guía local · Lehigh Acres, Florida</p>
+        <h1>Conoce la ciudad antes de decidir dónde vivir.</h1>
+      </div>
+      <div class="hero-side rise">
+        <p>Comercios, empleo, eventos y los proyectos que vienen, reunidos en un solo lugar para quien llega por primera vez y para quien ya vive aquí.</p>
+        <p>Información clara, sin prisa y sin letra pequeña.</p>
+      </div>
+    </div>
+    <div class="hero-photo stage">
+      <div class="ph r-21 tilt" style="--c: var(--ph1)"><span>Foto principal · 21:9</span></div>
+    </div>
+  </section>
+
+  <section class="statement wrap">
+    <div class="statement-grid">
+      <span class="vertical">Lehigh Acres</span>
+      <p class="big rise">Elegir una ciudad empieza mucho antes de hablar con una constructora. Aquí reunimos lo que se necesita saber para decidir con calma.</p>
+    </div>
+  </section>
+
+  <section id="guia" class="wrap">
+    <div class="section-head">
+      <h2>Qué encontrarás</h2>
+      <span class="eyebrow">Seis secciones de la guía</span>
+    </div>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-43 tilt" style="--c: var(--ph1)"><span>Foto · 4:3</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Directorio</p>
+        <h3>Los comercios del barrio, uno por uno.</h3>
+        <p>Restaurantes, servicios y tiendas con horarios, dirección y contacto. Cada ficha la completa el propio comercio.</p>
+        <a class="more" href="#comercios">Ver directorio</a>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-45 tilt" style="--c: var(--ph2)"><span>Foto · 4:5</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Mercado local</p>
+        <h3>Compra y vende entre vecinos y negocios.</h3>
+        <p>Un espacio para ofertas de comercios locales y servicios de la zona, pensado para quien recién se instala.</p>
+        <a class="more" href="#comercios">Ver mercado</a>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-43 tilt" style="--c: var(--ph3)"><span>Foto · 4:3</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Empleo</p>
+        <h3>Oportunidades de trabajo cerca de casa.</h3>
+        <p>Los empleadores de la zona publican sus vacantes y quienes buscan trabajo las encuentran sin intermediarios.</p>
+        <a class="more" href="#comercios">Ver vacantes</a>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-45 tilt" style="--c: var(--ph4)"><span>Foto · 4:5</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Noticias y eventos</p>
+        <h3>Lo que pasa esta semana en la ciudad.</h3>
+        <p>Ferias, inauguraciones y avisos de la comunidad, con fecha y lugar, para planear la semana.</p>
+        <a class="more" href="#whatsapp">Recibir avisos</a>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-43 tilt" style="--c: var(--ph5)"><span>Foto · 4:3</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Urbanismo y futuro</p>
+        <h3>Cómo va a crecer Lehigh Acres.</h3>
+        <p>Calles, servicios y nuevos desarrollos que están por llegar. Los proyectos de vivienda se identifican siempre como publicidad.</p>
+        <a class="more" href="#camino">Ver proyectos</a>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media stage rise"><div class="ph r-43 tilt" style="--c: var(--ph6)"><span>Foto · 4:3</span></div></div>
+      <div class="copy rise">
+        <p class="eyebrow">Vivir aquí</p>
+        <h3>Guía para quien se muda desde fuera.</h3>
+        <p>Barrios, costos del día a día y trámites de la zona, explicados en orden y sin tecnicismos.</p>
+        <a class="more" href="#camino">Leer la guía</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="comercios" class="band">
+    <div class="wrap band-grid">
+      <div class="copy rise">
+        <p class="eyebrow">Para comercios</p>
+        <h2 style="font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.45; margin: 12px 0 8px;">Programa de comercios fundadores</h2>
+        <p style="color: var(--muted)">Los primeros negocios en sumarse forman la base del directorio y mantienen beneficios desde el primer día.</p>
+        <ul class="perks">
+          <li><b>Ficha gratis</b><span>Presencia en el directorio sin costo para fundadores.</span></li>
+          <li><b>Visibilidad</b><span>Aparecen en guías, eventos y avisos del canal.</span></li>
+          <li><b>Crecimiento</b><span>Pueden pasar a planes con más herramientas cuando lo decidan.</span></li>
+        </ul>
+        <a class="btn" href="#top" style="color: var(--accent); border-color: var(--accent)">Quiero sumar mi comercio</a>
+      </div>
+      <div class="media stage rise"><div class="ph r-43 tilt" style="--c: var(--ph2)"><span>Foto · 4:3</span></div></div>
+    </div>
+  </section>
+
+  <section id="camino" class="path wrap">
+    <div class="section-head">
+      <h2>El camino de la guía</h2>
+      <span class="eyebrow">De descubrir a decidir</span>
+    </div>
+    <div class="steps">
+      <div class="step rise"><div class="n">1</div><h4>Descubrir</h4><p>Turismo, eventos y comercios que muestran cómo es la ciudad.</p></div>
+      <div class="step rise"><div class="n">2</div><h4>Confiar</h4><p>Contenido local verificable y un directorio hecho por los propios negocios.</p></div>
+      <div class="step rise"><div class="n">3</div><h4>Registrarse</h4><p>Quien lo desea crea su perfil para recibir avisos útiles.</p></div>
+      <div class="step rise"><div class="n">4</div><h4>Participar</h4><p>Membresías, mercado y empleo para comercios y vecinos.</p></div>
+      <div class="step rise"><div class="n">5</div><h4>Decidir</h4><p>Quien quiere vivir aquí puede conocer los proyectos de vivienda disponibles.</p></div>
+    </div>
+  </section>
+
+  <section id="whatsapp" class="channel wrap">
+    <div class="channel-card">
+      <div class="copy rise">
+        <p class="eyebrow">Canal de WhatsApp</p>
+        <h2 style="font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.45; margin: 12px 0;">Noticias de Lehigh Acres en tu teléfono.</h2>
+        <p>Avisos de eventos, aperturas y novedades de la ciudad, y un asistente que responde tus preguntas a cualquier hora.</p>
+        <a class="btn" href="#top">Unirme al canal</a>
+      </div>
+      <div class="media stage rise"><div class="ph r-11 tilt" style="--c: var(--ph1)"><span>Imagen · 1:1</span></div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="logo" href="#top">Go<span>Lehigh</span>Acres</a>
+      <p>Guía local de Lehigh Acres, Florida.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 8px">Transparencia</p>
+      <p>GoLehighAcres.org es un proyecto independiente, sin vínculo con el gobierno del condado. Los anuncios y los proyectos de vivienda se marcan como publicidad e indican qué empresa los patrocina.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rise').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  if (!reduce) {
+    document.querySelectorAll('.tilt').forEach(function (el) {
+      var stage = el.parentElement;
+      stage.addEventListener('pointermove', function (ev) {
+        var r = stage.getBoundingClientRect();
+        var x = (ev.clientX - r.left) / r.width - 0.5;
+        var y = (ev.clientY - r.top) / r.height - 0.5;
+        el.style.transform = 'rotateY(' + (x * 7).toFixed(2) + 'deg) rotateX(' + (-y * 7).toFixed(2) + 'deg)';
+      });
+      stage.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+
+    var heroPh = document.querySelector('.hero-photo .ph');
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        var y = Math.min(window.scrollY, 600);
+        heroPh.style.backgroundPosition = '50% ' + (y * 0.15) + 'px';
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+</script>
