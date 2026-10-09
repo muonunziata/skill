@@ -76,3 +76,5 @@
 .lnh-disclosure__tag{flex:none;padding:.1rem .45rem;border-radius:6px;background:#1d6fdc;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.04em}
 .screen-reader-text{border:0;clip:rect(1px,1px,1px,1px);clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-wrap:normal!important}
 .lnh-ai-caption{display:block;margin-top:.35em;color:#5b6574;font-size:.82em;font-style:italic}
+.lnh-contact{margin:1em 0}
+.lnh-disclosure a{white-space:nowrap}

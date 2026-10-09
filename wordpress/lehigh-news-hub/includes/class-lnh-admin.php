@@ -181,6 +181,8 @@ final class LNH_Admin {
 			'deleted'   => sprintf( _n( '%d article deleted.', '%d articles deleted.', $n, 'lehigh-news-hub' ), $n ),
 			'saved'     => __( 'Settings saved.', 'lehigh-news-hub' ),
 			'preset'    => __( 'Preset saved.', 'lehigh-news-hub' ),
+			/* translators: %d: number of pages */
+			'pages'     => sprintf( _n( '%d page created.', '%d pages created.', $n, 'lehigh-news-hub' ), $n ),
 			'preset_deleted' => __( 'Preset deleted.', 'lehigh-news-hub' ),
 			'error'     => __( 'Something went wrong. Nothing was changed.', 'lehigh-news-hub' ),
 			'none'      => __( 'Select at least one article first.', 'lehigh-news-hub' ),
@@ -223,6 +225,8 @@ final class LNH_Admin {
 			'runs'      => LNH_Runs::recent( 5 ),
 			'published7' => (int) $week->found_posts,
 			'avg'       => $scores,
+			'welcome'   => (array) get_option( LNH_Pages::WELCOME, array() ),
+			'pages'     => LNH_Pages::status(),
 			'rest_url'  => untrailingslashit( rest_url() ),
 			'profile'   => admin_url( 'profile.php#application-passwords-section' ),
 		) );

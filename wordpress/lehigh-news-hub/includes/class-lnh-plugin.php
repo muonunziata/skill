@@ -19,6 +19,7 @@ final class LNH_Plugin {
 		LNH_Queue::init();
 		LNH_Shortcode::init();
 		LNH_Front::init();
+		LNH_Pages::init();
 		if ( is_admin() ) {
 			LNH_Admin::init();
 		}
@@ -46,6 +47,7 @@ final class LNH_Plugin {
 		if ( false === get_option( LNH_Settings::OPTION ) ) {
 			add_option( LNH_Settings::OPTION, LNH_Settings::defaults(), '', false );
 		}
+		LNH_Pages::on_activate();
 		if ( ! wp_next_scheduled( 'lnh_cleanup' ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'lnh_cleanup' );
 		}

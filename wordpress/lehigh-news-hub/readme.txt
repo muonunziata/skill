@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ Lehigh News Hub receives the articles written by an external team of AI agents (
 
 == Installation ==
 
-1. Upload the plugin and activate it.
+1. Upload the plugin and activate it. It creates the pages it needs (News, How we work, Corrections & contact) and takes you to the hub.
 2. Create an Application Password for the account the agents use (Users → Profile). An Author or Editor account is recommended.
 3. Put `WP_REST_URL` and `WP_AUTH_TOKEN` (`user:application password`) in the agents' `.env`.
 4. Open **News Hub** in the admin menu.
@@ -48,6 +48,11 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.1.0 =
+* Creates the pages the site needs on activation: news listing, how we work (AI transparency) and corrections & contact. Never duplicated or overwritten; recreate missing ones from Settings → Pages.
+* Creates a default News category, a welcome screen and a one-time redirect to the hub after activation.
+* Optional public contact email shown by [lehigh_news_contact].
 
 = 1.0.0 =
 * First release.

@@ -211,79 +211,79 @@ msgstr ""
 msgid "Preset saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:184
+#: includes/class-lnh-admin.php:186
 msgid "Preset deleted."
 msgstr ""
 
-#: includes/class-lnh-admin.php:185
+#: includes/class-lnh-admin.php:187
 msgid "Something went wrong. Nothing was changed."
 msgstr ""
 
-#: includes/class-lnh-admin.php:186
+#: includes/class-lnh-admin.php:188
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:213
+#: includes/class-lnh-admin.php:215
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:245
+#: includes/class-lnh-admin.php:249
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:262
+#: includes/class-lnh-admin.php:266
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:262
+#: includes/class-lnh-admin.php:266
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:273
+#: includes/class-lnh-admin.php:277
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:317
+#: includes/class-lnh-admin.php:321
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:331
+#: includes/class-lnh-admin.php:335
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:348
+#: includes/class-lnh-admin.php:352
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:474
+#: includes/class-lnh-admin.php:478
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:483
+#: includes/class-lnh-admin.php:487
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:496
+#: includes/class-lnh-admin.php:500
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:504
+#: includes/class-lnh-admin.php:508
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:504
+#: includes/class-lnh-admin.php:508
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:521
+#: includes/class-lnh-admin.php:525
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:526
+#: includes/class-lnh-admin.php:530
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:527
+#: includes/class-lnh-admin.php:531
 msgid "Flagged"
 msgstr ""
 
@@ -317,8 +317,26 @@ msgid_plural "%d articles deleted."
 msgstr[0] ""
 msgstr[1] ""
 
+#: includes/class-lnh-admin.php:185
+msgid "%d page created."
+msgid_plural "%d pages created."
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/class-lnh-front.php:25
 msgid "AI-generated illustration"
+msgstr ""
+
+#: includes/class-lnh-front.php:74
+msgid "How we work"
+msgstr ""
+
+#: includes/class-lnh-pages.php:311
+msgid "Please use the contact options of this website to reach the newsroom."
+msgstr ""
+
+#: includes/class-lnh-pages.php:313
+msgid "Write to the newsroom:"
 msgstr ""
 
 #: includes/class-lnh-queue.php:60
@@ -373,283 +391,295 @@ msgstr ""
 msgid "Agent runs"
 msgstr ""
 
-#: includes/class-lnh-settings.php:74
+#: includes/class-lnh-settings.php:75
 msgid "Grid of cards"
 msgstr ""
 
-#: includes/class-lnh-settings.php:75
+#: includes/class-lnh-settings.php:76
 msgid "List with thumbnails"
 msgstr ""
 
-#: includes/class-lnh-settings.php:76
+#: includes/class-lnh-settings.php:77
 msgid "Featured first + grid"
 msgstr ""
 
-#: includes/class-lnh-settings.php:77
+#: includes/class-lnh-settings.php:78
 msgid "Compact list"
 msgstr ""
 
-#: includes/class-lnh-settings.php:78
+#: includes/class-lnh-settings.php:79
 msgid "Headlines only"
 msgstr ""
 
-#: includes/class-lnh-settings.php:82
+#: includes/class-lnh-settings.php:83
 msgid "General"
 msgstr ""
 
-#: includes/class-lnh-settings.php:84
+#: includes/class-lnh-settings.php:85
 msgid "Auto-publish approved drafts"
 msgstr ""
 
-#: includes/class-lnh-settings.php:84
+#: includes/class-lnh-settings.php:85
 msgid "Publish agent drafts immediately when the Auditor approves them with a high score. Off by default: you decide what goes live."
 msgstr ""
 
-#: includes/class-lnh-settings.php:85
+#: includes/class-lnh-settings.php:86
 msgid "Minimum score for auto-publish"
 msgstr ""
 
-#: includes/class-lnh-settings.php:85
+#: includes/class-lnh-settings.php:86
 msgid "Only used when auto-publish is on."
 msgstr ""
 
-#: includes/class-lnh-settings.php:86
+#: includes/class-lnh-settings.php:87
 msgid "Email me when a new draft arrives"
 msgstr ""
 
-#: includes/class-lnh-settings.php:87
+#: includes/class-lnh-settings.php:88
 msgid "Notification address"
 msgstr ""
 
-#: includes/class-lnh-settings.php:87
+#: includes/class-lnh-settings.php:88
 msgid "Leave empty to use the site admin email."
 msgstr ""
 
-#: includes/class-lnh-settings.php:88
+#: includes/class-lnh-settings.php:89
 msgid "Author for published articles"
 msgstr ""
 
-#: includes/class-lnh-settings.php:88
+#: includes/class-lnh-settings.php:89
 msgid "Leave on “keep as is” to keep the account the agents post with."
 msgstr ""
 
-#: includes/class-lnh-settings.php:89
+#: includes/class-lnh-settings.php:90
 msgid "Default category"
 msgstr ""
 
-#: includes/class-lnh-settings.php:89
+#: includes/class-lnh-settings.php:90
 msgid "Assigned to agent articles that have no category yet."
 msgstr ""
 
-#: includes/class-lnh-settings.php:90
+#: includes/class-lnh-settings.php:91
 msgid "Rows per page in the queue"
 msgstr ""
 
-#: includes/class-lnh-settings.php:94
+#: includes/class-lnh-settings.php:95
 msgid "Transparency"
 msgstr ""
 
-#: includes/class-lnh-settings.php:96
+#: includes/class-lnh-settings.php:97
 msgid "Show the source under agent articles"
 msgstr ""
 
-#: includes/class-lnh-settings.php:97
+#: includes/class-lnh-settings.php:98
 msgid "Source line"
 msgstr ""
 
-#: includes/class-lnh-settings.php:97
+#: includes/class-lnh-settings.php:98
 msgid "Variables: {source} (linked publisher), {date}."
 msgstr ""
 
-#: includes/class-lnh-settings.php:98
+#: includes/class-lnh-settings.php:99
 msgid "Source line position"
 msgstr ""
 
-#: includes/class-lnh-settings.php:98
+#: includes/class-lnh-settings.php:99
 msgid "After the article"
 msgstr ""
 
-#: includes/class-lnh-settings.php:98
+#: includes/class-lnh-settings.php:99
 msgid "Before the article"
 msgstr ""
 
-#: includes/class-lnh-settings.php:99
+#: includes/class-lnh-settings.php:100
 msgid "Show an AI disclosure on agent articles"
 msgstr ""
 
-#: includes/class-lnh-settings.php:99
+#: includes/class-lnh-settings.php:100
 msgid "Recommended. AI-generated featured images are always labelled in their caption."
 msgstr ""
 
-#: includes/class-lnh-settings.php:100
+#: includes/class-lnh-settings.php:101
+msgid "Public contact email for corrections"
+msgstr ""
+
+#: includes/class-lnh-settings.php:101
+msgid "Shown on the “Corrections & contact” page (spam-protected). Leave empty to show no address."
+msgstr ""
+
+#: includes/class-lnh-settings.php:102
 msgid "Disclosure text"
 msgstr ""
 
-#: includes/class-lnh-settings.php:100
+#: includes/class-lnh-settings.php:102
 msgid "Variables: {score} (audit score), {source}."
 msgstr ""
 
-#: includes/class-lnh-settings.php:104
-msgid "Shortcode defaults"
-msgstr ""
-
 #: includes/class-lnh-settings.php:106
-msgid "Layout"
-msgstr ""
-
-#: includes/class-lnh-settings.php:107
-msgid "Number of articles"
-msgstr ""
-
-#: includes/class-lnh-settings.php:108
-msgid "Columns (grid)"
-msgstr ""
-
-#: includes/class-lnh-settings.php:109
-msgid "Which articles"
-msgstr ""
-
-#: includes/class-lnh-settings.php:109
-msgid "Only articles created by the agents"
-msgstr ""
-
-#: includes/class-lnh-settings.php:109
-msgid "All posts"
-msgstr ""
-
-#: includes/class-lnh-settings.php:110
-msgid "Image shape"
-msgstr ""
-
-#: includes/class-lnh-settings.php:110
-msgid "Original"
+msgid "Pages"
 msgstr ""
 
 #: includes/class-lnh-settings.php:111
-msgid "Excerpt length (words)"
-msgstr ""
-
-#: includes/class-lnh-settings.php:112
-msgid "Date style"
-msgstr ""
-
-#: includes/class-lnh-settings.php:112
-msgid "3 hours ago"
-msgstr ""
-
-#: includes/class-lnh-settings.php:112
-msgid "Site date format"
+msgid "Shortcode defaults"
 msgstr ""
 
 #: includes/class-lnh-settings.php:113
-msgid "“Read more” text"
+msgid "Layout"
 msgstr ""
 
 #: includes/class-lnh-settings.php:114
-msgid "Show image"
+msgid "Number of articles"
 msgstr ""
 
 #: includes/class-lnh-settings.php:115
-msgid "Show category"
+msgid "Columns (grid)"
 msgstr ""
 
 #: includes/class-lnh-settings.php:116
-msgid "Show date"
+msgid "Which articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:116
+msgid "Only articles created by the agents"
+msgstr ""
+
+#: includes/class-lnh-settings.php:116
+msgid "All posts"
 msgstr ""
 
 #: includes/class-lnh-settings.php:117
-msgid "Show excerpt"
+msgid "Image shape"
+msgstr ""
+
+#: includes/class-lnh-settings.php:117
+msgid "Original"
 msgstr ""
 
 #: includes/class-lnh-settings.php:118
-msgid "Show source name"
+msgid "Excerpt length (words)"
 msgstr ""
 
 #: includes/class-lnh-settings.php:119
-msgid "Show author"
+msgid "Date style"
+msgstr ""
+
+#: includes/class-lnh-settings.php:119
+msgid "3 hours ago"
+msgstr ""
+
+#: includes/class-lnh-settings.php:119
+msgid "Site date format"
 msgstr ""
 
 #: includes/class-lnh-settings.php:120
-msgid "Show “read more” link"
+msgid "“Read more” text"
 msgstr ""
 
 #: includes/class-lnh-settings.php:121
-msgid "Show “AI image” badge on AI-generated images"
+msgid "Show image"
 msgstr ""
 
 #: includes/class-lnh-settings.php:122
-msgid "Cache (minutes)"
+msgid "Show category"
 msgstr ""
 
-#: includes/class-lnh-settings.php:122
-msgid "0 disables caching. The cache is cleared automatically when posts change."
+#: includes/class-lnh-settings.php:123
+msgid "Show date"
+msgstr ""
+
+#: includes/class-lnh-settings.php:124
+msgid "Show excerpt"
+msgstr ""
+
+#: includes/class-lnh-settings.php:125
+msgid "Show source name"
 msgstr ""
 
 #: includes/class-lnh-settings.php:126
-msgid "Design"
+msgid "Show author"
+msgstr ""
+
+#: includes/class-lnh-settings.php:127
+msgid "Show “read more” link"
 msgstr ""
 
 #: includes/class-lnh-settings.php:128
-msgid "Accent colour"
+msgid "Show “AI image” badge on AI-generated images"
 msgstr ""
 
 #: includes/class-lnh-settings.php:129
+msgid "Cache (minutes)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:129
+msgid "0 disables caching. The cache is cleared automatically when posts change."
+msgstr ""
+
+#: includes/class-lnh-settings.php:133
+msgid "Design"
+msgstr ""
+
+#: includes/class-lnh-settings.php:135
+msgid "Accent colour"
+msgstr ""
+
+#: includes/class-lnh-settings.php:136
 msgid "Corner radius (px)"
 msgstr ""
 
-#: includes/class-lnh-settings.php:130
+#: includes/class-lnh-settings.php:137
 msgid "Gap between cards (px)"
 msgstr ""
 
-#: includes/class-lnh-settings.php:131
+#: includes/class-lnh-settings.php:138
 msgid "Title size (%)"
 msgstr ""
 
-#: includes/class-lnh-settings.php:132
+#: includes/class-lnh-settings.php:139
 msgid "Card shadow"
 msgstr ""
 
-#: includes/class-lnh-settings.php:133
+#: includes/class-lnh-settings.php:140
 msgid "Colour scheme"
 msgstr ""
 
-#: includes/class-lnh-settings.php:133
+#: includes/class-lnh-settings.php:140
 msgid "Match the site theme"
 msgstr ""
 
-#: includes/class-lnh-settings.php:133
+#: includes/class-lnh-settings.php:140
 msgid "Always light"
 msgstr ""
 
-#: includes/class-lnh-settings.php:133
+#: includes/class-lnh-settings.php:140
 msgid "Always dark"
 msgstr ""
 
-#: includes/class-lnh-settings.php:137
+#: includes/class-lnh-settings.php:144
 msgid "Agents"
 msgstr ""
 
-#: includes/class-lnh-settings.php:139
+#: includes/class-lnh-settings.php:146
 msgid "Expected run interval (minutes)"
 msgstr ""
 
-#: includes/class-lnh-settings.php:139
+#: includes/class-lnh-settings.php:146
 msgid "The dashboard warns you when the agents have not reported for twice this time."
 msgstr ""
 
-#: includes/class-lnh-settings.php:140
+#: includes/class-lnh-settings.php:147
 msgid "Keep activity logs (days)"
 msgstr ""
 
-#: includes/class-lnh-settings.php:144
+#: includes/class-lnh-settings.php:151
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-lnh-settings.php:146
+#: includes/class-lnh-settings.php:153
 msgid "Delete all plugin data when uninstalling"
 msgstr ""
 
-#: includes/class-lnh-settings.php:146
+#: includes/class-lnh-settings.php:153
 msgid "Removes settings, presets and activity logs. Articles and their audit metadata are never deleted."
 msgstr ""
 
@@ -987,83 +1017,111 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: views/dashboard.php:9
+msgid "Lehigh News Hub is ready"
+msgstr ""
+
+#: views/dashboard.php:10
+msgid "We created the pages your site needs. They are published and ready to edit:"
+msgstr ""
+
+#: views/dashboard.php:14
+msgid "View"
+msgstr ""
+
 #: views/dashboard.php:15
-msgid "See what the agents did"
+msgid "Edit"
 msgstr ""
 
-#: views/dashboard.php:19
-msgid "Waiting for review"
-msgstr ""
-
-#: views/dashboard.php:20
-msgid "Flagged by the auditor"
+#: views/dashboard.php:18
+msgid "Next: connect your agents (see “Connect your agents” below), add the News page to your menu, and review the first articles in the queue."
 msgstr ""
 
 #: views/dashboard.php:21
-msgid "Published this week"
+msgid "Got it"
 msgstr ""
 
 #: views/dashboard.php:22
+msgid "Add the pages to my menu"
+msgstr ""
+
+#: views/dashboard.php:35
+msgid "See what the agents did"
+msgstr ""
+
+#: views/dashboard.php:39
+msgid "Waiting for review"
+msgstr ""
+
+#: views/dashboard.php:40
+msgid "Flagged by the auditor"
+msgstr ""
+
+#: views/dashboard.php:41
+msgid "Published this week"
+msgstr ""
+
+#: views/dashboard.php:42
 msgid "Average audit score (30 days)"
 msgstr ""
 
-#: views/dashboard.php:23
+#: views/dashboard.php:43
 msgid "AI images this week"
 msgstr ""
 
-#: views/dashboard.php:24
+#: views/dashboard.php:44
 msgid "Tokens used this week"
 msgstr ""
 
-#: views/dashboard.php:30
+#: views/dashboard.php:50
 msgid "Waiting for your decision"
 msgstr ""
 
-#: views/dashboard.php:30
+#: views/dashboard.php:50
 msgid "Open the queue"
 msgstr ""
 
-#: views/dashboard.php:32
+#: views/dashboard.php:52
 msgid "Nothing to review right now. New articles appear here as soon as the agents finish them."
 msgstr ""
 
-#: views/dashboard.php:53
+#: views/dashboard.php:73
 msgid "Recent agent runs"
 msgstr ""
 
-#: views/dashboard.php:53
+#: views/dashboard.php:73
 msgid "All activity"
 msgstr ""
 
-#: views/dashboard.php:64
+#: views/dashboard.php:84
 msgid "Your agents"
 msgstr ""
 
-#: views/dashboard.php:76
+#: views/dashboard.php:96
 msgid "active %s"
 msgstr ""
 
-#: views/dashboard.php:76
+#: views/dashboard.php:96
 msgid "no activity yet"
 msgstr ""
 
-#: views/dashboard.php:84
+#: views/dashboard.php:104
 msgid "Connect your agents"
 msgstr ""
 
-#: views/dashboard.php:89
+#: views/dashboard.php:109
 msgid "Create an %s for the account the agents will post with."
 msgstr ""
 
-#: views/dashboard.php:90
+#: views/dashboard.php:110
 msgid "Application Password"
 msgstr ""
 
-#: views/dashboard.php:93
+#: views/dashboard.php:113
 msgid "Put these two lines in the agents’ .env file:"
 msgstr ""
 
-#: views/dashboard.php:96
+#: views/dashboard.php:116
 msgid "Run python main.py check, then python main.py run."
 msgstr ""
 
@@ -1133,10 +1191,6 @@ msgstr ""
 
 #: views/queue.php:79
 msgid "Restore"
-msgstr ""
-
-#: views/queue.php:81
-msgid "View"
 msgstr ""
 
 #: views/queue.php:36
@@ -1395,14 +1449,58 @@ msgstr ""
 msgid "test"
 msgstr ""
 
-#: views/settings.php:44
+#: views/settings-pages.php:6
+msgid "Draft"
+msgstr ""
+
+#: views/settings-pages.php:7
+msgid "Pending"
+msgstr ""
+
+#: views/settings-pages.php:8
+msgid "Private"
+msgstr ""
+
+#: views/settings-pages.php:10
+msgid "In the trash"
+msgstr ""
+
+#: views/settings-pages.php:11
+msgid "Missing"
+msgstr ""
+
+#: views/settings-pages.php:16
+msgid "These pages were created when the plugin was activated. They are yours: edit them freely, the plugin never overwrites them."
+msgstr ""
+
+#: views/settings-pages.php:18
+msgid "Page"
+msgstr ""
+
+#: views/settings-pages.php:18
+msgid "Uses"
+msgstr ""
+
+#: views/settings-pages.php:38
+msgid "Create missing pages"
+msgstr ""
+
+#: views/settings-pages.php:39
+msgid "Recreates pages that were deleted or sent to the trash."
+msgstr ""
+
+#: views/settings-pages.php:39
+msgid "All pages are in place."
+msgstr ""
+
+#: views/settings.php:50
 msgid "— keep as is —"
 msgstr ""
 
-#: views/settings.php:47
+#: views/settings.php:53
 msgid "— none —"
 msgstr ""
 
-#: views/settings.php:63
+#: views/settings.php:69
 msgid "Save changes"
 msgstr ""

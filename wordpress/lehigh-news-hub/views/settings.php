@@ -8,6 +8,12 @@ defined( 'ABSPATH' ) || exit;
 	<?php endforeach; ?>
 </ul>
 
+<?php
+if ( ! empty( $schema[ $tab ]['custom'] ) ) {
+	LNH_Admin::view( 'settings-pages', array( 'rows' => LNH_Pages::status() ) );
+	return;
+}
+?>
 <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="lnh-card-box lnh-settings">
 	<input type="hidden" name="action" value="lnh_save_settings"><input type="hidden" name="lnh_tab" value="<?php echo esc_attr( $tab ); ?>">
 	<?php wp_nonce_field( 'lnh_save_settings' ); ?>

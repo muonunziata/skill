@@ -1,9 +1,29 @@
 <?php
-/** @var array $counts @var array $health @var array $stats @var array $waiting @var array $runs @var int $published7 @var int $avg @var string $rest_url @var string $profile */
+/** @var array $welcome @var array $pages @var array $counts @var array $health @var array $stats @var array $waiting @var array $runs @var int $published7 @var int $avg @var string $rest_url @var string $profile */
 defined( 'ABSPATH' ) || exit;
 $agents = LNH_Admin::agents();
 $state  = $health['state'];
 ?>
+<?php if ( ! empty( $welcome ) && current_user_can( 'edit_others_posts' ) ) : ?>
+<section class="lnh-card-box lnh-welcome">
+	<header><h2>🎉 <?php esc_html_e( 'Lehigh News Hub is ready', 'lehigh-news-hub' ); ?></h2></header>
+	<p><?php esc_html_e( 'We created the pages your site needs. They are published and ready to edit:', 'lehigh-news-hub' ); ?></p>
+	<ul class="lnh-welcome__pages">
+		<?php foreach ( $pages as $row ) : if ( ! $row['id'] ) { continue; } ?>
+			<li><strong><?php echo esc_html( $row['title'] ); ?></strong>
+				<?php if ( $row['view'] ) : ?><a href="<?php echo esc_url( $row['view'] ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'lehigh-news-hub' ); ?></a><?php endif; ?>
+				<?php if ( $row['edit'] ) : ?>· <a href="<?php echo esc_url( $row['edit'] ); ?>"><?php esc_html_e( 'Edit', 'lehigh-news-hub' ); ?></a><?php endif; ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<p><?php esc_html_e( 'Next: connect your agents (see “Connect your agents” below), add the News page to your menu, and review the first articles in the queue.', 'lehigh-news-hub' ); ?></p>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="lnh_dismiss_welcome"><?php wp_nonce_field( 'lnh_dismiss_welcome' ); ?>
+		<button class="button"><?php esc_html_e( 'Got it', 'lehigh-news-hub' ); ?></button>
+		<a class="button" href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Add the pages to my menu', 'lehigh-news-hub' ); ?></a>
+	</form>
+</section>
+<?php endif; ?>
+
 <div class="lnh-banner lnh-banner--<?php echo esc_attr( $state ); ?>">
 	<span class="lnh-dot lnh-dot--<?php echo esc_attr( $state ); ?>"></span>
 	<div>

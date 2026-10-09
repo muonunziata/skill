@@ -11,6 +11,8 @@ if ( empty( $settings['delete_on_uninstall'] ) ) {
 
 delete_option( 'lnh_settings' );
 delete_option( 'lnh_presets' );
+delete_option( 'lnh_pages' );
+delete_option( 'lnh_welcome' );
 delete_option( 'lnh_cache_v' );
 
 $runs = get_posts( array( 'post_type' => 'lnh_run', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids' ) );

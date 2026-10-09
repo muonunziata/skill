@@ -217,6 +217,70 @@ $sp = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_meta_description' => 'M
 wp_update_post( array( 'ID' => $sp, 'post_title' => 'T2' ) );
 t( 'meta description mirrored to Yoast/RankMath keys', 'Meta desc' === get_post_meta( $sp, '_yoast_wpseo_metadesc', true ) );
 
+echo "Pages created on activation\n";
+$cleanup_pages = function () {
+	foreach ( LNH_Pages::ids() as $id ) {
+		wp_delete_post( $id, true );
+	}
+	foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'meta_key' => LNH_Pages::META, 'numberposts' => -1, 'fields' => 'ids' ) ) as $id ) {
+		wp_delete_post( $id, true );
+	}
+	delete_option( LNH_Pages::OPTION );
+	delete_option( LNH_Pages::WELCOME );
+};
+$cleanup_pages();
+$orig_default_cat = LNH_Settings::get( 'default_category' );
+$r1 = LNH_Pages::ensure_all();
+t( 'first activation creates the 3 pages', 3 === count( $r1['created'] ) && array( 'how-we-work', 'corrections', 'news' ) === $r1['created'], $r1 );
+$ids = LNH_Pages::ids();
+t( 'pages are published pages with our key', 3 === count( array_filter( $ids, function ( $id ) { return 'page' === get_post_type( $id ) && 'publish' === get_post_status( $id ) && '' !== get_post_meta( $id, LNH_Pages::META, true ); } ) ) );
+$news = get_post( $ids['news'] );
+t( 'news page uses the listing shortcode and links to how-we-work', false !== strpos( $news->post_content, '[lehigh_news layout="featured"' ) && false !== strpos( $news->post_content, get_permalink( $ids['how-we-work'] ) ), $news->post_content );
+t( 'no unresolved placeholders anywhere', 0 === count( array_filter( $ids, function ( $id ) { return (bool) preg_match( '/\{(how|corrections)_url\}/', get_post( $id )->post_content ); } ) ) );
+$html = do_shortcode( $news->post_content );
+t( 'news page renders through the shortcode', false !== strpos( $html, 'class="lnh ' ) );
+t( 'a News category exists and is the default for agent posts', (int) LNH_Settings::get( 'default_category' ) > 0 && term_exists( (int) LNH_Settings::get( 'default_category' ), 'category' ) );
+$r2 = LNH_Pages::ensure_all();
+t( 'reactivation creates nothing (idempotent)', array() === $r2['created'] && 3 === count( $r2['existing'] ) && LNH_Pages::ids() === $ids );
+wp_update_post( array( 'ID' => $ids['news'], 'post_content' => 'MY OWN EDIT' ) );
+LNH_Pages::ensure_all();
+t( 'user edits are never overwritten', 'MY OWN EDIT' === get_post( $ids['news'] )->post_content );
+wp_trash_post( $ids['news'] );
+$r3 = LNH_Pages::ensure_all();
+t( 'a deliberately trashed page is not resurrected on activation', 'trash' === get_post_status( $ids['news'] ) && array() === $r3['created'] );
+$st = LNH_Pages::status();
+t( 'status reports the trashed page', 'trash' === $st['news']['state'] && '' === $st['news']['view'] );
+$r4 = LNH_Pages::ensure_all( true );
+t( 'explicit "create missing" restores it without duplicating', array( 'news' ) === $r4['restored'] && 'publish' === get_post_status( $ids['news'] ) && LNH_Pages::ids() === $ids );
+delete_option( LNH_Pages::OPTION );
+$r5 = LNH_Pages::ensure_all();
+t( 'lost option: pages are re-adopted by key, not duplicated', array() === $r5['created'] && LNH_Pages::ids() === $ids );
+wp_delete_post( $ids['corrections'], true );
+$r6 = LNH_Pages::ensure_all();
+t( 'a hard-deleted page is recreated', array( 'corrections' ) === $r6['created'] );
+update_option( LNH_Settings::OPTION, array_merge( LNH_Settings::all(), array( 'public_contact_email' => '' ) ) );
+t( 'contact shortcode without email shows no address', false === strpos( do_shortcode( '[lehigh_news_contact]' ), 'mailto' ) );
+update_option( LNH_Settings::OPTION, array_merge( LNH_Settings::all(), array( 'public_contact_email' => 'desk@example.com' ) ) );
+$c = do_shortcode( '[lehigh_news_contact]' );
+t( 'contact shortcode shows an obfuscated mailto', false !== strpos( $c, 'mailto:' ) && false === strpos( $c, 'desk@example.com' ) );
+t( 'welcome notice flag is set by on_activate', ( function () use ( $cleanup_pages ) { $cleanup_pages(); LNH_Pages::on_activate(); return array( 'how-we-work', 'corrections', 'news' ) === get_option( LNH_Pages::WELCOME ) && (bool) get_transient( 'lnh_activation_redirect' ); } )() );
+delete_transient( 'lnh_activation_redirect' );
+// Spanish site language -> Spanish pages
+$cleanup_pages();
+add_filter( 'locale', $es_filter = function () { return 'es_ES'; } );
+$ids_es = array();
+LNH_Pages::ensure_all();
+$ids_es = LNH_Pages::ids();
+t( 'Spanish locale creates Spanish pages', 'Noticias de Lehigh Acres' === get_the_title( $ids_es['news'] ) && 'noticias' === get_post( $ids_es['news'] )->post_name && false !== strpos( get_post( $ids_es['how-we-work'] )->post_content, 'Nuestra redacción, paso a paso' ) );
+remove_filter( 'locale', $es_filter );
+$cleanup_pages();
+foreach ( get_terms( array( 'taxonomy' => 'category', 'hide_empty' => false, 'name' => array( 'News', 'Noticias' ) ) ) as $term ) {
+	if ( (int) $term->term_id !== (int) get_option( 'default_category' ) ) {
+		wp_delete_term( $term->term_id, 'category' );
+	}
+}
+update_option( LNH_Settings::OPTION, array_merge( LNH_Settings::all(), array( 'public_contact_email' => '', 'default_category' => $orig_default_cat ) ) );
+
 echo "Front-end decorations\n";
 $fp = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 88, 'lnh_source_url' => 'https://wink.example/a', 'lnh_source_name' => 'WINK <b>News</b>', 'lnh_source_date' => '2026-10-01' ), 'publish' );
 $GLOBALS['post'] = get_post( $fp );

@@ -177,3 +177,9 @@ details summary{cursor:pointer;color:var(--c-accent);font-size:12.5px}
 .lnh-metabox .lnh-audit-top{margin-bottom:.4rem}
 #lnh-review .inside{margin:0;padding:12px}
 .column-lnh_score{width:130px}
+
+/* welcome card */
+.lnh-welcome{border-color:#bfe3cd;background:linear-gradient(180deg,#f3fbf6,#fff)}
+.lnh-welcome__pages{margin:.4rem 0 .8rem;padding-left:1.2rem}
+.lnh-welcome__pages li{margin:.25rem 0}
+.lnh-welcome form{display:flex;gap:.5rem;flex-wrap:wrap}

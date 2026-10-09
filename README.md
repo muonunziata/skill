@@ -31,7 +31,17 @@ Una redacción automática para noticias locales de **Lehigh Acres, Florida**: t
 ## Puesta en marcha (10 minutos)
 
 ### 1 · Instala el plugin
-WordPress → *Plugins → Añadir nuevo → Subir plugin* → `lehigh-news-hub.zip` → Activar. Aparece el menú **News Hub**.
+WordPress → *Plugins → Añadir nuevo → Subir plugin* → `lehigh-news-hub.zip` → Activar.
+
+Al activarlo, el plugin **crea automáticamente lo que el sitio necesita** y te lleva al panel **News Hub**:
+
+| Página creada | Para qué sirve |
+|---|---|
+| **Noticias de Lehigh Acres** (`/noticias/` o `/news/`) | Listado de artículos con el shortcode `[lehigh_news]`, destacada + paginación |
+| **Cómo trabajamos** (`/como-trabajamos/`) | Política editorial y transparencia: qué hace cada agente, fuentes, imágenes con IA, decisión humana |
+| **Correcciones y contacto** (`/correcciones/`) | Cómo avisar de errores y cómo los corregimos; correo público opcional (*Ajustes → Transparencia*) |
+
+Además crea la categoría **Noticias** (categoría por defecto de los artículos de los agentes). Las páginas salen en español si el idioma del sitio/usuario es español y en inglés en otro caso. Nunca se duplican al reactivar, nunca se sobrescriben tus ediciones y, si borras una a propósito, no se vuelve a crear sola; en *News Hub → Ajustes → Páginas* hay un botón para recrear las que falten. Añádelas a tu menú desde *Apariencia → Menús*.
 
 ### 2 · Crea el acceso de los agentes
 *Usuarios → tu perfil → Contraseñas de aplicación* → crea una (p. ej. «agentes»).

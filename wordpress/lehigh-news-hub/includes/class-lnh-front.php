@@ -69,6 +69,10 @@ final class LNH_Front {
 					'source' => esc_html( (string) get_post_meta( $id, 'lnh_source_name', true ) ),
 				)
 			);
+			$how = LNH_Pages::url( 'how-we-work' );
+			if ( '' !== $how ) {
+				$text .= ' <a href="' . esc_url( $how ) . '">' . esc_html__( 'How we work', 'lehigh-news-hub' ) . '</a>';
+			}
 			$after .= '<aside class="lnh-disclosure" role="note"><span class="lnh-disclosure__tag">AI</span><p>' . $text . '</p></aside>';
 			wp_enqueue_style( 'lnh-front' );
 		}

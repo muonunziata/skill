@@ -23,6 +23,7 @@ final class LNH_Settings {
 			'attribution_text'       => 'Source: {source}',
 			'attribution_position'   => 'after',
 			'show_disclosure'        => 1,
+			'public_contact_email'   => '',
 			'disclosure_text'        => 'This article was researched, written and fact-checked with the help of AI agents (audit score {score}/100) and reviewed by our editors before publication.',
 			// Shortcode defaults.
 			'sc_count'               => 6,
@@ -97,8 +98,14 @@ final class LNH_Settings {
 					'attribution_text'     => array( 'type' => 'text', 'label' => __( 'Source line', 'lehigh-news-hub' ), 'desc' => __( 'Variables: {source} (linked publisher), {date}.', 'lehigh-news-hub' ) ),
 					'attribution_position' => array( 'type' => 'select', 'label' => __( 'Source line position', 'lehigh-news-hub' ), 'options' => array( 'after' => __( 'After the article', 'lehigh-news-hub' ), 'before' => __( 'Before the article', 'lehigh-news-hub' ) ) ),
 					'show_disclosure'      => array( 'type' => 'checkbox', 'label' => __( 'Show an AI disclosure on agent articles', 'lehigh-news-hub' ), 'desc' => __( 'Recommended. AI-generated featured images are always labelled in their caption.', 'lehigh-news-hub' ) ),
+					'public_contact_email' => array( 'type' => 'email', 'label' => __( 'Public contact email for corrections', 'lehigh-news-hub' ), 'desc' => __( 'Shown on the “Corrections & contact” page (spam-protected). Leave empty to show no address.', 'lehigh-news-hub' ) ),
 					'disclosure_text'      => array( 'type' => 'textarea', 'label' => __( 'Disclosure text', 'lehigh-news-hub' ), 'desc' => __( 'Variables: {score} (audit score), {source}.', 'lehigh-news-hub' ) ),
 				),
+			),
+			'pages'      => array(
+				'label'  => __( 'Pages', 'lehigh-news-hub' ),
+				'custom' => true,
+				'fields' => array(),
 			),
 			'shortcode'  => array(
 				'label'  => __( 'Shortcode defaults', 'lehigh-news-hub' ),
@@ -153,7 +160,7 @@ final class LNH_Settings {
 	public static function save_tab( string $tab, array $post ): array {
 		$schema = self::schema();
 		$stored = self::all();
-		if ( ! isset( $schema[ $tab ] ) ) {
+		if ( ! isset( $schema[ $tab ] ) || ! empty( $schema[ $tab ]['custom'] ) ) {
 			return $stored;
 		}
 		foreach ( $schema[ $tab ]['fields'] as $key => $field ) {
