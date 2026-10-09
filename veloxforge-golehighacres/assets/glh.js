@@ -295,7 +295,8 @@
 				cursor = d.createElement('div'); cursor.className = 'glh-cur'; cursor.setAttribute('aria-hidden', 'true'); cursor.innerHTML = '<div class="c"></div>';
 				d.body.appendChild(cursor); ctext = cursor.firstChild;
 			}
-			function setCur(s) { if (!cursor) { return; } cursor.dataset.s = s; ctext.textContent = s === 'go' ? cur[1] : (s === 'drag' ? '‹ ' + cur[0] + ' ›' : ''); }
+			var ARROWS = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/><path d="m9 7 3-3 3 3M9 17l3 3 3-3M7 9l-3 3 3 3M17 9l3 3-3 3"/></svg>';
+			function setCur(s) { if (!cursor) { return; } cursor.dataset.s = s; if (s === 'go') { ctext.textContent = cur[1]; } else { ctext.innerHTML = ARROWS; } }
 			setCur('drag');
 			function zone(e) { return e.target && e.target.closest && e.target.closest('.glh-tile') ? 'go' : 'drag'; }
 

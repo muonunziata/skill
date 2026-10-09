@@ -261,7 +261,9 @@ body.admin-bar .glh-header.is-sticky { top: 32px; }
 .glh-cur.on { opacity: 1; }
 .glh-cur .c { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 16px; border: 1px solid var(--glh-gold); border-radius: 999px; background: rgba(255, 255, 255, .72); backdrop-filter: blur(4px); color: var(--glh-ink); font-family: var(--glh-body); font-size: .64rem; letter-spacing: .24em; text-transform: uppercase; white-space: nowrap; transition: min-width .25s, height .25s, background .25s, padding .25s; }
 .glh-cur[data-s="go"] .c { min-width: 38px; height: 38px; padding: 0; border: 1px solid rgba(255, 90, 95, .55); border-radius: 50%; background: rgba(255, 255, 255, .5); color: var(--glh-coral); font-family: var(--glh-display); font-weight: 700; font-size: .6rem; letter-spacing: 0; text-transform: none; opacity: .8; }
-.glh-cur[data-s="grab"] .c { min-width: 30px; height: 30px; padding: 0; background: rgba(227, 169, 43, .35); font-size: 0; }
+.glh-cur[data-s="drag"] .c { min-width: 54px; height: 54px; padding: 0; border-radius: 50%; background: rgba(255, 255, 255, .55); }
+.glh-cur[data-s="grab"] .c { min-width: 42px; height: 42px; padding: 0; border-radius: 50%; background: rgba(227, 169, 43, .35); }
+.glh-cur[data-s="grab"] svg { width: 20px; height: 20px; }
 .glh-modal { position: fixed; inset: 0; z-index: 99999; display: grid; place-items: center; padding: 24px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(8px); animation: glh-fade .25s ease-out; }
 .glh-modal[hidden] { display: none; }
 .glh-mbox { position: relative; display: grid; gap: 12px; animation: glh-pop .3s cubic-bezier(.2, .7, .2, 1); }

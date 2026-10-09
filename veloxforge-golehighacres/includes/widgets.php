@@ -399,7 +399,6 @@ class GLH_Widgets {
 			GLH::num( 'preview', 'Segundos de vista previa al pasar el mouse (sin sonido)', 'content', 10, 0, 60, array( 'group' => 'Reproducción' ) ),
 			GLH::sw( 'popup', 'Abrir ventana emergente al hacer click', 1, 'Reproducción' ),
 			GLH::sw( 'frame', 'Marco dorado alrededor', 1, 'Diseño' ),
-			GLH::t( 'cur_drag', 'Texto del cursor sobre la pared', 'Drag', 'text', 'Cursor' ),
 			GLH::t( 'cur_go', 'Texto del cursor sobre un video', 'GO!', 'text', 'Cursor' ),
 			GLH::t( 'lbl_prev', 'Rótulo «Vista previa · sin sonido»', 'Preview · no sound', 'text', 'Textos' ),
 			GLH::t( 'lbl_nofile', 'Texto del reproductor sin archivo', 'The video plays here, with sound', 'text', 'Textos' ),
@@ -448,7 +447,7 @@ class GLH_Widgets {
 				'rows' => $rows, 'cols' => $cols, 'tile' => (float) self::v( $s, 'tile_h', 36 ), 'gap' => (int) self::v( $s, 'gap', 16 ),
 				'drift' => ! empty( $s['drift'] ) ? 1 : 0, 'driftSpeed' => (float) self::v( $s, 'drift_speed', 36 ), 'idle' => (float) self::v( $s, 'idle', 2 ),
 				'wheel' => ! empty( $s['wheel'] ) ? 1 : 0, 'preview' => (float) self::v( $s, 'preview', 10 ), 'popup' => ! empty( $s['popup'] ) ? 1 : 0,
-				'cur' => array( self::v( $s, 'cur_drag', 'Drag' ), self::v( $s, 'cur_go', 'GO!' ) ),
+				'cur' => array( '', self::v( $s, 'cur_go', 'GO!' ) ),
 				'txt' => array( self::v( $s, 'lbl_prev', '' ), self::v( $s, 'lbl_nofile', '' ), self::v( $s, 'lbl_close', 'Close' ) ),
 			);
 			return '<section class="glh glh-wall' . ( ! empty( $s['frame'] ) ? ' has-frame' : '' ) . '" data-glh="wall"' . self::static_attr( $ctx ) . ' data-glh-cfg="' . GLH::json( $cfg ) . '" aria-label="Video wall. Drag to explore."><div class="glh-wall__stage">' . $tiles . '</div></section>';

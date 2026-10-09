@@ -78,7 +78,9 @@
   .cur.on { opacity: 1; }
   .cur .c { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 16px; border: 1px solid var(--gold); border-radius: 999px; background: rgba(255, 255, 255, .72); backdrop-filter: blur(4px); color: var(--ink); font-size: 0.64rem; letter-spacing: 0.24em; text-transform: uppercase; white-space: nowrap; transition: min-width .25s, height .25s, background .25s, color .25s, padding .25s; }
   .cur[data-s="tile"] .c { min-width: 38px; height: 38px; padding: 0; border: 1px solid rgba(255, 90, 95, .55); border-radius: 50%; background: rgba(255, 255, 255, .5); color: var(--coral); font-size: .6rem; font-weight: 700; letter-spacing: 0; text-transform: none; opacity: .8; }
-  .cur[data-s="grab"] .c { min-width: 30px; height: 30px; padding: 0; background: rgba(227, 169, 43, .35); font-size: 0; }
+  .cur[data-s="drag"] .c { min-width: 54px; height: 54px; padding: 0; border-radius: 50%; background: rgba(255, 255, 255, .55); color: var(--ink); }
+  .cur[data-s="grab"] .c { min-width: 42px; height: 42px; padding: 0; border-radius: 50%; background: rgba(227, 169, 43, .35); color: var(--ink); }
+  .cur[data-s="grab"] svg { width: 20px; height: 20px; }
   .cur[data-s="off"] { opacity: 0; }
 
   /* Popup player */
@@ -387,9 +389,11 @@
 
   /* ---------- Cursor ---------- */
   var cur = document.getElementById('cur'), curText = document.getElementById('curText');
+  var ARROWS = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/><path d="m9 7 3-3 3 3M9 17l3 3 3-3M7 9l-3 3 3 3M17 9l3 3-3 3"/></svg>';
   function setCursor(s) {
     cur.dataset.s = s;
-    curText.textContent = s === 'drag' ? '‹ Drag ›' : (s === 'tile' ? 'GO!' : '');
+    curText.innerHTML = s === 'tile' ? 'GO!' : (s === 'off' ? '' : ARROWS);
+    
   }
   function zone(e) { return e.target && e.target.closest && e.target.closest('.tile') ? 'tile' : 'drag'; }
   function moveCursor(e) {

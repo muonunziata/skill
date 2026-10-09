@@ -175,6 +175,71 @@
     .res .tagS { display: none; }
   }
 
+  /* Business profile popup (desktop dialog, full-screen sheet on phones) */
+  .res, .recent-row { cursor: pointer; }
+  .res:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; background: #FFF8E8; }
+  .res .go { justify-self: end; color: var(--muted); transition: transform .2s, color .2s; }
+  .res:hover .go { transform: translateX(4px); color: var(--coral); }
+  html.pf-lock, html.pf-lock body { overflow: hidden; }
+  .pf-modal { position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; padding: 24px; background: rgba(20, 24, 26, .55); backdrop-filter: blur(6px); animation: pf-fade .2s ease-out; }
+  .pf-modal[hidden] { display: none; }
+  .pf-box { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); width: min(1040px, 100%); height: min(86vh, 720px); border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 40px 100px rgba(0, 0, 0, .35); animation: pf-pop .3s cubic-bezier(.2, .7, .2, 1); }
+  .pf-close { position: absolute; z-index: 5; right: 14px; top: 14px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255, 255, 255, .92); font-size: 1rem; transition: background .2s, color .2s; }
+  .pf-close:hover { background: var(--ink); color: #fff; }
+  .pf-gal { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #EDF0EA; }
+  .pf-main { position: relative; flex: 1; min-height: 240px; overflow: hidden; }
+  .pf-slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 20px; opacity: 0; transition: opacity .35s; background: var(--k, var(--a)); }
+  .pf-slide.on { opacity: 1; }
+  .pf-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(140deg, rgba(255, 255, 255, .25), transparent 55%); }
+  .pf-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pf-slide b { position: relative; font-family: var(--display); font-size: clamp(1.2rem, 2.4vw, 1.8rem); letter-spacing: -.02em; color: rgba(255, 255, 255, .88); }
+  .pf-slide small { position: relative; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 255, 255, .85); }
+  .pf-arrow { position: absolute; top: 50%; z-index: 2; width: 42px; height: 42px; margin-top: -21px; border-radius: 50%; background: rgba(255, 255, 255, .85); font-size: 1.1rem; transition: background .2s; }
+  .pf-arrow:hover { background: #fff; }
+  .pf-prev { left: 12px; } .pf-next { right: 12px; }
+  .pf-count { position: absolute; z-index: 2; right: 14px; bottom: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(20, 24, 26, .55); color: #fff; font-size: .68rem; letter-spacing: .14em; }
+  .pf-thumbs { display: flex; gap: 8px; padding: 12px; overflow-x: auto; }
+  .pf-th { position: relative; flex: none; width: 78px; height: 56px; border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: var(--k, var(--a)); opacity: .65; transition: opacity .2s, border-color .2s; }
+  .pf-th img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pf-th[aria-current="true"] { opacity: 1; border-color: var(--coral); }
+  .pf-info { min-width: 0; overflow-y: auto; padding: 30px 30px 26px; }
+  .pf-head { display: flex; gap: 16px; align-items: center; padding-right: 44px; }
+  .pf-logo { flex: none; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 16px; background: var(--dot, var(--a)); color: #fff; font-family: var(--display); font-weight: 700; font-size: 1.4rem; overflow: hidden; }
+  .pf-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .pf-head h2 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.15; letter-spacing: -.02em; }
+  .pf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font-size: .78rem; color: var(--muted); }
+  .pf-cat { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); font-size: .72rem; }
+  .pf-cat i { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); }
+  .pf-stars { color: var(--gold); letter-spacing: 1px; }
+  .pf-badge { padding: 3px 10px; border-radius: 999px; background: #FFF1CC; color: #7A5200; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; }
+  .pf-desc { margin: 20px 0 0; font-size: .95rem; line-height: 1.7; color: #3C4448; }
+  .pf-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .pf-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border: 1px solid var(--ink); border-radius: 999px; font-family: var(--display); font-weight: 600; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; transition: transform .2s, background .2s, color .2s; }
+  .pf-btn:hover { transform: translateY(-2px); }
+  .pf-btn.main { background: var(--coral); border-color: var(--coral); color: #fff; }
+  .pf-list { display: grid; gap: 0; margin: 24px 0 0; border-top: 1px solid var(--ink); }
+  .pf-list > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: .9rem; }
+  .pf-list dt { font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .pf-list dd { margin: 0; overflow-wrap: anywhere; }
+  .pf-list a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+  .pf-hours { display: grid; grid-template-columns: auto 1fr; gap: 2px 18px; margin: 0; }
+  .pf-hours span:nth-child(odd) { color: var(--muted); }
+  .pf-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .pf-tags span { padding: 5px 12px; border-radius: 999px; background: var(--soft); font-size: .78rem; }
+  .pf-social { display: flex; gap: 10px; margin-top: 18px; font-size: .78rem; }
+  .pf-social a { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; }
+  .pf-note { margin: 22px 0 0; padding: 12px 14px; border-radius: 8px; background: #FFF8E8; font-size: .78rem; color: #6B5A2A; line-height: 1.5; }
+  @keyframes pf-fade { from { opacity: 0; } } @keyframes pf-pop { from { opacity: 0; transform: scale(.95); } } @keyframes pf-up { from { transform: translateY(40px); opacity: 0; } }
+  @media (max-width: 860px) {
+    .pf-modal { padding: 0; place-items: stretch; }
+    .pf-box { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); width: 100%; height: 100%; border-radius: 0; overflow-y: auto; animation: pf-up .3s cubic-bezier(.2, .7, .2, 1); }
+    .pf-gal { flex: none; } .pf-main { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+    .pf-info { overflow: visible; padding: 22px 18px 32px; }
+    .pf-close { position: fixed; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); }
+    .pf-list > div { grid-template-columns: 82px minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { .pf-modal, .pf-box { animation: none; } .pf-slide { transition: none; } }
+
   /* Journey */
   .tabs { border-block: 1px solid var(--line); overflow-x: auto; }
   .tabs ul { list-style: none; display: flex; gap: 8px; align-items: center; padding: 14px var(--gutter); max-width: 1320px; margin-inline: auto; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; }
@@ -364,10 +429,10 @@
           <table>
             <thead><tr><th>Business</th><th></th><th>Category</th><th>Area</th></tr></thead>
             <tbody>
-            <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--b); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 08</span></div></td><td class="n">Sample business 1</td><td>Restaurant</td><td>Lehigh Acres</td></tr>
-            <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--c); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 09</span></div></td><td class="n">Sample business 2</td><td>Services</td><td>Lehigh Acres</td></tr>
-            <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--d); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 10</span></div></td><td class="n">Sample business 3</td><td>Shop</td><td>Lehigh Acres</td></tr>
-            <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--e); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 11</span></div></td><td class="n">Sample business 4</td><td>Health</td><td>Lehigh Acres</td></tr>
+            <tr data-go data-row tabindex="0" role="button"><td class="thumb"><div class="ph r-43" style="--k: var(--b); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 08</span></div></td><td class="n">Sample business 1</td><td>Restaurant</td><td>Lehigh Acres</td></tr>
+            <tr data-go data-row tabindex="0" role="button"><td class="thumb"><div class="ph r-43" style="--k: var(--c); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 09</span></div></td><td class="n">Sample business 2</td><td>Services</td><td>Lehigh Acres</td></tr>
+            <tr data-go data-row tabindex="0" role="button"><td class="thumb"><div class="ph r-43" style="--k: var(--d); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 10</span></div></td><td class="n">Sample business 3</td><td>Shop</td><td>Lehigh Acres</td></tr>
+            <tr data-go data-row tabindex="0" role="button"><td class="thumb"><div class="ph r-43" style="--k: var(--e); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 11</span></div></td><td class="n">Sample business 4</td><td>Health</td><td>Lehigh Acres</td></tr>
           </tbody>
           </table>
         </div>
@@ -571,6 +636,97 @@
     var LIST = [];
     CATS.forEach(function (c) { c.subs.forEach(function (sub) { LIST.push({ cat: c.id, sub: sub, name: 'Sample ' + sub.replace(/\b\w/g, function (m) { return m.toUpperCase(); }), hay: (c.name + ' ' + sub).toLowerCase() }); }); });
 
+
+    LIST.forEach(function (l, i) { l.i = i; });
+
+    /* ---------- Business profile popup ---------- */
+    var SAMPLE = {
+      desc: 'Sample description for this {type}. Tell visitors what makes the business special: what you offer, how long you have served Lehigh Acres and why neighbours choose you.',
+      address: 'Sample Ave, Lehigh Acres, FL 33971', phone: '(239) 555-0100', email: 'hello@example.com', web: 'https://example.com',
+      hours: [['Mon – Fri', '8:00 AM – 5:00 PM'], ['Saturday', '9:00 AM – 1:00 PM'], ['Sunday', 'Closed']]
+    };
+    var PALETTE = ['var(--a)', 'var(--b)', 'var(--c)', 'var(--d)', 'var(--e)', 'var(--f)'];
+    function profileOf(l) {
+      var c = CATS[l.cat];
+      return { name: l.name, cat: c.name, dot: c.dot, sub: l.sub, desc: SAMPLE.desc.replace('{type}', l.sub), address: SAMPLE.address, phone: SAMPLE.phone, email: SAMPLE.email, web: SAMPLE.web,
+        hours: SAMPLE.hours, tags: [l.sub, 'Locally owned', 'Sample tag'], gallery: [{}, {}, {}, {}], rating: 0, reviews: 0, founding: false, sample: true, social: [['Facebook', 'https://facebook.com'], ['Instagram', 'https://instagram.com']] };
+    }
+    function mapsUrl(p) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address || (p.name + ' Lehigh Acres FL')); }
+    function dirUrl(p) { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address || (p.name + ' Lehigh Acres FL')); }
+    function initials(n) { return n.replace(/^Sample\s+/i, '').split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('') || 'GO'; }
+    function pin() { return '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>'; }
+
+    var pm = document.createElement('div');
+    pm.className = 'pf-modal'; pm.hidden = true; pm.setAttribute('role', 'dialog'); pm.setAttribute('aria-modal', 'true'); pm.setAttribute('aria-label', 'Business profile');
+    document.body.appendChild(pm);
+    var pfOpener = null, pfSlide = 0, pfN = 0;
+
+    function showSlide(i) {
+      pfSlide = (i + pfN) % pfN;
+      $$('.pf-slide', pm).forEach(function (el, k) { el.classList.toggle('on', k === pfSlide); });
+      $$('.pf-th', pm).forEach(function (el, k) { el.setAttribute('aria-current', String(k === pfSlide)); });
+      var cnt = $('.pf-count', pm); if (cnt) { cnt.textContent = (pfSlide + 1) + ' / ' + pfN; }
+    }
+    function openProfile(p, opener) {
+      pfOpener = opener || null; pfN = Math.max(1, (p.gallery || []).length);
+      var gal = (p.gallery && p.gallery.length ? p.gallery : [{}]), slides = '', thumbs = '';
+      gal.forEach(function (g, i) {
+        var k = 'var(--' + 'abcdef'.charAt(i % 6) + ')';
+        slides += '<div class="pf-slide' + (i === 0 ? ' on' : '') + '" style="--k:' + k + '">' + (g.src ? '<img src="' + esc(g.src) + '" alt="' + esc(g.alt || p.name) + '">' : '<b>PHOTO ' + (i + 1) + '</b><small>Gallery · ' + esc(p.name) + '</small>') + '</div>';
+        thumbs += '<button type="button" class="pf-th" style="--k:' + k + '" aria-label="Photo ' + (i + 1) + '" aria-current="' + (i === 0) + '">' + (g.src ? '<img src="' + esc(g.src) + '" alt="">' : '') + '</button>';
+      });
+      var stars = p.rating ? '<span class="pf-stars" aria-label="' + p.rating + ' out of 5">' + '★★★★★'.slice(0, Math.round(p.rating)) + '☆☆☆☆☆'.slice(0, 5 - Math.round(p.rating)) + '</span> <span>' + p.rating.toFixed(1) + (p.reviews ? ' (' + p.reviews + ')' : '') + '</span>' : '';
+      var rows = '';
+      rows += '<div><dt>Address</dt><dd>' + esc(p.address) + '<br><a href="' + mapsUrl(p) + '" target="_blank" rel="noopener">Open in Google Maps ↗</a></dd></div>';
+      if (p.phone) { rows += '<div><dt>Phone</dt><dd><a href="tel:' + esc(p.phone.replace(/[^+\d]/g, '')) + '">' + esc(p.phone) + '</a></dd></div>'; }
+      if (p.email) { rows += '<div><dt>Email</dt><dd>' + esc(p.email) + '</dd></div>'; }
+      if (p.web) { rows += '<div><dt>Website</dt><dd><a href="' + esc(p.web) + '" target="_blank" rel="noopener">' + esc(p.web.replace(/^https?:\/\//, '')) + '</a></dd></div>'; }
+      if (p.hours && p.hours.length) { rows += '<div><dt>Hours</dt><dd><div class="pf-hours">' + p.hours.map(function (h) { return '<span>' + esc(h[0]) + '</span><span>' + esc(h[1]) + '</span>'; }).join('') + '</div></dd></div>'; }
+      pm.innerHTML = '<div class="pf-box"><button type="button" class="pf-close" aria-label="Close">&#10005;</button>'
+        + '<div class="pf-gal"><div class="pf-main">' + slides + (gal.length > 1 ? '<button type="button" class="pf-arrow pf-prev" aria-label="Previous photo">‹</button><button type="button" class="pf-arrow pf-next" aria-label="Next photo">›</button><span class="pf-count"></span>' : '') + '</div>' + (gal.length > 1 ? '<div class="pf-thumbs">' + thumbs + '</div>' : '') + '</div>'
+        + '<div class="pf-info"><div class="pf-head"><div class="pf-logo" style="--dot:' + esc(p.dot) + '">' + (p.logo ? '<img src="' + esc(p.logo) + '" alt="">' : esc(initials(p.name))) + '</div><div><h2>' + esc(p.name) + '</h2><div class="pf-meta"><span class="pf-cat"><i style="--dot:' + esc(p.dot) + '"></i>' + esc(p.cat) + '</span>' + stars + (p.founding ? '<span class="pf-badge">Founding business</span>' : '') + '</div></div></div>'
+        + '<p class="pf-desc">' + esc(p.desc) + '</p>'
+        + '<div class="pf-actions"><a class="pf-btn main" href="' + mapsUrl(p) + '" target="_blank" rel="noopener">' + pin() + ' Open in Google Maps</a><a class="pf-btn" href="' + dirUrl(p) + '" target="_blank" rel="noopener">Get directions</a>' + (p.phone ? '<a class="pf-btn" href="tel:' + esc(p.phone.replace(/[^+\d]/g, '')) + '">Call</a>' : '') + (p.web ? '<a class="pf-btn" href="' + esc(p.web) + '" target="_blank" rel="noopener">Website</a>' : '') + '</div>'
+        + '<dl class="pf-list">' + rows + '</dl>'
+        + (p.tags && p.tags.length ? '<div class="pf-tags">' + p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '')
+        + (p.social && p.social.length ? '<div class="pf-social">' + p.social.map(function (s2) { return '<a href="' + esc(s2[1]) + '" target="_blank" rel="noopener">' + esc(s2[0]) + '</a>'; }).join('') + '</div>' : '')
+        + (p.sample ? '<p class="pf-note">This is a sample profile. Every field here (logo, description, photos, address, phone, hours, links) is editable for each real business.</p>' : '')
+        + '</div></div>';
+      pm.hidden = false; document.documentElement.classList.add('pf-lock'); showSlide(0);
+      $('.pf-close', pm).focus({ preventScroll: true });
+    }
+    function closeProfile() {
+      if (pm.hidden) { return; }
+      pm.hidden = true; pm.innerHTML = ''; document.documentElement.classList.remove('pf-lock');
+      if (pfOpener && document.body.contains(pfOpener)) { pfOpener.focus({ preventScroll: true }); }
+    }
+    pm.addEventListener('click', function (e) {
+      if (e.target === pm || e.target.closest('.pf-close')) { closeProfile(); return; }
+      if (e.target.closest('.pf-prev')) { showSlide(pfSlide - 1); } else if (e.target.closest('.pf-next')) { showSlide(pfSlide + 1); }
+      var th = e.target.closest('.pf-th'); if (th) { showSlide($$('.pf-th', pm).indexOf(th)); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (pm.hidden) { return; }
+      if (e.key === 'Escape') { closeProfile(); }
+      else if (e.key === 'ArrowLeft' && pfN > 1) { showSlide(pfSlide - 1); }
+      else if (e.key === 'ArrowRight' && pfN > 1) { showSlide(pfSlide + 1); }
+      else if (e.key === 'Tab') {
+        var f = $$('button, a[href]', pm).filter(function (n) { return n.offsetParent !== null || n === document.activeElement; });
+        if (!f.length) { return; }
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    function activate(el) {
+      if (el.closest('.res')) { var r = el.closest('.res'); openProfile(profileOf(LIST[+r.dataset.i]), r); }
+      else if (el.closest('tr[data-row]')) {
+        var tr = el.closest('tr[data-row]'), n = $('.n', tr).textContent, c = tr.children[2].textContent;
+        openProfile({ name: n, cat: c, dot: 'var(--a)', sub: c, desc: SAMPLE.desc.replace('{type}', c.toLowerCase()), address: SAMPLE.address, phone: SAMPLE.phone, email: SAMPLE.email, web: SAMPLE.web, hours: SAMPLE.hours, tags: [c, 'Locally owned', 'Sample tag'], gallery: [{}, {}, {}, {}], sample: true, social: [] }, tr);
+      }
+    }
+    document.getElementById('directory').addEventListener('click', function (e) { if (e.target.closest('.res, tr[data-row]')) { activate(e.target); } });
+    document.getElementById('directory').addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.res, tr[data-row]')) { e.preventDefault(); activate(e.target); } });
+
     var q = $('#q'), dd = $('#dd'), ddBtn = $('#ddBtn'), ddList = $('#ddList'), grid = $('#catGrid'), recent = $('#recent'), found = $('#found'), status = $('#status'), clr = $('#clear');
     var active = null;
 
@@ -660,7 +816,7 @@
         var items = by[c.id]; if (!items) return;
         html += '<section class="group" aria-label="' + esc(c.name) + '"><h3><i style="--dot:' + c.dot + '"></i>' + hl(c.name, toks) + '<span>' + items.length + '</span></h3>';
         items.forEach(function (l) {
-          html += '<div class="res" data-go><strong>' + hl(l.name, toks) + '</strong><em>' + hl(l.sub, toks) + '</em><em>Lehigh Acres</em><span class="tagS">Sample</span></div>';
+          html += '<div class="res" role="button" tabindex="0" data-i="' + l.i + '" data-go aria-label="Open profile: ' + esc(l.name) + '"><strong>' + hl(l.name, toks) + '</strong><em>' + hl(l.sub, toks) + '</em><em>Lehigh Acres</em><span class="tagS">Sample</span><span class="go" aria-hidden="true">→</span></div>';
         });
         html += '</section>';
       });
