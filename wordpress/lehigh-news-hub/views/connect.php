@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 					<li>
 						<strong><?php esc_html_e( 'Paste your Gemini key', 'lehigh-news-hub' ); ?></strong>
 						<span class="lnh-muted"> — <?php printf( /* translators: %s: link */ esc_html__( 'it is free: get it at %s (sign in with Google, press “Create API key”).', 'lehigh-news-hub' ), '<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>' ); ?></span>
-						<div class="lnh-easy__row"><input type="password" name="gemini_key" class="regular-text" placeholder="AIza…" required spellcheck="false" autocomplete="off">
+						<div class="lnh-easy__row"><input type="password" name="gemini_key" class="regular-text" placeholder="AQ.…" required spellcheck="false" autocomplete="off">
 							<button class="button button-primary button-hero"><?php esc_html_e( 'Download my agents', 'lehigh-news-hub' ); ?></button></div>
 						<label class="lnh-small"><input type="checkbox" name="ai_images" value="1"> <?php esc_html_e( 'Also create AI featured images with this key (needs a Google plan that allows image generation).', 'lehigh-news-hub' ); ?></label>
 					</li>

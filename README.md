@@ -47,7 +47,7 @@ Además crea la categoría **Noticias** (categoría por defecto de los artículo
 ### 2 · Configura tus agentes en 3 pasos (la forma fácil)
 En WordPress, **News Hub → Panel → «Configurar mis agentes»**:
 
-1. **Pega tu clave de Gemini** (gratis en https://aistudio.google.com/apikey; WordPress comprueba con Google que sea válida) y pulsa **«Descargar mis agentes»**. Recibes un `.zip` que ya trae la dirección de tu sitio, una contraseña de conexión privada y tu clave: **no hay nada que escribir ni copiar**.
+1. **Pega tu clave de Gemini** (gratis en https://aistudio.google.com/apikey; las claves nuevas empiezan por `AQ.` y las antiguas por `AIza`, sirven las dos; WordPress comprueba con Google que sea válida) y pulsa **«Descargar mis agentes»**. Recibes un `.zip` que ya trae la dirección de tu sitio, una contraseña de conexión privada y tu clave: **no hay nada que escribir ni copiar**.
 2. **Descomprime y haz doble clic en `INICIAR.bat`** (Windows) o **`INICIAR.command`** (Mac; la primera vez, clic derecho → Abrir). La primera vez instala todo solo, con una **barra de progreso** (porcentaje, paso actual, tiempo transcurrido y un girito que se mueve: si el tiempo avanza y el girito gira, está trabajando; si pasa mucho rato sin novedades te avisa; el registro completo queda en `instalacion.log`) (unos minutos; necesita Python 3.11+, y en Windows lo instala con `winget` si hace falta). Deja la ventana abierta.
 3. **Vuelve a WordPress y pulsa «Iniciar a trabajar»**. Los agentes se conectan solos y verás la tarjeta ponerse en verde.
 

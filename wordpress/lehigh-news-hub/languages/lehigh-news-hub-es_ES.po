@@ -282,8 +282,8 @@ msgid "A run was requested: the agents will start within seconds."
 msgstr "Se pidió una ejecución: los agentes empezarán en unos segundos."
 
 #: includes/class-lnh-admin.php:206
-msgid "Paste your Gemini key first (it looks like AIza… and is free at aistudio.google.com/apikey)."
-msgstr "Primero pega tu clave de Gemini (empieza por AIza… y es gratis en aistudio.google.com/apikey)."
+msgid "Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey)."
+msgstr "Primero pega tu clave de Gemini (empieza por AQ. —las antiguas por AIza— y es gratis en aistudio.google.com/apikey)."
 
 #: includes/class-lnh-admin.php:207
 msgid "Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey."

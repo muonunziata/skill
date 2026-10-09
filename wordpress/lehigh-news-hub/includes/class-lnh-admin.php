@@ -203,7 +203,7 @@ final class LNH_Admin {
 			'agents_started' => __( 'The agents will start working as soon as they connect.', 'lehigh-news-hub' ),
 			'agents_paused'  => __( 'The agents are paused. They finish the article in progress and then stop.', 'lehigh-news-hub' ),
 			'agents_run_now' => __( 'A run was requested: the agents will start within seconds.', 'lehigh-news-hub' ),
-			'pkg_key'         => __( 'Paste your Gemini key first (it looks like AIza… and is free at aistudio.google.com/apikey).', 'lehigh-news-hub' ),
+			'pkg_key'         => __( 'Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey).', 'lehigh-news-hub' ),
 			'pkg_rejected'    => __( 'Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey.', 'lehigh-news-hub' ),
 			'pkg_unavailable' => __( 'This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead.', 'lehigh-news-hub' ),
 			'pkg_error'       => __( 'The agents package could not be created. Check that Application Passwords are available on this site.', 'lehigh-news-hub' ),

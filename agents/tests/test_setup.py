@@ -368,7 +368,7 @@ def test_a_network_problem_does_not_throw_away_the_saved_key(tmp_path, fake_wp):
         return MODELS
 
     env = tmp_path / ".env"
-    env.write_text("GEMINI_API_KEY=AIzaSAVEDKEY\n")
+    env.write_text("GEMINI_API_KEY=AQ.SAVEDKEY.test-key_1\n")
     class EnterKeepsDefault(Scripted):
         def ask(self, prompt, default="", secret=False):
             return (self.answers.pop(0) if self.answers else "") or default
@@ -376,7 +376,7 @@ def test_a_network_problem_does_not_throw_away_the_saved_key(tmp_path, fake_wp):
     con = EnterKeepsDefault([])                                   # Enter = retry with the saved key
     args = wiz_args(tmp_path, fake_wp, gemini_key=None, non_interactive=False)
     sw.run_wizard(args, con, open_url=approving_browser(), list_models=flaky)
-    assert attempts[:2] == ["AIzaSAVEDKEY", "AIzaSAVEDKEY"]       # the second try offered (and used) the saved key
+    assert attempts[:2] == ["AQ.SAVEDKEY.test-key_1", "AQ.SAVEDKEY.test-key_1"]       # the second try offered (and used) the saved key
     assert any("se conserva" in line for line in con.log)
 
 

@@ -280,7 +280,7 @@ msgid "A run was requested: the agents will start within seconds."
 msgstr ""
 
 #: includes/class-lnh-admin.php:206
-msgid "Paste your Gemini key first (it looks like AIza… and is free at aistudio.google.com/apikey)."
+msgid "Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey)."
 msgstr ""
 
 #: includes/class-lnh-admin.php:207

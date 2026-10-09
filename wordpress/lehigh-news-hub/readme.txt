@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.3 =
+* Accepts Google's new Gemini key format (AQ.…, issued by AI Studio since the key change) as well as the old AIza… keys; the field and messages now show the new format.
 
 = 1.5.2 =
 * The agents' installer now shows a live progress meter (overall percentage, current step, elapsed time, a moving spinner and “no news for N s” warnings) so you can tell a slow download from a stuck one. A full log is written to instalacion.log.

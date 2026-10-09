@@ -171,7 +171,7 @@ final class LNH_Package {
 		check_admin_referer( 'lnh_agents_package' );
 		$back = admin_url( 'admin.php?page=lnh-connect' );
 		$key  = isset( $_POST['gemini_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['gemini_key'] ) ) ) : '';
-		if ( ! preg_match( '/^[A-Za-z0-9_\-]{20,100}$/', $key ) ) {
+		if ( ! preg_match( '/^[A-Za-z0-9._\-]{20,300}$/', $key ) ) {
 			wp_safe_redirect( add_query_arg( 'lnh_notice', 'pkg_key', $back ) );
 			exit;
 		}

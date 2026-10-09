@@ -326,7 +326,7 @@ t( 'key: an already authenticated user is left alone', 7 === LNH_Connect::authen
 $g4 = LNH_Connect::generate();
 t( 'generating a new key revokes the previous one', false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g3['password'] ) ) && (int) $u->ID === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g4['password'] ) ) );
 if ( LNH_Package::available() ) {
-	$pk = LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', false );
+	$pk = LNH_Package::build( 'AQ.Ab8RN6TestKeyTestKeyTestKey1', false );
 	$ze = '';
 	if ( is_array( $pk ) ) {
 		$zz = new ZipArchive();
@@ -478,7 +478,7 @@ $pre = function ( $code ) {
 	};
 };
 add_filter( 'pre_http_request', $pre( 200 ), 10, 3 );
-$ok_key = LNH_Package::key_is_accepted( 'AIzaGoodKeyGoodKeyGoodKey' );
+$ok_key = LNH_Package::key_is_accepted( 'AQ.Ab8GoodKeyGoodKeyGoodKey_-x' );
 remove_all_filters( 'pre_http_request' );
 add_filter( 'pre_http_request', $pre( 400 ), 10, 3 );
 $bad_key = LNH_Package::key_is_accepted( 'AIzaBadKeyBadKeyBadKey1' );
@@ -488,7 +488,7 @@ $unk_key = LNH_Package::key_is_accepted( 'AIzaWhoKnowsWhoKnows1' );
 remove_all_filters( 'pre_http_request' );
 t( 'Gemini key check: accepted / rejected / unknown (offline never blocks)', true === $ok_key && false === $bad_key && null === $unk_key );
 if ( class_exists( 'ZipArchive' ) ) {
-	$built = LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', true );
+	$built = LNH_Package::build( 'AQ.Ab8RN6TestKeyTestKeyTestKey1', true );
 	t( 'the package is built', is_array( $built ) && is_file( $built['path'] ), is_wp_error( $built ) ? $built->get_error_message() : '' );
 	$z = new ZipArchive();
 	$z->open( $built['path'] );
@@ -499,7 +499,7 @@ if ( class_exists( 'ZipArchive' ) ) {
 	$envz = (string) $z->getFromName( 'golehighacres-agents/.env' );
 	t( 'zip: agents + launchers + readme + generated .env, in one folder', in_array( 'golehighacres-agents/main.py', $names, true ) && in_array( 'golehighacres-agents/lehigh_agents/__init__.py', $names, true ) && in_array( 'golehighacres-agents/INICIAR.bat', $names, true ) && in_array( 'golehighacres-agents/LEEME.txt', $names, true ), $names );
 	t( 'zip: tests, state and the bundle\'s own .env are left out', ! preg_grep( '#/(tests|state)/#', $names ) && false === strpos( $envz, 'LEAKED-SECRET' ) );
-	t( '.env: site, token, key, working models and language are filled in', false !== strpos( $envz, 'WP_REST_URL=' . untrailingslashit( rest_url() ) ) && 1 === preg_match( '/^WP_AUTH_TOKEN="lehigh-agents[\w-]*:[A-Za-z0-9 ]+"$/m', $envz ) && false !== strpos( $envz, 'GEMINI_API_KEY=AIzaTestKeyTestKeyTestKey1' ) && 3 === preg_match_all( '/^(RASTREADOR|REDACCTOR|AUDITOR)_MODEL=gemini-2\.5-flash$/m', $envz ) && false !== strpos( $envz, 'SOCIAL_ENABLED=true' ), $envz );
+	t( '.env: site, token, key, working models and language are filled in', false !== strpos( $envz, 'WP_REST_URL=' . untrailingslashit( rest_url() ) ) && 1 === preg_match( '/^WP_AUTH_TOKEN="lehigh-agents[\w-]*:[A-Za-z0-9 ]+"$/m', $envz ) && false !== strpos( $envz, 'GEMINI_API_KEY=AQ.Ab8RN6TestKeyTestKeyTestKey1' ) && 3 === preg_match_all( '/^(RASTREADOR|REDACCTOR|AUDITOR)_MODEL=gemini-2\.5-flash$/m', $envz ) && false !== strpos( $envz, 'SOCIAL_ENABLED=true' ), $envz );
 	t( '.env: AI images only when asked', false !== strpos( $envz, 'IMAGE_PROVIDER=gemini' ) && false !== strpos( $envz, 'IMAGE_MODEL=gemini-2.5-flash-image' ) );
 	t( 'zip: launchers keep their executable bit, .env is private', ( $z->getExternalAttributesName( 'golehighacres-agents/INICIAR.command', $o, $a ) ? ( ( $a >> 16 ) & 0111 ) > 0 : false ) && ( $z->getExternalAttributesName( 'golehighacres-agents/.env', $o, $a2 ) ? ( ( $a2 >> 16 ) & 0077 ) === 0 : false ) );
 	$z->close();
@@ -510,7 +510,7 @@ if ( class_exists( 'ZipArchive' ) ) {
 	t( 'the token inside the package really authenticates as the agents\' account', $authed instanceof WP_User && LNH_Connect::agent_user() && (int) $authed->ID === (int) LNH_Connect::agent_user()->ID );
 	wp_delete_file( $built['path'] );
 	wp_set_current_user( $mk_user( 'editor' ) );
-	t( 'only administrators can build it', is_wp_error( LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', false ) ) );
+	t( 'only administrators can build it', is_wp_error( LNH_Package::build( 'AQ.Ab8RN6TestKeyTestKeyTestKey1', false ) ) );
 	wp_set_current_user( $admin );
 	$conn = LNH_Connect::agent_user();
 	if ( $conn ) {
