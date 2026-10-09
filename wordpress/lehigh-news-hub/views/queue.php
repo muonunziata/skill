@@ -62,6 +62,7 @@ $back = add_query_arg( array_filter( array( 'tab' => $tab, 's' => $opts['s'], 'm
 							<p class="lnh-excerpt"><?php echo esc_html( LNH_Util::clip( wp_strip_all_tags( $p->post_excerpt ), 140 ) ); ?></p>
 							<div class="lnh-badges">
 								<?php if ( $ai ) : ?><span class="lnh-chip lnh-chip--info"><?php esc_html_e( 'AI image', 'lehigh-news-hub' ); ?></span><?php endif; ?>
+								<?php if ( LNH_Meta::social( $id ) ) : ?><span class="lnh-chip lnh-chip--social">🎨 <?php esc_html_e( 'Social kit', 'lehigh-news-hub' ); ?></span><?php endif; ?>
 								<?php if ( $rev ) : ?><span class="lnh-chip lnh-chip--info"><?php echo esc_html( sprintf( /* translators: %d: number of revisions */ _n( '%d revision', '%d revisions', $rev, 'lehigh-news-hub' ), $rev ) ); ?></span><?php endif; ?>
 								<?php if ( $todo ) : ?><span class="lnh-chip lnh-chip--ok"><?php echo esc_html( sprintf( /* translators: %d: number of pending media items */ _n( '%d media item pending', '%d media items pending', count( $todo ), 'lehigh-news-hub' ), count( $todo ) ) ); ?></span><?php endif; ?>
 							</div>

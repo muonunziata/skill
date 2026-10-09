@@ -4,3 +4,7 @@ requests>=2.31
 # Only needed when REDACCTOR_MODEL points at a Claude / GPT model:
 anthropic>=0.40
 openai>=1.50
+# Agent 4 (Social Designer): slides are drawn with a headless Chromium, the video is assembled with ffmpeg
+playwright>=1.45
+Pillow>=10.0
+imageio-ffmpeg>=0.5

@@ -69,7 +69,8 @@ class FakeLLM(LLM):
 
     def _role(self, system):
         for key, needle in (("rastreador", "Agente Rastreador"), ("redactor", "Redactor Multimedia"),
-                            ("imagen", "photo editor"), ("auditor", "Agente Auditor")):
+                            ("imagen", "photo editor"), ("auditor", "Agente Auditor"),
+                            ("social", "Diseñador Social")):
             if needle in system:
                 return key
         return "other"
@@ -130,6 +131,18 @@ class _WPHandler(BaseHTTPRequestHandler):
                 return self._send(200, [])
             srv.tag_id += 1
             return self._send(201, {"id": srv.tag_id})
+        if method == "GET" and (path.endswith("/wp/v2/posts") or path.rsplit("/", 1)[-1].isdigit() and "/wp/v2/posts/" in path):
+            post = {"id": 501, "link": "http://x/?p=501", "title": {"raw": "Aprueban nueva carretera", "rendered": "x"},
+                    "content": {"raw": "<p>El condado de Lee aprobó el 4 de marzo un proyecto vial en Lehigh Acres, según WINK News. "
+                                      "La obra costará 4.5 millones de dólares y abrirá en 2027.</p>"},
+                    "excerpt": {"raw": "Obra aprobada."},
+                    "meta": {"lnh_source_url": "https://wink.example/road", "lnh_source_name": "WINK News", "lnh_keywords": '["road"]',
+                             "lnh_facts": "Lee County approved a road project.", "lnh_language": "es", "lnh_featured_image_url": ""}}
+            return self._send(200, [post] if path.endswith("/wp/v2/posts") else post)
+        if "/wp/v2/posts/" in path and method == "POST":
+            payload = json.loads(body)
+            srv.post_updates.append((int(path.rsplit("/", 1)[1]), payload))
+            return self._send(200, {"id": int(path.rsplit("/", 1)[1])})
         if path.endswith("/wp/v2/posts") and method == "POST":
             payload = json.loads(body)
             srv.posts.append(payload)
@@ -145,6 +158,7 @@ class _WPHandler(BaseHTTPRequestHandler):
 def wp_server():
     srv = HTTPServer(("127.0.0.1", 0), _WPHandler)
     srv.requests, srv.posts, srv.deleted, srv.media_id, srv.tag_id = [], [], [], 76, 10
+    srv.post_updates = []
     t = threading.Thread(target=srv.serve_forever, daemon=True)
     t.start()
     yield srv
@@ -160,4 +174,7 @@ def settings(tmp_path, monkeypatch, wp_server):
     monkeypatch.setenv("WP_AUTH_TOKEN", "bot:abcd efgh")
     monkeypatch.setenv("STATE_DIR", str(tmp_path / "state"))
     monkeypatch.setenv("FRESHNESS_DAYS", "3650")
+    monkeypatch.setenv("SOCIAL_ENABLED", "false")  # Agent 4 has its own tests (needs Chromium)
+    for k in ("SOCIAL_VOICE", "SOCIAL_WEBHOOK_URL", "SOCIAL_VIDEO", "SOCIAL_MODEL", "BRAND_LOGO", "CHROMIUM_PATH"):
+        monkeypatch.delenv(k, raising=False)
     return Settings.from_env("/nonexistent.env")

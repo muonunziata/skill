@@ -38,7 +38,19 @@ class Store:
         self.db.execute(
             "CREATE TABLE IF NOT EXISTS seen (url TEXT PRIMARY KEY, title TEXT, status TEXT, ts REAL)"
         )
+        self.db.execute("CREATE TABLE IF NOT EXISTS api_usage (provider TEXT, ts REAL)")
         self.db.commit()
+
+    def log_api_call(self, provider: str) -> None:
+        self.db.execute("INSERT INTO api_usage(provider, ts) VALUES(?, ?)", (provider, time.time()))
+        self.db.commit()
+
+    def last_api_call(self, provider: str) -> float:
+        row = self.db.execute("SELECT MAX(ts) FROM api_usage WHERE provider=?", (provider,)).fetchone()
+        return float(row[0] or 0)
+
+    def api_calls_since(self, provider: str, since: float) -> int:
+        return int(self.db.execute("SELECT COUNT(*) FROM api_usage WHERE provider=? AND ts>=?", (provider, since)).fetchone()[0])
 
     def close(self) -> None:
         self.db.close()

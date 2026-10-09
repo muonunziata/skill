@@ -1,3 +1,3 @@
-"""Lehigh News Hub agents: researcher -> writer -> auditor -> WordPress hub."""
+"""Lehigh News Hub agents: researcher -> writer -> auditor -> social designer -> WordPress hub."""
 
-__version__ = "1.1.0"
+__version__ = "1.3.0"

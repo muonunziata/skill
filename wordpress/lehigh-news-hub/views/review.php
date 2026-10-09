@@ -45,6 +45,7 @@ $back_url = admin_url( 'admin.php?page=lnh-queue' );
 			</div>
 			<div class="lnh-preview entry-content"><?php echo apply_filters( 'the_content', $post->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.NamingConventions.PrefixAllGlobals ?></div>
 		</article>
+		<?php LNH_Admin::view( 'social-kit', array( 'id' => $id ) ); ?>
 	</div>
 
 	<aside class="lnh-review__side">

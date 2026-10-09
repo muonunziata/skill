@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,11 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.3.0 =
+* New Agent 4, the Social designer: each approved article gets an Instagram carousel, a TikTok carousel and a vertical video on the GoLehighAcres.org brand, with captions and hashtags, shown in a “Social kit” card on the review screen (preview, download, copy).
+* The social designer appears in the agent panel, the activity feed and the dashboard.
+* GoLehighAcres.org logo in the admin screens and brand green as the default accent colour.
 
 = 1.2.0 =
 * One-click agent credentials: creates a dedicated Author account and an Application Password and shows a ready-to-use .env block (copy or download). Nothing is stored in plain text.

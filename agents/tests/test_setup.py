@@ -183,7 +183,7 @@ class Scripted(Console):
 
 def wiz_args(tmp_path, srv, **over):
     base = dict(output=str(tmp_path / ".env"), site=f"http://127.0.0.1:{srv.server_port}", gemini_key="G-KEY", wp_user=None,
-                wp_password=None, redactor_model=None, anthropic_key=None, openai_key=None, image_provider="none", image_key=None,
+                wp_password=None, redactor_model=None, anthropic_key=None, openai_key=None, image_provider="none", image_key=None, mediastack_key=None,
                 non_interactive=True, no_check=True, timeout=20)
     base.update(over)
     return argparse.Namespace(**base)

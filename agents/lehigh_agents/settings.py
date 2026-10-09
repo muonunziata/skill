@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,6 +28,11 @@ def _int(value: str | None, default: int, lo: int, hi: int) -> int:
 def _list(value: str | None, default: list[str]) -> list[str]:
     items = [p.strip() for p in (value or "").split(",") if p.strip()]
     return items or default
+
+
+def _hex(value: str | None, default: str) -> str:
+    v = (value or "").strip()
+    return v if re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", v) else default
 
 
 def _json_dict(value: str | None) -> dict:
@@ -89,6 +95,34 @@ class Settings:
     image_extra: dict
     image_label: bool
     max_revisions: int
+    mediastack_api_key: str
+    mediastack_min_hours: float
+    mediastack_monthly_limit: int
+    mediastack_countries: str
+    mediastack_languages: str
+    mediastack_limit: int
+    mediastack_https: str
+    social_enabled: bool
+    social_formats: list
+    social_video: bool
+    social_voice: str
+    social_voice_model: str
+    social_model: str
+    social_max_slides: int
+    social_video_seconds: int
+    social_theme: str
+    social_upload: bool
+    social_webhook_url: str
+    social_webhook_secret: str
+    brand_name: str
+    brand_handle: str
+    brand_color: str
+    brand_accent: str
+    brand_dark: str
+    brand_logo: str
+    brand_logo_vertical: str
+    brand_font: str
+    chromium_path: str
 
     @classmethod
     def from_env(cls, env_file: str | os.PathLike[str] | None = None) -> "Settings":
@@ -129,6 +163,34 @@ class Settings:
             image_extra=_json_dict(e("IMAGE_EXTRA_INPUT")),
             image_label=_bool(e("AI_IMAGE_LABEL"), True),
             max_revisions=_int(e("MAX_REVISIONS"), 1, 0, 3),
+            mediastack_api_key=(e("MEDIASTACK_API_KEY") or "").strip(),
+            mediastack_min_hours=float(_int(e("MEDIASTACK_MIN_HOURS"), 8, 1, 720)),
+            mediastack_monthly_limit=_int(e("MEDIASTACK_MONTHLY_LIMIT"), 100, 1, 1_000_000),
+            mediastack_countries=(e("MEDIASTACK_COUNTRIES") or "us").strip().replace(" ", ""),
+            mediastack_languages=(e("MEDIASTACK_LANGUAGES") or "en,es").strip().replace(" ", ""),
+            mediastack_limit=_int(e("MEDIASTACK_LIMIT"), 25, 1, 100),
+            social_enabled=_bool(e("SOCIAL_ENABLED"), True),
+            social_formats=[f for f in _list(e("SOCIAL_FORMATS"), ["instagram", "tiktok"]) if f in ("instagram", "tiktok")] or ["instagram", "tiktok"],
+            social_video=_bool(e("SOCIAL_VIDEO"), True),
+            social_voice=(e("SOCIAL_VOICE") or "none").strip().lower() if (e("SOCIAL_VOICE") or "none").strip().lower() in ("none", "gemini", "openai") else "none",
+            social_voice_model=(e("SOCIAL_VOICE_MODEL") or "").strip(),
+            social_model=(e("SOCIAL_MODEL") or redactor).strip(),
+            social_max_slides=_int(e("SOCIAL_MAX_SLIDES"), 8, 5, 10),
+            social_video_seconds=_int(e("SOCIAL_VIDEO_SECONDS"), 30, 12, 60),
+            social_theme=(e("SOCIAL_THEME") or "light").strip().lower() if (e("SOCIAL_THEME") or "light").strip().lower() in ("dark", "light", "brand") else "light",
+            social_upload=_bool(e("SOCIAL_UPLOAD"), True),
+            social_webhook_url=(e("SOCIAL_WEBHOOK_URL") or "").strip(),
+            social_webhook_secret=(e("SOCIAL_WEBHOOK_SECRET") or "").strip(),
+            brand_name=(e("BRAND_NAME") or "GoLehighAcres.org").strip(),
+            brand_handle=(e("BRAND_HANDLE") or "GoLehighAcres.org").strip(),
+            brand_color=_hex(e("BRAND_COLOR"), "#1b6a55"),   # the green arrow of the logo
+            brand_accent=_hex(e("BRAND_ACCENT"), "#ff5757"),  # the coral "GO"
+            brand_dark=_hex(e("BRAND_DARK"), "#0f3a30"),
+            brand_logo=(e("BRAND_LOGO") or "").strip(),       # empty = the packaged GoLehighAcres.org logo
+            brand_logo_vertical=(e("BRAND_LOGO_VERTICAL") or "").strip(),
+            brand_font=(e("BRAND_FONT") or "").strip(),
+            chromium_path=(e("CHROMIUM_PATH") or "").strip(),
+            mediastack_https=(e("MEDIASTACK_HTTPS") or "auto").strip().lower() if (e("MEDIASTACK_HTTPS") or "auto").strip().lower() in ("auto", "true", "false") else "auto",
         )
 
     def provider_keys_needed(self) -> dict[str, str]:

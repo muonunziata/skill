@@ -40,6 +40,7 @@ $state  = $health['state'];
 	<a class="lnh-kpi" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-queue&tab=flagged' ) ); ?>"><span class="lnh-kpi__n"><?php echo (int) $counts['flagged']; ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'Flagged by the auditor', 'lehigh-news-hub' ); ?></span></a>
 	<a class="lnh-kpi" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-queue&tab=published' ) ); ?>"><span class="lnh-kpi__n"><?php echo (int) $published7; ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'Published this week', 'lehigh-news-hub' ); ?></span></a>
 	<div class="lnh-kpi"><span class="lnh-kpi__n"><?php echo $avg ? LNH_Admin::ring( $avg, 52 ) : '—'; // phpcs:ignore WordPress.Security.EscapeOutput ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'Average audit score (30 days)', 'lehigh-news-hub' ); ?></span></div>
+	<div class="lnh-kpi"><span class="lnh-kpi__n"><?php echo (int) $stats['social']['kits']; ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'Social kits this week', 'lehigh-news-hub' ); ?></span></div>
 	<div class="lnh-kpi"><span class="lnh-kpi__n"><?php echo (int) $stats['redactor']['images']; ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'AI images this week', 'lehigh-news-hub' ); ?></span></div>
 	<div class="lnh-kpi"><span class="lnh-kpi__n"><?php echo esc_html( number_format_i18n( $stats['tokens'] ) ); ?></span><span class="lnh-kpi__l"><?php esc_html_e( 'Tokens used this week', 'lehigh-news-hub' ); ?></span></div>
 </div>
@@ -83,7 +84,7 @@ $state  = $health['state'];
 		<section class="lnh-card-box">
 			<header><h2><?php esc_html_e( 'Your agents', 'lehigh-news-hub' ); ?></h2></header>
 			<ul class="lnh-agents">
-				<?php foreach ( array( 'rastreador', 'redactor', 'auditor' ) as $key ) :
+				<?php foreach ( array( 'rastreador', 'redactor', 'auditor', 'social' ) as $key ) :
 					$a = $agents[ $key ];
 					$s = $stats[ $key ];
 					?>

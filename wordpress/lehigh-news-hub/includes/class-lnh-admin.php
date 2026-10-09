@@ -109,7 +109,8 @@ final class LNH_Admin {
 			'rastreador' => array( 'label' => __( 'Researcher', 'lehigh-news-hub' ), 'icon' => '🔎', 'role' => __( 'Searches the web and reads the sources', 'lehigh-news-hub' ) ),
 			'redactor'   => array( 'label' => __( 'Writer', 'lehigh-news-hub' ), 'icon' => '✍️', 'role' => __( 'Writes the article and its featured image', 'lehigh-news-hub' ) ),
 			'auditor'    => array( 'label' => __( 'Auditor', 'lehigh-news-hub' ), 'icon' => '🛡️', 'role' => __( 'Fact-checks, then decides if it can be sent', 'lehigh-news-hub' ) ),
-			'pipeline'   => array( 'label' => __( 'Coordinator', 'lehigh-news-hub' ), 'icon' => '⚙️', 'role' => __( 'Runs the three agents in order', 'lehigh-news-hub' ) ),
+			'social'     => array( 'label' => __( 'Social designer', 'lehigh-news-hub' ), 'icon' => '🎨', 'role' => __( 'Designs Instagram and TikTok carousels and videos', 'lehigh-news-hub' ) ),
+			'pipeline'   => array( 'label' => __( 'Coordinator', 'lehigh-news-hub' ), 'icon' => '⚙️', 'role' => __( 'Runs the agents in order', 'lehigh-news-hub' ) ),
 		);
 	}
 
@@ -142,6 +143,13 @@ final class LNH_Admin {
 			'error'       => __( 'Error', 'lehigh-news-hub' ),
 			'fetch_failed' => __( 'Page unavailable', 'lehigh-news-hub' ),
 			'validation'  => __( 'Retry', 'lehigh-news-hub' ),
+			'plan'        => __( 'Social plan', 'lehigh-news-hub' ),
+			'render'      => __( 'Slides drawn', 'lehigh-news-hub' ),
+			'video'       => __( 'Video made', 'lehigh-news-hub' ),
+			'upload'      => __( 'Kit uploaded', 'lehigh-news-hub' ),
+			'attached'    => __( 'Kit attached', 'lehigh-news-hub' ),
+			'webhook'     => __( 'Webhook sent', 'lehigh-news-hub' ),
+			'done'        => __( 'Kit ready', 'lehigh-news-hub' ),
 		);
 	}
 
@@ -195,7 +203,8 @@ final class LNH_Admin {
 	}
 
 	private static function open( string $title, string $sub = '' ): void {
-		echo '<div class="wrap lnh-admin"><h1 class="wp-heading-inline">' . esc_html( $title ) . '</h1>';
+		echo '<div class="wrap lnh-admin"><img class="lnh-brandlogo" src="' . esc_url( LNH_URL . 'assets/img/golehighacres-logo.png' ) . '" alt="GoLehighAcres.org" width="274" height="34">';
+		echo '<h1 class="wp-heading-inline">' . esc_html( $title ) . '</h1>';
 		if ( '' !== $sub ) {
 			echo '<p class="lnh-sub">' . esc_html( $sub ) . '</p>';
 		}

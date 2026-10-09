@@ -22,6 +22,9 @@ if errorlevel 1 (
   exit /b 1
 )
 echo Dependencies installed in .venv
+echo Installing Chromium (used by Agent 4 to draw Instagram/TikTok slides)...
+.venv\Scripts\python.exe -m playwright install chromium >nul 2>&1
+if errorlevel 1 echo Chromium was not installed. Run: .venv\Scripts\python.exe -m playwright install chromium
 
 if /i "%~1"=="--no-setup" (
   echo Next: .venv\Scripts\python.exe main.py setup

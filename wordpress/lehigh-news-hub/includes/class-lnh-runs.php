@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 final class LNH_Runs {
 
 	const CPT    = 'lnh_run';
-	const AGENTS = array( 'pipeline', 'rastreador', 'redactor', 'auditor' );
+	const AGENTS = array( 'pipeline', 'rastreador', 'redactor', 'auditor', 'social' );
 
 	/** @var array<string, array> Decoded runs by "limit:page" for the current request (reset whenever a run is stored). */
 	private static $memo = array();
@@ -105,7 +105,7 @@ final class LNH_Runs {
 					$data[ $k ] = $str( $d[ $k ], $max );
 				}
 			}
-			foreach ( array( 'score', 'post_id', 'words' ) as $k ) {
+			foreach ( array( 'score', 'post_id', 'words', 'count', 'seconds' ) as $k ) {
 				if ( isset( $d[ $k ] ) ) {
 					$data[ $k ] = $int( $d[ $k ] );
 				}
@@ -237,6 +237,7 @@ final class LNH_Runs {
 			'rastreador' => array( 'searches' => 0, 'pages' => 0, 'findings' => 0, 'skipped' => 0, 'last' => 0, 'model' => '' ),
 			'redactor'   => array( 'drafts' => 0, 'images' => 0, 'prompts' => 0, 'last' => 0, 'model' => '' ),
 			'auditor'    => array( 'audits' => 0, 'approved' => 0, 'flagged' => 0, 'submitted' => 0, 'last' => 0, 'model' => '' ),
+			'social'     => array( 'kits' => 0, 'slides' => 0, 'videos' => 0, 'last' => 0, 'model' => '' ),
 			'runs'       => 0,
 			'tokens'     => 0,
 			'image_model' => '',
@@ -253,6 +254,7 @@ final class LNH_Runs {
 				$stats['rastreador']['model'] = $run['models']['rastreador'] ?? '';
 				$stats['redactor']['model']   = $run['models']['redactor'] ?? '';
 				$stats['auditor']['model']    = $run['models']['auditor'] ?? '';
+				$stats['social']['model']     = $run['models']['social'] ?? '';
 				$stats['image_model']         = $run['models']['image'] ?? '';
 			}
 			foreach ( $run['events'] as $ev ) {
@@ -292,6 +294,15 @@ final class LNH_Runs {
 						break;
 					case 'auditor:submitted':
 						++$stats['auditor']['submitted'];
+						break;
+					case 'social:done':
+						++$stats['social']['kits'];
+						break;
+					case 'social:render':
+						$stats['social']['slides'] += (int) ( $ev['data']['count'] ?? 0 );
+						break;
+					case 'social:video':
+						++$stats['social']['videos'];
 						break;
 				}
 			}

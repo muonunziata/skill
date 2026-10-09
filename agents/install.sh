@@ -23,6 +23,10 @@ echo "Installing dependencies…"
 python -m pip install --quiet --upgrade pip
 python -m pip install --quiet -r requirements.txt
 echo "✓ Dependencies installed in ./.venv"
+# Agent 4 draws the slides with Chromium. Best effort: without it the other three agents keep working.
+echo "Installing the browser used to draw Instagram/TikTok slides (Chromium, ~150 MB)…"
+python -m playwright install chromium >/dev/null 2>&1 && echo "✓ Chromium ready" \
+  || echo "! Chromium was not installed; run '.venv/bin/python -m playwright install chromium' later or set CHROMIUM_PATH."
 
 if [ "${1:-}" = "--no-setup" ]; then
   echo "Next: .venv/bin/python main.py setup"

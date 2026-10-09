@@ -13,6 +13,7 @@ from .. import prompts
 from ..llm import LLM, LLMError
 from ..media import parse_page
 from ..net import FetchError, Fetcher
+from ..news_api import NewsAPIError
 from ..schemas import Hallazgo, clean_list, normalize_date, validate_hallazgos
 from ..settings import Settings
 from ..store import Store, canonical_url, similarity
@@ -21,7 +22,7 @@ log = logging.getLogger("lehigh.rastreador")
 
 NOT_ARTICLES = {"facebook.com", "x.com", "twitter.com", "instagram.com", "tiktok.com", "youtube.com", "youtu.be",
                 "reddit.com", "pinterest.com", "linkedin.com"}
-MAX_PAGES = 10
+MAX_PAGES = 12
 MIN_PAGE_CHARS = 400
 
 
@@ -32,8 +33,9 @@ def _domain(url: str) -> str:
 class Rastreador:
     name = "rastreador"
 
-    def __init__(self, settings: Settings, llm: LLM, fetcher: Fetcher, store: Store, events):
+    def __init__(self, settings: Settings, llm: LLM, fetcher: Fetcher, store: Store, events, news_api=None):
         self.s, self.llm, self.fetcher, self.store, self.events = settings, llm, fetcher, store, events
+        self.news_api = news_api
 
     def _ev(self, type_: str, message: str, **kw) -> None:
         self.events(self.name, type_, message, **kw)
@@ -49,12 +51,14 @@ class Rastreador:
         )
         for q in grounded.queries:
             self._ev("search", f"Búsqueda en Google: {q}", queries=[q])
-        if not grounded.sources:
+        sources = list(grounded.sources)
+        sources += self._extra_sources()
+        if not sources:
             self._ev("warn", "La búsqueda no devolvió fuentes citables", level="warn")
             return []
 
-        pages = self._read_sources(grounded.sources)
-        self._ev("step", f"{len(pages)} página(s) leídas de {len(grounded.sources)} fuente(s) citadas")
+        pages = self._read_sources(sources)
+        self._ev("step", f"{len(pages)} página(s) leídas de {len(sources)} fuente(s) candidatas")
         if not pages:
             return []
 
@@ -72,10 +76,21 @@ class Rastreador:
         return self._to_hallazgos(items, pages)
 
     # ───────────────────────── steps ─────────────────────────
+    def _extra_sources(self) -> list[dict[str, str]]:
+        """Optional Mediastack candidates; they are read like any other page, so they are verified the same way."""
+        if self.news_api is None or not self.news_api.enabled:
+            return []
+        try:
+            items = self.news_api.fetch(self._ev)
+        except NewsAPIError as exc:
+            self._ev("warn", f"{exc}", level="warn")
+            return []
+        return [{"uri": i.url, "title": i.source, "domain": i.source} for i in items[:8]]
+
     def _read_sources(self, sources: list[dict[str, str]]) -> list[dict[str, str]]:
         pages: list[dict[str, str]] = []
         seen: set[str] = set()
-        for src in sources[: MAX_PAGES + 6]:
+        for src in sources[: MAX_PAGES + 8]:
             if len(pages) >= MAX_PAGES:
                 break
             try:

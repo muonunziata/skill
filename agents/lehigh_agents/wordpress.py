@@ -53,8 +53,9 @@ class WordPressClient:
     def _req(self, method: str, path: str, **kw: Any) -> Any:
         url = self.root + path
         headers = {**self.headers, **kw.pop("headers", {})}
+        timeout = kw.pop("timeout", self.timeout)
         try:
-            r = self.http.request(method, url, headers=headers, timeout=self.timeout, **kw)
+            r = self.http.request(method, url, headers=headers, timeout=timeout, **kw)
         except requests.RequestException as exc:
             raise WPError(f"{method} {path} failed: {exc}") from exc
         if r.status_code >= 400:
@@ -83,10 +84,11 @@ class WordPressClient:
 
     # ───────────────────────── media ─────────────────────────
     def upload_media(self, data: bytes, filename: str, mime: str, alt: str = "", caption: str = "",
-                     title: str = "") -> dict[str, Any]:
+                     title: str = "", timeout: float | None = None) -> dict[str, Any]:
         safe = re.sub(r"[^A-Za-z0-9._-]", "-", filename)
+        extra = {"timeout": timeout} if timeout else {}
         created = self._req("POST", "/wp/v2/media", data=data, headers={
-            "Content-Disposition": f'attachment; filename="{safe}"', "Content-Type": mime})
+            "Content-Disposition": f'attachment; filename="{safe}"', "Content-Type": mime}, **extra)
         media_id = int(created["id"])
         fields = {k: v for k, v in {"alt_text": alt, "caption": caption, "title": title}.items() if v}
         if fields:
@@ -129,6 +131,18 @@ class WordPressClient:
         pid = int(post["id"])
         return {"id": pid, "link": post.get("link", ""), "status": post.get("status", ""),
                 "edit_link": f"{self.site}/wp-admin/post.php?post={pid}&action=edit"}
+
+    def get_post(self, post_id: int) -> dict[str, Any]:
+        return self._req("GET", f"/wp/v2/posts/{int(post_id)}?context=edit")
+
+    def latest_posts(self, count: int = 1, statuses: str = "draft,pending,publish") -> list[dict[str, Any]]:
+        """Newest articles that the agents created (they carry lnh_* meta)."""
+        found = self._req("GET", "/wp/v2/posts", params={"per_page": 50, "status": statuses, "context": "edit",
+                                                        "orderby": "date", "order": "desc"})
+        return [p for p in found if (p.get("meta") or {}).get("lnh_source_url")][:count]
+
+    def update_post(self, post_id: int, payload: dict[str, Any]) -> dict[str, Any]:
+        return self._req("POST", f"/wp/v2/posts/{int(post_id)}", json=payload)
 
     # ───────────────────────── plugin: activity log ─────────────────────────
     def post_run_report(self, report: dict[str, Any]) -> bool:

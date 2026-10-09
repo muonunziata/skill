@@ -45,7 +45,7 @@ final class LNH_Settings {
 			'sc_readmore_text'       => 'Read more',
 			'sc_cache'               => 10,
 			// Design.
-			'ds_accent'              => '#1d6fdc',
+			'ds_accent'              => '#1b6a55',
 			'ds_radius'              => 12,
 			'ds_gap'                 => 20,
 			'ds_shadow'              => 1,

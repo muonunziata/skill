@@ -98,232 +98,268 @@ msgid "Fact-checks, then decides if it can be sent"
 msgstr "Verifica los hechos y decide si se puede enviar"
 
 #: includes/class-lnh-admin.php:112
+msgid "Social designer"
+msgstr "Diseñador social"
+
+#: includes/class-lnh-admin.php:112
+msgid "Designs Instagram and TikTok carousels and videos"
+msgstr "Diseña carruseles y videos para Instagram y TikTok"
+
+#: includes/class-lnh-admin.php:113
 msgid "Coordinator"
 msgstr "Coordinador"
 
-#: includes/class-lnh-admin.php:112
-msgid "Runs the three agents in order"
-msgstr "Ejecuta los tres agentes en orden"
+#: includes/class-lnh-admin.php:113
+msgid "Runs the agents in order"
+msgstr "Ejecuta los agentes en orden"
 
-#: includes/class-lnh-admin.php:123
+#: includes/class-lnh-admin.php:124
 msgid "Run started"
 msgstr "Ejecución iniciada"
 
-#: includes/class-lnh-admin.php:124
+#: includes/class-lnh-admin.php:125
 msgid "Run finished"
 msgstr "Ejecución terminada"
 
-#: includes/class-lnh-admin.php:125
+#: includes/class-lnh-admin.php:126
 msgid "Working"
 msgstr "Trabajando"
 
-#: includes/class-lnh-admin.php:126
+#: includes/class-lnh-admin.php:127
 msgid "Web search"
 msgstr "Búsqueda web"
 
-#: includes/class-lnh-admin.php:127
+#: includes/class-lnh-admin.php:128
 msgid "Read a page"
 msgstr "Página leída"
 
-#: includes/class-lnh-admin.php:128
+#: includes/class-lnh-admin.php:129
 msgid "Story found"
 msgstr "Noticia encontrada"
 
-#: includes/class-lnh-admin.php:129
+#: includes/class-lnh-admin.php:130
 msgid "Skipped"
 msgstr "Omitida"
 
-#: includes/class-lnh-admin.php:130
+#: includes/class-lnh-admin.php:131
 msgid "Draft written"
 msgstr "Borrador redactado"
 
-#: includes/class-lnh-admin.php:131
+#: includes/class-lnh-admin.php:132
 msgid "Media"
 msgstr "Multimedia"
 
-#: includes/class-lnh-admin.php:132
+#: includes/class-lnh-admin.php:133
 msgid "Image prompt"
 msgstr "Prompt de imagen"
 
-#: includes/class-lnh-admin.php:133
+#: includes/class-lnh-admin.php:134
 msgid "Image generated"
 msgstr "Imagen generada"
 
-#: includes/class-lnh-admin.php:134
+#: includes/class-lnh-admin.php:135
 msgid "Image attached"
 msgstr "Imagen adjuntada"
 
-#: includes/class-lnh-admin.php:135
+#: includes/class-lnh-admin.php:136
 msgid "Automatic check"
 msgstr "Comprobación automática"
 
-#: includes/class-lnh-admin.php:136
+#: includes/class-lnh-admin.php:137
 msgid "Audit result"
 msgstr "Resultado de la auditoría"
 
-#: includes/class-lnh-admin.php:137
+#: includes/class-lnh-admin.php:138
 msgid "Sent to WordPress"
 msgstr "Enviado a WordPress"
 
-#: includes/class-lnh-admin.php:138
+#: includes/class-lnh-admin.php:139
 msgid "Held back"
 msgstr "Retenido"
 
-#: includes/class-lnh-admin.php:139
+#: includes/class-lnh-admin.php:140
 msgid "Cleanup"
 msgstr "Limpieza"
 
-#: includes/class-lnh-admin.php:140
+#: includes/class-lnh-admin.php:141
 msgid "Test mode"
 msgstr "Modo de prueba"
 
-#: includes/class-lnh-admin.php:141
+#: includes/class-lnh-admin.php:142
 msgid "Warning"
 msgstr "Aviso"
 
-#: includes/class-lnh-admin.php:142
+#: includes/class-lnh-admin.php:143
 msgid "Error"
 msgstr "Error"
 
-#: includes/class-lnh-admin.php:143
+#: includes/class-lnh-admin.php:144
 msgid "Page unavailable"
 msgstr "Página no disponible"
 
-#: includes/class-lnh-admin.php:144
+#: includes/class-lnh-admin.php:145
 msgid "Retry"
 msgstr "Reintento"
 
-#: includes/class-lnh-admin.php:153
+#: includes/class-lnh-admin.php:146
+msgid "Social plan"
+msgstr "Plan social"
+
+#: includes/class-lnh-admin.php:147
+msgid "Slides drawn"
+msgstr "Láminas dibujadas"
+
+#: includes/class-lnh-admin.php:148
+msgid "Video made"
+msgstr "Video creado"
+
+#: includes/class-lnh-admin.php:149
+msgid "Kit uploaded"
+msgstr "Kit subido"
+
+#: includes/class-lnh-admin.php:150
+msgid "Kit attached"
+msgstr "Kit vinculado"
+
+#: includes/class-lnh-admin.php:151
+msgid "Webhook sent"
+msgstr "Webhook enviado"
+
+#: includes/class-lnh-admin.php:152
+msgid "Kit ready"
+msgstr "Kit listo"
+
+#: includes/class-lnh-admin.php:161
 msgid "Waiting for the first run"
 msgstr "Esperando la primera ejecución"
 
-#: includes/class-lnh-admin.php:158
+#: includes/class-lnh-admin.php:166
 msgid "The last run reported an error"
 msgstr "La última ejecución informó de un error"
 
-#: includes/class-lnh-admin.php:161
+#: includes/class-lnh-admin.php:169
 msgid "Agents have not reported for a while"
 msgstr "Los agentes llevan un tiempo sin reportar"
 
-#: includes/class-lnh-admin.php:163
+#: includes/class-lnh-admin.php:171
 msgid "Agents are running normally"
 msgstr "Los agentes funcionan con normalidad"
 
-#: includes/class-lnh-admin.php:183
+#: includes/class-lnh-admin.php:191
 msgid "Settings saved."
 msgstr "Ajustes guardados."
 
-#: includes/class-lnh-admin.php:184
+#: includes/class-lnh-admin.php:192
 msgid "Preset saved."
 msgstr "Preajuste guardado."
 
-#: includes/class-lnh-admin.php:187
+#: includes/class-lnh-admin.php:195
 msgid "Preset deleted."
 msgstr "Preajuste eliminado."
 
-#: includes/class-lnh-admin.php:188
+#: includes/class-lnh-admin.php:196
 msgid "Something went wrong. Nothing was changed."
 msgstr "Algo salió mal. No se cambió nada."
 
-#: includes/class-lnh-admin.php:189
+#: includes/class-lnh-admin.php:197
 msgid "Select at least one article first."
 msgstr "Selecciona primero al menos un artículo."
 
-#: includes/class-lnh-admin.php:216
+#: includes/class-lnh-admin.php:225
 msgid "Your AI newsroom at a glance."
 msgstr "Tu redacción con IA de un vistazo."
 
-#: includes/class-lnh-admin.php:250
+#: includes/class-lnh-admin.php:259
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr "Artículos redactados y auditados por los agentes. Tú decides qué se publica."
 
-#: includes/class-lnh-admin.php:267
+#: includes/class-lnh-admin.php:276
 msgid "Article not found."
 msgstr "Artículo no encontrado."
 
-#: includes/class-lnh-admin.php:267
+#: includes/class-lnh-admin.php:276
 msgid "Back to the queue"
 msgstr "Volver a la cola"
 
-#: includes/class-lnh-admin.php:278
+#: includes/class-lnh-admin.php:287
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr "Todo lo que hicieron el Investigador, el Redactor y el Auditor, paso a paso."
 
-#: includes/class-lnh-admin.php:322
+#: includes/class-lnh-admin.php:331
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr "Diseña una lista de los últimos artículos, mira la vista previa en vivo y copia el shortcode."
 
-#: includes/class-lnh-admin.php:348
+#: includes/class-lnh-admin.php:357
 msgid "News Hub settings"
 msgstr "Ajustes de News Hub"
 
-#: includes/class-lnh-admin.php:365
+#: includes/class-lnh-admin.php:374
 msgid "You are not allowed to do that."
 msgstr "No tienes permiso para hacer eso."
 
-#: includes/class-lnh-admin.php:491
+#: includes/class-lnh-admin.php:500
 msgid "AI agents – audit"
 msgstr "Agentes de IA – auditoría"
 
-#: includes/class-lnh-admin.php:500
+#: includes/class-lnh-admin.php:509
 msgid "AI audit"
 msgstr "Auditoría IA"
 
-#: includes/class-lnh-admin.php:513
+#: includes/class-lnh-admin.php:522
 msgid "Review"
 msgstr "Revisar"
 
-#: includes/class-lnh-admin.php:521
+#: includes/class-lnh-admin.php:530
 msgid "All origins"
 msgstr "Todos los orígenes"
 
-#: includes/class-lnh-admin.php:521
+#: includes/class-lnh-admin.php:530
 msgid "Created by AI agents"
 msgstr "Creados por agentes de IA"
 
-#: includes/class-lnh-admin.php:538
+#: includes/class-lnh-admin.php:547
 msgid "Audit score %d/100"
 msgstr "Puntuación de auditoría %d/100"
 
-#: includes/class-lnh-admin.php:543
+#: includes/class-lnh-admin.php:552
 msgid "Approved"
 msgstr "Aprobado"
 
-#: includes/class-lnh-admin.php:544
+#: includes/class-lnh-admin.php:553
 msgid "Flagged"
 msgstr "Marcado"
 
-#: includes/class-lnh-admin.php:174
+#: includes/class-lnh-admin.php:182
 msgid "%d article published."
 msgid_plural "%d articles published."
 msgstr[0] "%d artículo publicado."
 msgstr[1] "%d artículos publicados."
 
-#: includes/class-lnh-admin.php:176
+#: includes/class-lnh-admin.php:184
 msgid "%d article scheduled."
 msgid_plural "%d articles scheduled."
 msgstr[0] "%d artículo programado."
 msgstr[1] "%d artículos programados."
 
-#: includes/class-lnh-admin.php:178
+#: includes/class-lnh-admin.php:186
 msgid "%d article rejected."
 msgid_plural "%d articles rejected."
 msgstr[0] "%d artículo rechazado."
 msgstr[1] "%d artículos rechazados."
 
-#: includes/class-lnh-admin.php:180
+#: includes/class-lnh-admin.php:188
 msgid "%d article moved back to review."
 msgid_plural "%d articles moved back to review."
 msgstr[0] "%d artículo devuelto a revisión."
 msgstr[1] "%d artículos devueltos a revisión."
 
-#: includes/class-lnh-admin.php:182
+#: includes/class-lnh-admin.php:190
 msgid "%d article deleted."
 msgid_plural "%d articles deleted."
 msgstr[0] "%d artículo eliminado."
 msgstr[1] "%d artículos eliminados."
 
-#: includes/class-lnh-admin.php:186
+#: includes/class-lnh-admin.php:194
 msgid "%d page created."
 msgid_plural "%d pages created."
 msgstr[0] "%d página creada."
@@ -1144,62 +1180,66 @@ msgid "Average audit score (30 days)"
 msgstr "Puntuación media de auditoría (30 días)"
 
 #: views/dashboard.php:43
+msgid "Social kits this week"
+msgstr "Kits sociales esta semana"
+
+#: views/dashboard.php:44
 msgid "AI images this week"
 msgstr "Imágenes IA esta semana"
 
-#: views/dashboard.php:44
+#: views/dashboard.php:45
 msgid "Tokens used this week"
 msgstr "Tokens usados esta semana"
 
-#: views/dashboard.php:50
+#: views/dashboard.php:51
 msgid "Waiting for your decision"
 msgstr "Esperando tu decisión"
 
-#: views/dashboard.php:50
+#: views/dashboard.php:51
 msgid "Open the queue"
 msgstr "Abrir la cola"
 
-#: views/dashboard.php:52
+#: views/dashboard.php:53
 msgid "Nothing to review right now. New articles appear here as soon as the agents finish them."
 msgstr "No hay nada por revisar ahora. Los artículos nuevos aparecen aquí en cuanto los agentes los terminan."
 
-#: views/dashboard.php:73
+#: views/dashboard.php:74
 msgid "Recent agent runs"
 msgstr "Ejecuciones recientes de los agentes"
 
-#: views/dashboard.php:73
+#: views/dashboard.php:74
 msgid "All activity"
 msgstr "Toda la actividad"
 
-#: views/dashboard.php:84
+#: views/dashboard.php:85
 msgid "Your agents"
 msgstr "Tus agentes"
 
-#: views/dashboard.php:96
+#: views/dashboard.php:97
 msgid "active %s"
 msgstr "activo %s"
 
-#: views/dashboard.php:96
+#: views/dashboard.php:97
 msgid "no activity yet"
 msgstr "sin actividad aún"
 
-#: views/dashboard.php:107
+#: views/dashboard.php:108
 msgid "One click: creates the account and gives you the .env lines."
 msgstr "Un clic: crea la cuenta y te da las líneas del .env."
 
-#: views/dashboard.php:113
+#: views/dashboard.php:114
 msgid "Create an %s for the account the agents will post with."
 msgstr "Crea una %s para la cuenta con la que publicarán los agentes."
 
-#: views/dashboard.php:114
+#: views/dashboard.php:115
 msgid "Application Password"
 msgstr "contraseña de aplicación"
 
-#: views/dashboard.php:117
+#: views/dashboard.php:118
 msgid "Put these two lines in the agents’ .env file:"
 msgstr "Pon estas dos líneas en el archivo .env de los agentes:"
 
-#: views/dashboard.php:120
+#: views/dashboard.php:121
 msgid "Run python main.py setup (it configures the rest for you), then python main.py run."
 msgstr "Ejecuta python main.py setup (configura el resto por ti) y después python main.py run."
 
@@ -1267,7 +1307,11 @@ msgstr "Auditoría"
 msgid "Received"
 msgstr "Recibido"
 
-#: views/queue.php:79
+#: views/queue.php:65
+msgid "Social kit"
+msgstr "Kit social"
+
+#: views/queue.php:80
 msgid "Restore"
 msgstr "Restaurar"
 
@@ -1277,13 +1321,13 @@ msgid_plural "%d articles"
 msgstr[0] "%d artículo"
 msgstr[1] "%d artículos"
 
-#: views/queue.php:65
+#: views/queue.php:66
 msgid "%d revision"
 msgid_plural "%d revisions"
 msgstr[0] "%d revisión"
 msgstr[1] "%d revisiones"
 
-#: views/queue.php:66
+#: views/queue.php:67
 msgid "%d media item pending"
 msgid_plural "%d media items pending"
 msgstr[0] "%d elemento multimedia pendiente"
@@ -1309,139 +1353,139 @@ msgstr "Sin imagen destacada"
 msgid "Search result preview"
 msgstr "Vista previa en buscadores"
 
-#: views/review.php:52
+#: views/review.php:53
 msgid "Your decision"
 msgstr "Tu decisión"
 
-#: views/review.php:54
+#: views/review.php:55
 msgid "This article is live."
 msgstr "Este artículo está publicado."
 
-#: views/review.php:55
+#: views/review.php:56
 msgid "View article"
 msgstr "Ver artículo"
 
-#: views/review.php:57
+#: views/review.php:58
 msgid "Rejected: %s"
 msgstr "Rechazado: %s"
 
-#: views/review.php:60
+#: views/review.php:61
 msgid "Publish now"
 msgstr "Publicar ahora"
 
-#: views/review.php:64
+#: views/review.php:65
 msgid "Or schedule it"
 msgstr "O prográmalo"
 
-#: views/review.php:65
+#: views/review.php:66
 msgid "Schedule"
 msgstr "Programar"
 
-#: views/review.php:75
+#: views/review.php:76
 msgid "Reject (optional reason)"
 msgstr "Rechazar (motivo opcional)"
 
-#: views/review.php:77
+#: views/review.php:78
 msgid "Reject article"
 msgstr "Rechazar artículo"
 
-#: views/review.php:81
+#: views/review.php:82
 msgid "Edit in the WordPress editor"
 msgstr "Editar en el editor de WordPress"
 
-#: views/review.php:87
+#: views/review.php:88
 msgid "Score given by the Auditor agent after comparing the article with the facts reported by the Researcher."
 msgstr "Puntuación del agente Auditor tras comparar el artículo con los hechos que reportó el Investigador."
 
-#: views/review.php:96
+#: views/review.php:97
 msgid "%d links checked, none broken"
 msgstr "%d enlaces comprobados, ninguno roto"
 
-#: views/review.php:99
+#: views/review.php:100
 msgid "Unsafe HTML found"
 msgstr "Se encontró HTML inseguro"
 
-#: views/review.php:99
+#: views/review.php:100
 msgid "HTML is clean"
 msgstr "El HTML está limpio"
 
-#: views/review.php:103
+#: views/review.php:104
 msgid "Figures not found in the source: %s"
 msgstr "Cifras que no aparecen en la fuente: %s"
 
-#: views/review.php:104
+#: views/review.php:105
 msgid "All figures appear in the source"
 msgstr "Todas las cifras aparecen en la fuente"
 
-#: views/review.php:108
+#: views/review.php:109
 msgid "Copied from source: %d%%"
 msgstr "Copiado de la fuente: %d%%"
 
-#: views/review.php:111
+#: views/review.php:112
 msgid "%d words"
 msgstr "%d palabras"
 
-#: views/review.php:119
+#: views/review.php:120
 msgid "Auditor notes"
 msgstr "Notas del auditor"
 
-#: views/review.php:121
+#: views/review.php:122
 msgid "No issues reported."
 msgstr "No se reportaron problemas."
 
-#: views/review.php:128
+#: views/review.php:129
 msgid "Auto"
 msgstr "Auto"
 
-#: views/review.php:128
+#: views/review.php:129
 msgid "AI"
 msgstr "IA"
 
-#: views/review.php:140
+#: views/review.php:141
 msgid "Facts the Researcher extracted"
 msgstr "Hechos que extrajo el Investigador"
 
-#: views/review.php:145
+#: views/review.php:146
 msgid "Featured image"
 msgstr "Imagen destacada"
 
-#: views/review.php:147
+#: views/review.php:148
 msgid "AI-generated"
 msgstr "Generada con IA"
 
-#: views/review.php:148
+#: views/review.php:149
 msgid "It is labelled as an illustration in its caption. Check that it does not suggest something the story does not say."
 msgstr "Está etiquetada como ilustración en su pie de foto. Comprueba que no sugiera algo que la noticia no dice."
 
-#: views/review.php:149
+#: views/review.php:150
 msgid "Prompt the Writer wrote"
 msgstr "Prompt que escribió el Redactor"
 
-#: views/review.php:151
+#: views/review.php:152
 msgid "Openly licensed photo – credit is in the caption."
 msgstr "Foto con licencia abierta: el crédito está en el pie de foto."
 
-#: views/review.php:153
+#: views/review.php:154
 msgid "No image yet. Set one in the editor."
 msgstr "Aún no hay imagen. Asigna una en el editor."
 
-#: views/review.php:156
+#: views/review.php:157
 msgid "Media still to add"
 msgstr "Multimedia pendiente de añadir"
 
-#: views/review.php:162
+#: views/review.php:163
 msgid "How the agents got here"
 msgstr "Cómo llegaron los agentes a este artículo"
 
-#: views/review.php:162
+#: views/review.php:163
 msgid "Full run"
 msgstr "Ejecución completa"
 
-#: views/review.php:167
+#: views/review.php:168
 msgid "No trace stored for this article."
 msgstr "No hay traza guardada para este artículo."
 
-#: views/review.php:95
+#: views/review.php:96
 msgid "%d broken link"
 msgid_plural "%d broken links"
 msgstr[0] "%d enlace roto"
@@ -1582,3 +1626,63 @@ msgstr "— ninguna —"
 #: views/settings.php:69
 msgid "Save changes"
 msgstr "Guardar cambios"
+
+#: views/social-kit.php:9
+msgid "made %s"
+msgstr "creado %s"
+
+#: views/social-kit.php:12
+msgid "The Social designer has not made Instagram or TikTok content for this article yet. It runs automatically after an article is approved, or you can ask for it:"
+msgstr "El Diseñador social aún no ha creado contenido de Instagram o TikTok para este artículo. Se ejecuta solo cuando un artículo es aprobado, o puedes pedirlo así:"
+
+#: views/social-kit.php:17
+msgid "Brand: GoLehighAcres.org"
+msgstr "Marca: GoLehighAcres.org"
+
+#: views/social-kit.php:18
+msgid "Uses an AI-generated image (labelled on the slides)"
+msgstr "Usa una imagen generada con IA (indicado en las láminas)"
+
+#: views/social-kit.php:19
+msgid "Voice: %s"
+msgstr "Voz: %s"
+
+#: views/social-kit.php:26
+msgid "Instagram carousel (4:5)"
+msgstr "Carrusel de Instagram (4:5)"
+
+#: views/social-kit.php:27
+msgid "TikTok photo carousel (9:16)"
+msgstr "Carrusel de fotos de TikTok (9:16)"
+
+#: views/social-kit.php:39
+msgid "Slide %d"
+msgstr "Lámina %d"
+
+#: views/social-kit.php:40
+msgid "Download"
+msgstr "Descargar"
+
+#: views/social-kit.php:45
+msgid "Caption (with hashtags)"
+msgstr "Texto de la publicación (con hashtags)"
+
+#: views/social-kit.php:47
+msgid "Copy caption"
+msgstr "Copiar texto"
+
+#: views/social-kit.php:52
+msgid "Vertical video (%ss)"
+msgstr "Video vertical (%ss)"
+
+#: views/social-kit.php:54
+msgid "Download video"
+msgstr "Descargar video"
+
+#: views/social-kit.php:57
+msgid "Alt text for the cover:"
+msgstr "Texto alternativo de la portada:"
+
+#: views/social-kit.php:58
+msgid "The hub does not post to the networks by itself: download the files and publish them from the Instagram / TikTok apps or Meta Business Suite once you have approved the article. Review the content first — it was written by an AI from the article."
+msgstr "El hub no publica en las redes por sí solo: descarga los archivos y publícalos desde las apps de Instagram / TikTok o Meta Business Suite cuando hayas aprobado el artículo. Revisa antes el contenido: lo redactó una IA a partir del artículo."

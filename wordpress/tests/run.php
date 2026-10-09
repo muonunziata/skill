@@ -113,7 +113,7 @@ echo "Settings\n";
 $before = get_option( LNH_Settings::OPTION );
 LNH_Settings::save_tab( 'design', array( 'ds_accent' => 'nope', 'ds_radius' => '500', 'ds_theme' => 'neon', 'ds_shadow' => '' ) );
 $s = LNH_Settings::all();
-t( 'invalid colour/theme fall back, radius clamped, unchecked box = 0', '#1d6fdc' === $s['ds_accent'] && 'auto' === $s['ds_theme'] && 40 === $s['ds_radius'] && 0 === $s['ds_shadow'], $s );
+t( 'invalid colour/theme fall back, radius clamped, unchecked box = 0', '#1b6a55' === $s['ds_accent'] && 'auto' === $s['ds_theme'] && 40 === $s['ds_radius'] && 0 === $s['ds_shadow'], $s );
 LNH_Settings::save_tab( 'general', array( 'auto_publish' => '1', 'auto_publish_min_score' => '95', 'notify' => '' ) );
 $s = LNH_Settings::all();
 t( 'saving one tab keeps other tabs', 40 === $s['ds_radius'] && 1 === $s['auto_publish'] && 95 === $s['auto_publish_min_score'] );
@@ -322,6 +322,64 @@ foreach ( WP_Application_Passwords::get_user_application_passwords( $u->ID ) as 
 wp_delete_user( $u->ID );
 wp_delete_user( $contrib2 );
 t( 'cleanup leaves no agents account', null === LNH_Connect::agent_user() );
+
+echo "Social kit (Agent 4)\n";
+$kit_in = array(
+	'generated_at' => 1790000000, 'model' => 'gemini-2.5-flash', 'voice' => '', 'seconds' => 14.04, 'ai_image' => true, 'hook' => 'Cuatro carriles <script>alert(1)</script>',
+	'instagram' => array( 'caption' => "Línea uno\n\nLínea dos <b>x</b>", 'slides' => array(
+		array( 'id' => 12, 'url' => 'https://site.example/wp-content/uploads/a.png', 'name' => 'instagram-01.png' ),
+		array( 'id' => 13, 'url' => 'javascript:alert(1)', 'name' => 'evil.png' ),
+	) ),
+	'tiktok' => array( 'caption' => 'tt', 'slides' => array( array( 'id' => 14, 'url' => 'https://site.example/t.png', 'name' => 'tiktok-01.png' ) ) ),
+	'video' => array( 'id' => 15, 'url' => 'https://site.example/v.mp4', 'name' => 'video.mp4' ),
+	'hashtags' => array( '#LehighAcres', 'Go Lehigh', '<i>x</i>', '' ), 'alt_text' => 'Portada', 'warnings' => array( 'Sin voz <u>x</u>' ),
+);
+$sp1 = $post_via_rest( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 50, 'lnh_social' => wp_json_encode( $kit_in ) ) );
+$created[] = $sp1['id'];
+$kit = LNH_Meta::social( $sp1['id'] );
+t( 'kit arrives through REST and is stored as normalised JSON', 'Cuatro carriles alert(1)' === $kit['hook'] || false === strpos( $kit['hook'], '<script' ), $kit['hook'] ?? '' );
+t( 'javascript: URLs are dropped from slides', 1 === count( $kit['instagram']['slides'] ) && 0 === strpos( $kit['instagram']['slides'][0]['url'], 'https://' ), $kit['instagram']['slides'] );
+t( 'hashtags are normalised', array( '#LehighAcres', '#GoLehigh', '#ixi' ) === $kit['hashtags'], $kit['hashtags'] );
+t( 'tags are stripped from captions and warnings', false === strpos( $kit['instagram']['caption'], '<b>' ) && false === strpos( $kit['warnings'][0], '<u>' ) && false !== strpos( $kit['instagram']['caption'], "\n\n" ) );
+t( 'video and flags survive', 'video.mp4' === $kit['video']['name'] && true === $kit['ai_image'] && 14.0 === $kit['seconds'], $kit );
+t( 'garbage is stored as empty, never as a kit', '' === LNH_Meta::sanitize_social( 'not json' ) && array() === LNH_Meta::normalize_social( array( 'hook' => 'x' ) ) );
+$anon = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/posts/' . $sp1['id'] ) );
+wp_set_current_user( 0 );
+$vis = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/posts/' . $sp1['id'] ) )->get_data();
+wp_set_current_user( $admin );
+t( 'visitors never see the kit meta', ! isset( $vis['meta']['lnh_social'] ) );
+$spost = get_post( $sp1['id'] );
+ob_start();
+LNH_Admin::view( 'social-kit', array( 'id' => $spost->ID ) );
+$html = ob_get_clean();
+t( 'review card shows slides, video, caption and download links', false !== strpos( $html, 'lnh-slides--tiktok' ) && false !== strpos( $html, '<video' ) && false !== strpos( $html, 'download="instagram-01.png"' ) && false !== strpos( $html, '#GoLehigh' ) );
+t( 'review card is escaped', false === strpos( $html, '<script' ) && false === strpos( $html, 'javascript:' ) );
+$none = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 60 ) );
+ob_start();
+LNH_Admin::view( 'social-kit', array( 'id' => $none ) );
+$empty = ob_get_clean();
+t( 'no kit: the card explains how to request one', false !== strpos( $empty, 'python main.py social --post ' . $none ) && false === strpos( $empty, '<video' ) );
+$agents = LNH_Admin::agents();
+t( 'the social designer is a known agent', isset( $agents['social'] ) && isset( LNH_Admin::event_labels()['done'] ) && in_array( 'social', LNH_Runs::AGENTS, true ) );
+$run = LNH_Runs::sanitize( array(
+	'run_id' => 'social-test-1', 'started_at' => time(), 'finished_at' => time(), 'status' => 'ok', 'models' => array( 'social' => 'gemini-2.5-flash' ),
+	'events' => array(
+		array( 'ts' => time(), 'agent' => 'social', 'type' => 'render', 'message' => '6 slides', 'data' => array( 'count' => 6 ) ),
+		array( 'ts' => time(), 'agent' => 'social', 'type' => 'video', 'message' => 'video', 'data' => array( 'seconds' => 14 ) ),
+		array( 'ts' => time(), 'agent' => 'social', 'type' => 'done', 'message' => 'ready' ),
+	),
+) );
+t( 'social events keep their agent and numeric data', 'social' === $run['events'][0]['agent'] && 6 === $run['events'][0]['data']['count'] && 14 === $run['events'][1]['data']['seconds'], $run['events'] );
+$rid = LNH_Runs::store( $run );
+$st  = LNH_Runs::agent_stats( 7 );
+t( 'agent stats count kits, slides and videos', $st['social']['kits'] >= 1 && $st['social']['slides'] >= 6 && $st['social']['videos'] >= 1 && 'gemini-2.5-flash' === $st['social']['model'], $st['social'] );
+wp_delete_post( $rid, true );
+ob_start();
+LNH_Admin::view( 'dashboard', array( 'welcome' => array(), 'pages' => array(), 'counts' => array( 'review' => 0, 'flagged' => 0 ), 'health' => LNH_Admin::health(), 'stats' => LNH_Runs::agent_stats( 7 ), 'waiting' => array(), 'runs' => array(), 'published7' => 0, 'avg' => 0, 'rest_url' => rest_url(), 'profile' => '' ) );
+$dash = ob_get_clean();
+t( 'dashboard lists the 4th agent and its KPI', false !== strpos( $dash, 'Social designer' ) && false !== strpos( $dash, 'Social kits this week' ) );
+t( 'brand: default accent is the GoLehighAcres.org green', '#1b6a55' === LNH_Settings::defaults()['ds_accent'] );
+t( 'brand logo ships with the plugin', is_file( LNH_DIR . 'assets/img/golehighacres-logo.png' ) );
 
 echo "Front-end decorations\n";
 $fp = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 88, 'lnh_source_url' => 'https://wink.example/a', 'lnh_source_name' => 'WINK <b>News</b>', 'lnh_source_date' => '2026-10-01' ), 'publish' );

@@ -281,6 +281,7 @@ class Redactor:
         url, media_id = self._host(img, art, alt, label)
         art.featured_image_url = url
         art.featured_media_id = media_id
+        art.featured_image_bytes = img.data
         art.featured_image_ai = True
         art.featured_image_prompt = prompt
         art.featured_image_alt = alt

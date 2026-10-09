@@ -11,9 +11,12 @@ from .agents import Auditor, Rastreador, Redactor
 from .imagegen import ImageGenError, ImageGenerator
 from .llm import LLM, LLMError
 from .net import Fetcher
+from .news_api import MediastackClient
 from .runlog import RunLog
 from .schemas import Articulo, Hallazgo
 from .settings import Settings
+from .social import SocialDesigner, SocialError, article_context
+from .social.voice import Narrator
 from .store import Store
 from .wordpress import WPError, WordPressClient
 
@@ -23,7 +26,8 @@ log = logging.getLogger("lehigh.pipeline")
 class Pipeline:
     def __init__(self, settings: Settings, llm: LLM | None = None, wp: WordPressClient | None = None,
                  imagegen: ImageGenerator | None = None, fetcher: Fetcher | None = None, store: Store | None = None,
-                 dry_run: bool = False, make_images: bool = True):
+                 dry_run: bool = False, make_images: bool = True, make_social: bool = True,
+                 social: SocialDesigner | None = None):
         self.s = settings
         self.dry_run = dry_run
         self.llm = llm or LLM(settings)
@@ -32,6 +36,8 @@ class Pipeline:
         self.wp = None if dry_run else (wp or WordPressClient(settings.wp_rest_url, settings.wp_auth_token))
         self.imagegen = imagegen or ImageGenerator(settings)
         self.make_images = make_images
+        self.make_social = make_social and settings.social_enabled
+        self._social = social
 
     # ───────────────────────── one run ─────────────────────────
     def run_once(self) -> dict[str, Any]:
@@ -41,11 +47,12 @@ class Pipeline:
         report: dict[str, Any] = {
             "run_id": runlog.run_id, "started_at": int(time.time()), "dry_run": self.dry_run,
             "models": {"rastreador": s.rastreador_model, "redactor": s.redactor_model, "auditor": s.auditor_model,
-                       "image": f"{self.imagegen.provider}/{self.imagegen.model}" if self.imagegen.enabled and self.make_images else ""},
+                       "image": f"{self.imagegen.provider}/{self.imagegen.model}" if self.imagegen.enabled and self.make_images else "",
+                       "social": s.social_model if self.make_social else ""},
             "topic": s.topic, "items": [], "status": "running",
         }
         runlog("pipeline", "run_started", f"Ejecución {runlog.run_id} iniciada" + (" (modo prueba)" if self.dry_run else ""))
-        rastreador = Rastreador(s, self.llm, self.fetcher, self.store, runlog)
+        rastreador = Rastreador(s, self.llm, self.fetcher, self.store, runlog, news_api=MediastackClient(s, self.store))
 
         try:
             hallazgos = rastreador.run()
@@ -96,6 +103,8 @@ class Pipeline:
                         posted=outcome["posted"], reason=outcome.get("reason", ""),
                         post=outcome.get("post"), article=art.to_dict(), finding=h.to_dict())
             posted = outcome["posted"]
+            if aud.status == "approved" and (posted or self.dry_run) and self.make_social:
+                item["social"] = self._design_social(h, art, outcome.get("post"), emit)
             self._remember(h, "published" if posted else aud.status)
         except (LLMError, ImageGenError, WPError) as exc:
             emit("pipeline", "error", f"Falló «{h.titulo_fuente}»: {exc}", level="error")
@@ -106,6 +115,37 @@ class Pipeline:
                 if self.wp.delete_media(art.featured_media_id):
                     emit("pipeline", "cleanup", f"Imagen {art.featured_media_id} eliminada de la biblioteca de medios")
         return item
+
+    def _design_social(self, h: Hallazgo, art: Articulo, post: dict | None, emit) -> dict[str, Any] | None:
+        """Agent 4. Never fatal: a failed kit must not undo an article that is already in WordPress."""
+        designer = self._social or SocialDesigner(self.s, self.llm, self.fetcher, emit, self.wp, Narrator(self.s))
+        designer.events = emit
+        try:
+            ctx = article_context(h, art, self.s, post, photo=self._photo_bytes(art))
+            emit("social", "step", "Diseñando carruseles de Instagram/TikTok y video…")
+            kit = designer.run(ctx)
+            return {"folder": kit.folder, "files": kit.files, "seconds": kit.seconds, "voice": kit.voice,
+                    "uploaded": sum(len(v) for v in kit.uploaded.values()), "warnings": kit.warnings,
+                    "hook": kit.plan["hook"]}
+        except (SocialError, LLMError, WPError) as exc:
+            emit("social", "error", f"No se pudo crear el kit social: {exc}", level="warn")
+        except Exception as exc:  # noqa: BLE001 - rendering/ffmpeg/IO problems stay local to this agent
+            log.exception("social kit failed")
+            emit("social", "error", f"No se pudo crear el kit social: {exc}", level="warn")
+        return None
+
+    def _photo_bytes(self, art: Articulo) -> bytes:
+        if art.featured_image_bytes:
+            return art.featured_image_bytes
+        url = art.featured_image_url
+        try:
+            if url.startswith(("http://", "https://")):
+                return self.fetcher.get(url, max_bytes=8_000_000, accept="image/*").body
+            if url and Path(url).is_file():
+                return Path(url).read_bytes()
+        except Exception as exc:  # noqa: BLE001 - the kit is designed without a photo instead
+            log.info("featured image unavailable for social kit: %s", exc)
+        return b""
 
     # ───────────────────────── persistence ─────────────────────────
     def _remember(self, h: Hallazgo, status: str) -> None:
@@ -122,7 +162,7 @@ class Pipeline:
     def _wp_report(report: dict[str, Any]) -> dict[str, Any]:
         """Compact version of the report for the plugin's Agent Activity screen (no article bodies)."""
         items = [{k: i.get(k) for k in ("titulo_fuente", "url", "status", "audit_score", "post_title", "featured_image_ai",
-                                        "revisions", "posted", "error")} | {"post_id": (i.get("post") or {}).get("id")}
+                                        "revisions", "posted", "error")} | {"post_id": (i.get("post") or {}).get("id"), "social": bool(i.get("social"))}
                  for i in report["items"]]
         return {k: report.get(k) for k in ("run_id", "started_at", "finished_at", "status", "models", "topic", "counts",
                                            "dry_run", "usage")} | {"items": items, "events": report["events"][-300:]}

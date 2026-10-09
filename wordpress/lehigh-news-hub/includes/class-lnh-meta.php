@@ -31,6 +31,7 @@ final class LNH_Meta {
 		'lnh_generated_at'       => 'string',
 		'lnh_revisions'          => 'integer',
 		'lnh_language'            => 'string',
+		'lnh_social'             => 'string', // JSON written by Agent 4 (Social Designer).
 		// Set by the hub itself (editor decisions).
 		'lnh_reviewed_by'        => 'integer',
 		'lnh_reviewed_at'        => 'integer',
@@ -97,10 +98,77 @@ final class LNH_Meta {
 		if ( in_array( $key, array( 'lnh_source_url', 'lnh_featured_image_url' ), true ) ) {
 			return 'esc_url_raw';
 		}
+		if ( 'lnh_social' === $key ) {
+			return array( __CLASS__, 'sanitize_social' );
+		}
 		if ( in_array( $key, array( 'lnh_facts', 'lnh_audit_notes', 'lnh_audit_checks', 'lnh_trace', 'lnh_image_prompt', 'lnh_keywords', 'lnh_media_todo', 'lnh_agent_models', 'lnh_reject_reason' ), true ) ) {
 			return 'sanitize_textarea_field'; // Keeps JSON intact; output is always escaped.
 		}
 		return 'sanitize_text_field';
+	}
+
+	/** Meta sanitizer: only a well-formed kit survives; anything else is stored as empty. */
+	public static function sanitize_social( $raw ): string {
+		$kit = self::normalize_social( LNH_Util::json_list( $raw ) );
+		return $kit ? (string) wp_json_encode( $kit, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) : '';
+	}
+
+	/** The social kit of a post (empty array when Agent 4 has not produced one). */
+	public static function social( int $post_id ): array {
+		return self::normalize_social( LNH_Util::json_list( get_post_meta( $post_id, 'lnh_social', true ) ) );
+	}
+
+	/** Whitelist + clip every field of a kit (it is rendered in the admin, so it is treated as untrusted input). */
+	public static function normalize_social( array $raw ): array {
+		if ( empty( $raw['instagram'] ) && empty( $raw['tiktok'] ) && empty( $raw['video'] ) ) {
+			return array();
+		}
+		$text  = function ( $v, int $max ): string {
+			return LNH_Util::clip( sanitize_textarea_field( is_scalar( $v ) ? (string) $v : '' ), $max );
+		};
+		$file  = function ( $f ) use ( $text ): array {
+			$url = is_array( $f ) ? esc_url_raw( (string) ( $f['url'] ?? '' ), array( 'http', 'https' ) ) : '';
+			return $url ? array( 'id' => absint( $f['id'] ?? 0 ), 'url' => $url, 'name' => $text( $f['name'] ?? '', 80 ) ) : array();
+		};
+		$files = function ( $list ) use ( $file ): array {
+			$out = array();
+			foreach ( array_slice( is_array( $list ) ? $list : array(), 0, 12 ) as $f ) {
+				$one = $file( $f );
+				if ( $one ) {
+					$out[] = $one;
+				}
+			}
+			return $out;
+		};
+		$net = function ( $n ) use ( $text, $files ): array {
+			$n = is_array( $n ) ? $n : array();
+			return array( 'caption' => $text( $n['caption'] ?? '', 2200 ), 'slides' => $files( $n['slides'] ?? array() ) );
+		};
+		$tags = array();
+		foreach ( array_slice( is_array( $raw['hashtags'] ?? null ) ? $raw['hashtags'] : array(), 0, 15 ) as $t ) {
+			$t = '#' . preg_replace( '/[^\p{L}\p{N}_]/u', '', (string) $t );
+			if ( strlen( $t ) > 1 ) {
+				$tags[] = $t;
+			}
+		}
+		$warnings = array();
+		foreach ( array_slice( is_array( $raw['warnings'] ?? null ) ? $raw['warnings'] : array(), 0, 8 ) as $w ) {
+			$warnings[] = $text( $w, 200 );
+		}
+		return array(
+			'generated_at' => absint( $raw['generated_at'] ?? 0 ),
+			'model'        => $text( $raw['model'] ?? '', 80 ),
+			'voice'        => $text( $raw['voice'] ?? '', 80 ),
+			'seconds'      => round( (float) ( $raw['seconds'] ?? 0 ), 1 ),
+			'ai_image'     => LNH_Util::to_bool( $raw['ai_image'] ?? false ),
+			'hook'         => $text( $raw['hook'] ?? '', 200 ),
+			'instagram'    => $net( $raw['instagram'] ?? array() ),
+			'tiktok'       => $net( $raw['tiktok'] ?? array() ),
+			'video'        => $file( $raw['video'] ?? array() ),
+			'hashtags'     => $tags,
+			'alt_text'     => $text( $raw['alt_text'] ?? '', 200 ),
+			'warnings'     => $warnings,
+		);
 	}
 
 	/** Hide our keys from the Custom Fields box. */

@@ -444,7 +444,7 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
     new["WP_AUTH_TOKEN"] = f"{user}:{password}"
 
     # 3 · Images -----------------------------------------------------------------------
-    con.say("\n3/4 · Imagen destacada con IA (opcional)")
+    con.say("\n3/4 · Imagen destacada con IA y fuentes extra (opcional)")
     provider = args.image_provider
     if provider is None and not con.interactive and (values.get("IMAGE_PROVIDER") or values.get("IMAGE_API_KEY")):
         con.say("  – Se conserva la configuración de imágenes existente.")
@@ -478,6 +478,15 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
             new.update(IMAGE_PROVIDER=provider, IMAGE_API_KEY=k,
                        IMAGE_MODEL="black-forest-labs/flux-1.1-pro" if provider == "replicate" else "gpt-image-1")
             con.say(f"  ✓ {provider} configurado")
+
+    # 3b · Optional news source -------------------------------------------------------------
+    ms = args.mediastack_key if args.mediastack_key is not None else values.get("MEDIASTACK_API_KEY", "")
+    if con.interactive and args.mediastack_key is None and not ms:
+        con.say("\nFuente de noticias extra (opcional): Mediastack, plan gratuito de 100 consultas/mes (https://mediastack.com/signup).")
+        ms = con.ask("  Clave de Mediastack (Enter = omitir)", "", secret=True)
+    if ms:
+        new["MEDIASTACK_API_KEY"] = ms
+        con.say("  ✓ Mediastack activado (el proyecto limita las consultas para respetar tu plan)")
 
     # 4 · Write + check ------------------------------------------------------------------
     con.say("\n4/4 · Guardando la configuración")

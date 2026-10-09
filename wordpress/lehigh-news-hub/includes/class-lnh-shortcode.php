@@ -202,7 +202,7 @@ final class LNH_Shortcode {
 		$s    = LNH_Settings::all();
 		$vars = array(
 			'--lnh-cols'        => (int) $a['columns'],
-			'--lnh-accent'      => LNH_Util::hex_color( $a['accent'], '#1d6fdc' ),
+			'--lnh-accent'      => LNH_Util::hex_color( $a['accent'], '#1b6a55' ),
 			'--lnh-radius'      => (int) $s['ds_radius'] . 'px',
 			'--lnh-gap'         => (int) $s['ds_gap'] . 'px',
 			'--lnh-title-scale' => round( (int) $s['ds_title_scale'] / 100, 2 ),

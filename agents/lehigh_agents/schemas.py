@@ -47,9 +47,13 @@ class Articulo:
     featured_media_id: int = 0
     image_provider: str = ""
     image_model: str = ""
+    # raw bytes of the AI image, kept in memory for the Social Designer (never serialised)
+    featured_image_bytes: bytes = field(default=b"", repr=False)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        d = asdict(self)
+        d.pop("featured_image_bytes")
+        return d
 
 
 # ───────────────────────────── Agent 3 output ─────────────────────────────
