@@ -27,7 +27,7 @@ final class LNH_Admin {
 	// ---------------------------------------------------------------- menu.
 
 	public static function menu(): void {
-		$counts = LNH_Queue::counts();
+		$counts = current_user_can( self::CAP_REVIEW ) ? LNH_Queue::counts() : array( 'review' => 0 ); // Skip the queries for users who cannot see the menu.
 		$badge  = $counts['review'] > 0 ? ' <span class="awaiting-mod">' . (int) $counts['review'] . '</span>' : '';
 		add_menu_page( __( 'News Hub', 'lehigh-news-hub' ), __( 'News Hub', 'lehigh-news-hub' ) . $badge, self::CAP_REVIEW, 'lnh', array( __CLASS__, 'page_dashboard' ), 'dashicons-megaphone', 26 );
 		add_submenu_page( 'lnh', __( 'Dashboard', 'lehigh-news-hub' ), __( 'Dashboard', 'lehigh-news-hub' ), self::CAP_REVIEW, 'lnh', array( __CLASS__, 'page_dashboard' ) );
@@ -68,7 +68,15 @@ final class LNH_Admin {
 				'nonce'     => wp_create_nonce( 'lnh_preview' ),
 				'feedUrl'   => esc_url_raw( rest_url( 'lnh/v1/feed' ) ),
 				'restNonce' => wp_create_nonce( 'wp_rest' ),
+				'agents'    => array_map(
+					function ( $a ) {
+						return array( 'label' => $a['label'], 'icon' => $a['icon'] );
+					},
+					self::agents()
+				),
+				'events'    => self::event_labels(),
 				'i18n'      => array(
+					'ago'         => __( '%s ago', 'lehigh-news-hub' ),
 					'copied'      => __( 'Copied!', 'lehigh-news-hub' ),
 					'confirmReject' => __( 'Reject the selected article(s)? They move to the Rejected tab and can be restored.', 'lehigh-news-hub' ),
 					'confirmDelete' => __( 'Delete permanently? This cannot be undone.', 'lehigh-news-hub' ),
@@ -105,7 +113,12 @@ final class LNH_Admin {
 	}
 
 	public static function event_label( string $type ): string {
-		$map = array(
+		return self::event_labels()[ $type ] ?? ucfirst( str_replace( '_', ' ', $type ) );
+	}
+
+	/** Event type => translated label (also handed to the live-feed script). */
+	public static function event_labels(): array {
+		return array(
 			'run_started' => __( 'Run started', 'lehigh-news-hub' ),
 			'run_finished' => __( 'Run finished', 'lehigh-news-hub' ),
 			'step'        => __( 'Working', 'lehigh-news-hub' ),
@@ -129,7 +142,6 @@ final class LNH_Admin {
 			'fetch_failed' => __( 'Page unavailable', 'lehigh-news-hub' ),
 			'validation'  => __( 'Retry', 'lehigh-news-hub' ),
 		);
-		return $map[ $type ] ?? ucfirst( str_replace( '_', ' ', $type ) );
 	}
 
 	/** Agent system health from the last run. */
@@ -219,10 +231,11 @@ final class LNH_Admin {
 
 	private static function avg_score( int $days ): int {
 		global $wpdb;
-		$since = gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
+		// post_date (local, always set) rather than post_date_gmt: drafts and pending articles have a zero GMT date.
+		$since = wp_date( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$avg = $wpdb->get_var( $wpdb->prepare(
-			"SELECT AVG(CAST(pm.meta_value AS UNSIGNED)) FROM {$wpdb->postmeta} pm INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = 'lnh_audit_score' AND p.post_type = 'post' AND p.post_date_gmt >= %s",
+			"SELECT AVG(CAST(pm.meta_value AS UNSIGNED)) FROM {$wpdb->postmeta} pm INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = 'lnh_audit_score' AND p.post_type = 'post' AND p.post_date >= %s",
 			$since
 		) );
 		return (int) round( (float) $avg );

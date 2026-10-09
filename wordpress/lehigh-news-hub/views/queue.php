@@ -69,7 +69,7 @@ $back = add_query_arg( array_filter( array( 'tab' => $tab, 's' => $opts['s'], 'm
 					</td>
 					<td class="lnh-audit"><?php echo LNH_Admin::ring( $score ); // phpcs:ignore WordPress.Security.EscapeOutput ?> <?php echo LNH_Admin::chip( $st ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
 					<td><?php echo $url ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( LNH_Util::host( $url ) ) . '</a>' : '—'; // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
-					<td><?php echo esc_html( LNH_Util::ago( (int) get_post_time( 'U', true, $p ) ) ); ?></td>
+					<td><?php echo esc_html( LNH_Util::ago( LNH_Util::post_timestamp( $p ) ) ); ?></td>
 					<td class="lnh-actions">
 						<a class="button" href="<?php echo esc_url( $review_url ); ?>"><?php esc_html_e( 'Review', 'lehigh-news-hub' ); ?></a>
 						<?php if ( in_array( $tab, array( 'review', 'flagged' ), true ) ) : ?>

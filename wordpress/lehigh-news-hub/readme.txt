@@ -42,7 +42,7 @@ Lehigh News Hub receives the articles written by an external team of AI agents (
 No, unless you enable auto-publish in Settings. Agents create drafts; flagged articles are never auto-published.
 
 = Where do the audit data live? =
-In post meta keys starting with `lnh_` (visible through the REST API). They survive uninstalling the plugin.
+In post meta keys starting with `lnh_`. They are readable through the REST API only by people who can edit the post (visitors never see them) and they survive uninstalling the plugin.
 
 = Is the HTML sent by the agents trusted? =
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.

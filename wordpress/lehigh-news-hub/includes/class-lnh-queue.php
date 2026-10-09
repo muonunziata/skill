@@ -20,13 +20,21 @@ final class LNH_Queue {
 	public static function init(): void {
 		add_action( 'rest_after_insert_post', array( __CLASS__, 'on_rest_insert' ), 20, 3 );
 		add_filter( 'rest_pre_insert_post', array( __CLASS__, 'filter_agent_content' ), 10, 2 );
-		foreach ( array( 'transition_post_status', 'deleted_post', 'added_post_meta' ) as $hook ) {
+		foreach ( array( 'transition_post_status', 'deleted_post' ) as $hook ) {
 			add_action( $hook, array( __CLASS__, 'flush_counts' ) );
 		}
+		add_action( 'added_post_meta', array( __CLASS__, 'maybe_flush_counts' ), 10, 3 );
 	}
 
 	public static function flush_counts(): void {
 		delete_transient( self::COUNTS_KEY );
+	}
+
+	/** The queue is defined by `lnh_audit_status`; every other meta write on the site is irrelevant to the counts. */
+	public static function maybe_flush_counts( $meta_id, $post_id, $meta_key ): void {
+		if ( 'lnh_audit_status' === $meta_key ) {
+			self::flush_counts();
+		}
 	}
 
 	/**
@@ -133,7 +141,8 @@ final class LNH_Queue {
 			$args['post_date']     = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $timestamp ) );
 			$args['post_date_gmt'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 			$args['edit_date']     = true;
-		} elseif ( in_array( $post->post_status, array( 'draft', 'pending', 'trash', 'auto-draft' ), true ) ) {
+		} elseif ( in_array( $post->post_status, array( 'draft', 'pending', 'trash', 'auto-draft', 'future' ), true ) ) {
+			// "Publish now" on a scheduled article must also move its date, or WordPress puts it straight back to "future".
 			$args['post_date']     = current_time( 'mysql' );
 			$args['post_date_gmt'] = current_time( 'mysql', true );
 			$args['edit_date']     = true;
@@ -212,13 +221,14 @@ final class LNH_Queue {
 			return;
 		}
 		$settings = LNH_Settings::all();
-		update_option( 'lnh_last_heartbeat', time(), false );
 		$score  = (int) get_post_meta( $post->ID, 'lnh_audit_score', true );
 		$status = (string) get_post_meta( $post->ID, 'lnh_audit_status', true );
 
 		if ( $settings['auto_publish'] && 'approved' === $status && $score >= (int) $settings['auto_publish_min_score'] && 'draft' === $post->post_status ) {
-			// Editorial rule configured by an administrator: no user switching, the capability check is replaced by the rule.
-			if ( true === self::publish( $post->ID, 0, true ) ) {
+			// Editorial rule configured by an administrator: no user switching, the score replaces the manual review. The
+			// audit meta is supplied by the requester, so only accounts that may publish anyway (Author and up) qualify;
+			// a Contributor must never be able to self-publish by claiming an "approved" audit.
+			if ( current_user_can( 'publish_post', $post->ID ) && true === self::publish( $post->ID, 0, true ) ) {
 				update_post_meta( $post->ID, 'lnh_reviewed_by', 0 ); // 0 = published automatically.
 				return;
 			}

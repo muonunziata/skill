@@ -37,279 +37,283 @@ msgstr "Ajustes"
 msgid "Review article"
 msgstr "Revisar artículo"
 
-#: includes/class-lnh-admin.php:72
+#: includes/class-lnh-admin.php:79
+msgid "%s ago"
+msgstr "hace %s"
+
+#: includes/class-lnh-admin.php:80
 msgid "Copied!"
 msgstr "¡Copiado!"
 
-#: includes/class-lnh-admin.php:73
+#: includes/class-lnh-admin.php:81
 msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
 msgstr "¿Rechazar los artículos seleccionados? Pasan a la pestaña Rechazados y se pueden restaurar."
 
-#: includes/class-lnh-admin.php:74
+#: includes/class-lnh-admin.php:82
 msgid "Delete permanently? This cannot be undone."
 msgstr "¿Eliminar definitivamente? Esta acción no se puede deshacer."
 
-#: includes/class-lnh-admin.php:75
+#: includes/class-lnh-admin.php:83
 msgid "No activity yet."
 msgstr "Aún no hay actividad."
 
-#: includes/class-lnh-admin.php:76
+#: includes/class-lnh-admin.php:84
 msgid "Live"
 msgstr "En vivo"
 
-#: includes/class-lnh-admin.php:77
+#: includes/class-lnh-admin.php:85
 msgid "Paused"
 msgstr "En pausa"
 
-#: includes/class-lnh-admin.php:78
+#: includes/class-lnh-admin.php:86
 msgid "Could not render the preview."
 msgstr "No se pudo generar la vista previa."
 
-#: includes/class-lnh-admin.php:100
+#: includes/class-lnh-admin.php:108
 msgid "Researcher"
 msgstr "Investigador"
 
-#: includes/class-lnh-admin.php:100
+#: includes/class-lnh-admin.php:108
 msgid "Searches the web and reads the sources"
 msgstr "Busca en la web y lee las fuentes"
 
-#: includes/class-lnh-admin.php:101
+#: includes/class-lnh-admin.php:109
 msgid "Writer"
 msgstr "Redactor"
 
-#: includes/class-lnh-admin.php:101
+#: includes/class-lnh-admin.php:109
 msgid "Writes the article and its featured image"
 msgstr "Escribe el artículo y su imagen destacada"
 
-#: includes/class-lnh-admin.php:102
+#: includes/class-lnh-admin.php:110
 msgid "Auditor"
 msgstr "Auditor"
 
-#: includes/class-lnh-admin.php:102
+#: includes/class-lnh-admin.php:110
 msgid "Fact-checks, then decides if it can be sent"
 msgstr "Verifica los hechos y decide si se puede enviar"
 
-#: includes/class-lnh-admin.php:103
+#: includes/class-lnh-admin.php:111
 msgid "Coordinator"
 msgstr "Coordinador"
 
-#: includes/class-lnh-admin.php:103
+#: includes/class-lnh-admin.php:111
 msgid "Runs the three agents in order"
 msgstr "Ejecuta los tres agentes en orden"
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:122
 msgid "Run started"
 msgstr "Ejecución iniciada"
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:123
 msgid "Run finished"
 msgstr "Ejecución terminada"
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:124
 msgid "Working"
 msgstr "Trabajando"
 
-#: includes/class-lnh-admin.php:112
+#: includes/class-lnh-admin.php:125
 msgid "Web search"
 msgstr "Búsqueda web"
 
-#: includes/class-lnh-admin.php:113
+#: includes/class-lnh-admin.php:126
 msgid "Read a page"
 msgstr "Página leída"
 
-#: includes/class-lnh-admin.php:114
+#: includes/class-lnh-admin.php:127
 msgid "Story found"
 msgstr "Noticia encontrada"
 
-#: includes/class-lnh-admin.php:115
+#: includes/class-lnh-admin.php:128
 msgid "Skipped"
 msgstr "Omitida"
 
-#: includes/class-lnh-admin.php:116
+#: includes/class-lnh-admin.php:129
 msgid "Draft written"
 msgstr "Borrador redactado"
 
-#: includes/class-lnh-admin.php:117
+#: includes/class-lnh-admin.php:130
 msgid "Media"
 msgstr "Multimedia"
 
-#: includes/class-lnh-admin.php:118
+#: includes/class-lnh-admin.php:131
 msgid "Image prompt"
 msgstr "Prompt de imagen"
 
-#: includes/class-lnh-admin.php:119
+#: includes/class-lnh-admin.php:132
 msgid "Image generated"
 msgstr "Imagen generada"
 
-#: includes/class-lnh-admin.php:120
+#: includes/class-lnh-admin.php:133
 msgid "Image attached"
 msgstr "Imagen adjuntada"
 
-#: includes/class-lnh-admin.php:121
+#: includes/class-lnh-admin.php:134
 msgid "Automatic check"
 msgstr "Comprobación automática"
 
-#: includes/class-lnh-admin.php:122
+#: includes/class-lnh-admin.php:135
 msgid "Audit result"
 msgstr "Resultado de la auditoría"
 
-#: includes/class-lnh-admin.php:123
+#: includes/class-lnh-admin.php:136
 msgid "Sent to WordPress"
 msgstr "Enviado a WordPress"
 
-#: includes/class-lnh-admin.php:124
+#: includes/class-lnh-admin.php:137
 msgid "Held back"
 msgstr "Retenido"
 
-#: includes/class-lnh-admin.php:125
+#: includes/class-lnh-admin.php:138
 msgid "Cleanup"
 msgstr "Limpieza"
 
-#: includes/class-lnh-admin.php:126
+#: includes/class-lnh-admin.php:139
 msgid "Test mode"
 msgstr "Modo de prueba"
 
-#: includes/class-lnh-admin.php:127
+#: includes/class-lnh-admin.php:140
 msgid "Warning"
 msgstr "Aviso"
 
-#: includes/class-lnh-admin.php:128
+#: includes/class-lnh-admin.php:141
 msgid "Error"
 msgstr "Error"
 
-#: includes/class-lnh-admin.php:129
+#: includes/class-lnh-admin.php:142
 msgid "Page unavailable"
 msgstr "Página no disponible"
 
-#: includes/class-lnh-admin.php:130
+#: includes/class-lnh-admin.php:143
 msgid "Retry"
 msgstr "Reintento"
 
-#: includes/class-lnh-admin.php:140
+#: includes/class-lnh-admin.php:152
 msgid "Waiting for the first run"
 msgstr "Esperando la primera ejecución"
 
-#: includes/class-lnh-admin.php:145
+#: includes/class-lnh-admin.php:157
 msgid "The last run reported an error"
 msgstr "La última ejecución informó de un error"
 
-#: includes/class-lnh-admin.php:148
+#: includes/class-lnh-admin.php:160
 msgid "Agents have not reported for a while"
 msgstr "Los agentes llevan un tiempo sin reportar"
 
-#: includes/class-lnh-admin.php:150
+#: includes/class-lnh-admin.php:162
 msgid "Agents are running normally"
 msgstr "Los agentes funcionan con normalidad"
 
-#: includes/class-lnh-admin.php:170
+#: includes/class-lnh-admin.php:182
 msgid "Settings saved."
 msgstr "Ajustes guardados."
 
-#: includes/class-lnh-admin.php:171
+#: includes/class-lnh-admin.php:183
 msgid "Preset saved."
 msgstr "Preajuste guardado."
 
-#: includes/class-lnh-admin.php:172
+#: includes/class-lnh-admin.php:184
 msgid "Preset deleted."
 msgstr "Preajuste eliminado."
 
-#: includes/class-lnh-admin.php:173
+#: includes/class-lnh-admin.php:185
 msgid "Something went wrong. Nothing was changed."
 msgstr "Algo salió mal. No se cambió nada."
 
-#: includes/class-lnh-admin.php:174
+#: includes/class-lnh-admin.php:186
 msgid "Select at least one article first."
 msgstr "Selecciona primero al menos un artículo."
 
-#: includes/class-lnh-admin.php:201
+#: includes/class-lnh-admin.php:213
 msgid "Your AI newsroom at a glance."
 msgstr "Tu redacción con IA de un vistazo."
 
-#: includes/class-lnh-admin.php:232
+#: includes/class-lnh-admin.php:245
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr "Artículos redactados y auditados por los agentes. Tú decides qué se publica."
 
-#: includes/class-lnh-admin.php:249
+#: includes/class-lnh-admin.php:262
 msgid "Article not found."
 msgstr "Artículo no encontrado."
 
-#: includes/class-lnh-admin.php:249
+#: includes/class-lnh-admin.php:262
 msgid "Back to the queue"
 msgstr "Volver a la cola"
 
-#: includes/class-lnh-admin.php:260
+#: includes/class-lnh-admin.php:273
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr "Todo lo que hicieron el Investigador, el Redactor y el Auditor, paso a paso."
 
-#: includes/class-lnh-admin.php:304
+#: includes/class-lnh-admin.php:317
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr "Diseña una lista de los últimos artículos, mira la vista previa en vivo y copia el shortcode."
 
-#: includes/class-lnh-admin.php:318
+#: includes/class-lnh-admin.php:331
 msgid "News Hub settings"
 msgstr "Ajustes de News Hub"
 
-#: includes/class-lnh-admin.php:335
+#: includes/class-lnh-admin.php:348
 msgid "You are not allowed to do that."
 msgstr "No tienes permiso para hacer eso."
 
-#: includes/class-lnh-admin.php:461
+#: includes/class-lnh-admin.php:474
 msgid "AI agents – audit"
 msgstr "Agentes de IA – auditoría"
 
-#: includes/class-lnh-admin.php:470
+#: includes/class-lnh-admin.php:483
 msgid "AI audit"
 msgstr "Auditoría IA"
 
-#: includes/class-lnh-admin.php:483
+#: includes/class-lnh-admin.php:496
 msgid "Review"
 msgstr "Revisar"
 
-#: includes/class-lnh-admin.php:491
+#: includes/class-lnh-admin.php:504
 msgid "All origins"
 msgstr "Todos los orígenes"
 
-#: includes/class-lnh-admin.php:491
+#: includes/class-lnh-admin.php:504
 msgid "Created by AI agents"
 msgstr "Creados por agentes de IA"
 
-#: includes/class-lnh-admin.php:508
+#: includes/class-lnh-admin.php:521
 msgid "Audit score %d/100"
 msgstr "Puntuación de auditoría %d/100"
 
-#: includes/class-lnh-admin.php:513
+#: includes/class-lnh-admin.php:526
 msgid "Approved"
 msgstr "Aprobado"
 
-#: includes/class-lnh-admin.php:514
+#: includes/class-lnh-admin.php:527
 msgid "Flagged"
 msgstr "Marcado"
 
-#: includes/class-lnh-admin.php:161
+#: includes/class-lnh-admin.php:173
 msgid "%d article published."
 msgid_plural "%d articles published."
 msgstr[0] "%d artículo publicado."
 msgstr[1] "%d artículos publicados."
 
-#: includes/class-lnh-admin.php:163
+#: includes/class-lnh-admin.php:175
 msgid "%d article scheduled."
 msgid_plural "%d articles scheduled."
 msgstr[0] "%d artículo programado."
 msgstr[1] "%d artículos programados."
 
-#: includes/class-lnh-admin.php:165
+#: includes/class-lnh-admin.php:177
 msgid "%d article rejected."
 msgid_plural "%d articles rejected."
 msgstr[0] "%d artículo rechazado."
 msgstr[1] "%d artículos rechazados."
 
-#: includes/class-lnh-admin.php:167
+#: includes/class-lnh-admin.php:179
 msgid "%d article moved back to review."
 msgid_plural "%d articles moved back to review."
 msgstr[0] "%d artículo devuelto a revisión."
 msgstr[1] "%d artículos devueltos a revisión."
 
-#: includes/class-lnh-admin.php:169
+#: includes/class-lnh-admin.php:181
 msgid "%d article deleted."
 msgid_plural "%d articles deleted."
 msgstr[0] "%d artículo eliminado."
@@ -319,55 +323,55 @@ msgstr[1] "%d artículos eliminados."
 msgid "AI-generated illustration"
 msgstr "Ilustración generada con IA"
 
-#: includes/class-lnh-queue.php:52
+#: includes/class-lnh-queue.php:60
 msgid "To review"
 msgstr "Por revisar"
 
-#: includes/class-lnh-queue.php:54
+#: includes/class-lnh-queue.php:62
 msgid "Scheduled"
 msgstr "Programados"
 
-#: includes/class-lnh-queue.php:55
+#: includes/class-lnh-queue.php:63
 msgid "Published"
 msgstr "Publicados"
 
-#: includes/class-lnh-queue.php:56
+#: includes/class-lnh-queue.php:64
 msgid "Rejected"
 msgstr "Rechazados"
 
-#: includes/class-lnh-queue.php:124
+#: includes/class-lnh-queue.php:132
 msgid "You are not allowed to publish this article."
 msgstr "No tienes permiso para publicar este artículo."
 
-#: includes/class-lnh-queue.php:128
+#: includes/class-lnh-queue.php:136
 msgid "This is not an agent article."
 msgstr "Este no es un artículo de los agentes."
 
-#: includes/class-lnh-queue.php:160
+#: includes/class-lnh-queue.php:169
 msgid "You are not allowed to reject this article."
 msgstr "No tienes permiso para rechazar este artículo."
 
-#: includes/class-lnh-queue.php:176
+#: includes/class-lnh-queue.php:185
 msgid "You are not allowed to restore this article."
 msgstr "No tienes permiso para restaurar este artículo."
 
-#: includes/class-lnh-queue.php:189
+#: includes/class-lnh-queue.php:198
 msgid "You are not allowed to delete this article."
 msgstr "No tienes permiso para eliminar este artículo."
 
-#: includes/class-lnh-queue.php:240
+#: includes/class-lnh-queue.php:250
 msgid "[%1$s] New AI draft to review: %2$s (score %3$d)"
 msgstr "[%1$s] Nuevo borrador de IA por revisar: %2$s (puntuación %3$d)"
 
-#: includes/class-lnh-queue.php:243
+#: includes/class-lnh-queue.php:253
 msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
 msgstr "Los agentes tienen un artículo nuevo esperando tu decisión.\n\nAuditoría: %1$s (%2$d/100)\n\nRevísalo aquí: %3$s\n"
 
-#: includes/class-lnh-rest.php:78
+#: includes/class-lnh-rest.php:79
 msgid "The run report is missing run_id."
 msgstr "Al informe de ejecución le falta run_id."
 
-#: includes/class-lnh-runs.php:21
+#: includes/class-lnh-runs.php:24
 msgid "Agent runs"
 msgstr "Ejecuciones de agentes"
 
@@ -651,23 +655,19 @@ msgstr "Eliminar todos los datos del plugin al desinstalar"
 msgid "Removes settings, presets and activity logs. Articles and their audit metadata are never deleted."
 msgstr "Elimina ajustes, preajustes y registros de actividad. Los artículos y sus metadatos de auditoría nunca se borran."
 
-#: includes/class-lnh-shortcode.php:64
+#: includes/class-lnh-shortcode.php:85
 msgid "View all"
 msgstr "Ver todo"
 
-#: includes/class-lnh-shortcode.php:70
+#: includes/class-lnh-shortcode.php:91
 msgid "No articles yet."
 msgstr "Aún no hay artículos."
 
-#: includes/class-lnh-shortcode.php:204
-msgid "%s ago"
-msgstr "hace %s"
-
-#: includes/class-lnh-shortcode.php:245
+#: includes/class-lnh-shortcode.php:266
 msgid "AI image"
 msgstr "Imagen IA"
 
-#: includes/class-lnh-shortcode.php:322
+#: includes/class-lnh-shortcode.php:343
 msgid "Articles pagination"
 msgstr "Paginación de artículos"
 

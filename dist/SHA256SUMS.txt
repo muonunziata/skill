@@ -1,0 +1,2 @@
+00da5c90bffa4f2cbbf8bc04a57c52f27f430fa3b8e040c6f5115bd34575ad29  lehigh-news-hub-complete-1.0.0.zip
+99acba79dee07d2e5d33f3a2700f77ff58e08731724e8998436a2d40074271fd  lehigh-news-hub.zip

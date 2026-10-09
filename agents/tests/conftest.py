@@ -79,7 +79,9 @@ class FakeLLM(LLM):
         self.calls.append((role, model, prompt))
         queue = self.scripts[role]
         item = queue.pop(0) if len(queue) > 1 else queue[0]
-        return item if isinstance(item, str) else json.dumps(item, ensure_ascii=False)
+        text = item if isinstance(item, str) else json.dumps(item, ensure_ascii=False)
+        self._track(model, len(prompt) // 4, len(text) // 4)
+        return text
 
     def grounded_search(self, model, system, prompt):
         return self.grounded

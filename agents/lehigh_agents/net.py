@@ -5,6 +5,7 @@ IP addresses, redirects re-validated hop by hop, bounded size and time.
 """
 from __future__ import annotations
 
+import http.client
 import ipaddress
 import socket
 import urllib.error
@@ -16,9 +17,11 @@ USER_AGENT = "LehighNewsHubBot/1.0 (+local news research; respects robots on req
 
 
 class FetchError(Exception):
-    def __init__(self, message: str, status: int = 0):
+    def __init__(self, message: str, status: int = 0, inconclusive: bool = False):
         super().__init__(message)
         self.status = status  # HTTP status when the server answered, 0 for network / policy errors
+        # True when the failure says nothing about the page itself (timeout, refused by our SSRF policy, flaky network)
+        self.inconclusive = inconclusive
 
 
 @dataclass
@@ -40,22 +43,28 @@ class FetchResult:
 
 
 def check_public_url(url: str, allow_private: bool = False) -> None:
-    parts = urlsplit(url)
+    # URLs come from a model / web pages: malformed ones (bad port, bad IPv6 literal, over-long IDNA label) must surface
+    # as FetchError like every other fetch problem, never as a stray ValueError / UnicodeError.
+    try:
+        parts = urlsplit(url)
+        host = parts.hostname
+        port = parts.port
+    except ValueError as exc:
+        raise FetchError(f"invalid URL: {exc}") from exc
     if parts.scheme not in ("http", "https"):
-        raise FetchError(f"blocked scheme: {parts.scheme or 'none'}")
-    host = parts.hostname
+        raise FetchError(f"blocked scheme: {parts.scheme or 'none'}", inconclusive=True)
     if not host:
         raise FetchError("URL has no host")
     if allow_private:
         return
     try:
-        infos = socket.getaddrinfo(host, parts.port or (443 if parts.scheme == "https" else 80), type=socket.SOCK_STREAM)
-    except socket.gaierror as exc:
+        infos = socket.getaddrinfo(host, port or (443 if parts.scheme == "https" else 80), type=socket.SOCK_STREAM)
+    except (socket.gaierror, UnicodeError) as exc:
         raise FetchError(f"cannot resolve {host}: {exc}") from exc
     for info in infos:
         ip = ipaddress.ip_address(info[4][0])
         if not ip.is_global:
-            raise FetchError(f"blocked non-public address {ip} for {host}")
+            raise FetchError(f"blocked non-public address {ip} for {host}", inconclusive=True)
 
 
 class _Redirects(urllib.request.HTTPRedirectHandler):
@@ -97,4 +106,6 @@ class Fetcher:
         except urllib.error.HTTPError as exc:
             raise FetchError(f"HTTP {exc.code} for {url}", exc.code) from exc
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            raise FetchError(f"network error for {url}: {exc}") from exc
+            raise FetchError(f"network error for {url}: {exc}", inconclusive=True) from exc
+        except (http.client.HTTPException, ValueError, UnicodeError) as exc:  # truncated body, malformed URL / headers
+            raise FetchError(f"invalid response or URL for {url}: {exc}") from exc

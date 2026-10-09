@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the downloadable archives into ./dist
 #   lehigh-news-hub.zip           installable WordPress plugin (Plugins → Add New → Upload)
-#   lehigh-news-hub-complete.zip  whole project: agents + plugin + docs
+#   lehigh-news-hub-complete-<version>.zip  whole project: agents + plugin + docs
 set -euo pipefail
 cd "$(dirname "$0")/.."
 version=$(grep -oP "Version:\s*\K[0-9.]+" wordpress/lehigh-news-hub/lehigh-news-hub.php | head -1)

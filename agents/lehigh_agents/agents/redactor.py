@@ -32,9 +32,11 @@ AI_LABELS = {"es": "Imagen ilustrativa generada con IA", "en": "AI-generated ill
 
 # Words that must never appear in an image prompt for a news outlet (see prompts.IMAGE_PROMPT hard rules).
 UNSAFE_IMAGE_TERMS = re.compile(
-    r"\b(child|children|kid|kids|boy|girl|baby|toddler|teen|teenager|minor|student|victim|corpse|dead|body bag|blood|"
+    r"\b(child|children|kid|kids|boy|girl|baby|toddler|teen|teenager|minor|student|victim|corpse|dead(?![- ]end)|body bag|blood|"
     r"bloody|injur\w*|wound\w*|crash scene|accident scene|arrest\w*|handcuff\w*|gun|guns|weapon\w*|shooting|stabbing|"
     r"riot|protest\w*|police officer|deputy|firefighter|swat|logo|trademark|celebrity|politician|nude|naked)\b", re.I)
+NEUTRAL_ALT = {"es": "Calle residencial de Lehigh Acres, Florida", "en": "Residential street in Lehigh Acres, Florida",
+               "pt": "Rua residencial em Lehigh Acres, Flórida", "fr": "Rue résidentielle de Lehigh Acres, Floride"}
 REALISM_SUFFIX = ("Photorealistic documentary photograph, natural unretouched colour, true-to-life textures, "
                   "subtle film grain, no text, no logos, no watermark.")
 
@@ -76,6 +78,11 @@ def _is_english(text: str) -> bool:
     en = sum(w in _EN_WORDS for w in words)
     es = sum(w in _ES_WORDS for w in words)
     return en >= 5 and en > 2 * es
+
+
+def _comment_text(text: str) -> str:
+    """Make `text` safe inside an HTML comment: no `--` run (so no `-->` / `--!>` can close it early) and no `>`."""
+    return re.sub(r"-+", "-", text).replace(">", "")
 
 
 def image_block(url: str, alt: str, caption: str) -> str:
@@ -152,7 +159,9 @@ class Redactor:
                       "featured_image_alt", "featured_image_caption", "featured_media_id", "image_provider",
                       "image_model"):
             setattr(new, field, getattr(art, field))
+        new.media_todo = list(art.media_todo)  # media still to add (incl. "imagen destacada") survives the rewrite
         self._resolve_placeholders(h, new)
+        new.media_todo = list(dict.fromkeys(new.media_todo))
         self._ev("draft", f"Revisión lista: «{new.post_title}»", model=self.s.redactor_model)
         return new
 
@@ -170,14 +179,13 @@ class Redactor:
     # ───────────────────────── 2. media ─────────────────────────
     def _media(self, h: Hallazgo, art: Articulo) -> None:
         self._resolve_placeholders(h, art)
-        suggested = ""  # the model is told to leave it empty; anything else is never trusted blindly
         if self.make_images and self.imagegen.enabled:
             try:
                 self._generate_featured(h, art)
             except (ImageGenError, LLMError, WPError, OSError) as exc:
                 self._ev("warn", f"No se pudo generar la imagen con IA: {exc}", level="warn")
         if not art.featured_image_url:
-            self._archive_featured(h, art, suggested)
+            self._archive_featured(h, art)
 
     def _resolve_placeholders(self, h: Hallazgo, art: Articulo) -> None:
         art.post_content = re.sub(
@@ -195,14 +203,14 @@ class Redactor:
                     self._ev("media", f"Video de YouTube verificado: {item.caption[:60]}")
                     return video_block(item.url)
                 art.media_todo.append(f"video: {desc}")
-                return f"<!-- lnh-placeholder video: {desc.replace('--', '-')} -->"
+                return f"<!-- lnh-placeholder video: {_comment_text(desc)} -->"
             if used >= 2:
                 art.media_todo.append(f"imagen: {desc}")
-                return f"<!-- lnh-placeholder imagen: {desc.replace('--', '-')} -->"
+                return f"<!-- lnh-placeholder imagen: {_comment_text(desc)} -->"
             hit = self._commons(f"{desc} {self.s.topic}") or self._commons(self.s.topic)
             if not hit:
                 art.media_todo.append(f"imagen: {desc}")
-                return f"<!-- lnh-placeholder imagen: {desc.replace('--', '-')} -->"
+                return f"<!-- lnh-placeholder imagen: {_comment_text(desc)} -->"
             used += 1
             self._ev("media", f"Foto con licencia abierta (Wikimedia Commons): {hit.alt[:60]}")
             return image_block(hit.url, hit.alt or desc, f"{hit.caption} — {hit.credit}" if hit.caption else hit.credit)
@@ -217,7 +225,7 @@ class Redactor:
             log.info("commons search failed: %s", exc)
         return None
 
-    def _archive_featured(self, h: Hallazgo, art: Articulo, suggested: str) -> None:
+    def _archive_featured(self, h: Hallazgo, art: Articulo) -> None:
         """Fallback featured image: an openly licensed Commons photo (or the source image when explicitly allowed)."""
         hit = self._commons(" ".join(h.palabras_clave[:2] + [self.s.topic]))
         if hit:
@@ -255,7 +263,8 @@ class Redactor:
         sensitive = bool(data.get("sensitive"))
         if not _is_english(prompt) or UNSAFE_IMAGE_TERMS.search(prompt):
             self._ev("warn", "El prompt de imagen no cumplió las reglas de seguridad; se usa una escena neutra", level="warn")
-            prompt, sensitive = fallback_image_prompt(h), True
+            # the model's alt text described the scene we just rejected: describe the neutral one instead
+            prompt, alt, sensitive = fallback_image_prompt(h), NEUTRAL_ALT.get(s.language, NEUTRAL_ALT["en"]), True
         if "photo" not in prompt.lower():
             prompt = f"{prompt} {REALISM_SUFFIX}"
         return prompt, alt, sensitive

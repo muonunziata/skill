@@ -9,6 +9,9 @@ final class LNH_Runs {
 	const CPT    = 'lnh_run';
 	const AGENTS = array( 'pipeline', 'rastreador', 'redactor', 'auditor' );
 
+	/** @var array<string, array> Decoded runs by "limit:page" for the current request (reset whenever a run is stored). */
+	private static $memo = array();
+
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ) );
 		add_action( 'lnh_cleanup', array( __CLASS__, 'cleanup' ) );
@@ -43,7 +46,7 @@ final class LNH_Runs {
 			'run_id'      => $str( $raw['run_id'] ?? '', 40 ),
 			'started_at'  => $int( $raw['started_at'] ?? 0 ),
 			'finished_at' => $int( $raw['finished_at'] ?? 0 ),
-			'status'      => in_array( $raw['status'] ?? '', array( 'ok', 'error', 'running' ), true ) ? $raw['status'] : 'ok',
+			'status'      => in_array( $raw['status'] ?? '', array( 'ok', 'error', 'running' ), true ) ? (string) $raw['status'] : 'ok',
 			'dry_run'     => ! empty( $raw['dry_run'] ),
 			'topic'       => $str( $raw['topic'] ?? '' ),
 			'models'      => array(),
@@ -107,11 +110,12 @@ final class LNH_Runs {
 					$data[ $k ] = $int( $d[ $k ] );
 				}
 			}
+			$level = isset( $ev['level'] ) ? (string) $ev['level'] : 'info';
 			$run['events'][] = array(
 				'ts'      => $int( $ev['ts'] ?? 0 ),
 				'agent'   => in_array( $agent, self::AGENTS, true ) ? $agent : 'pipeline',
 				'type'    => $str( $ev['type'] ?? '', 30 ),
-				'level'   => in_array( $ev['level'] ?? 'info', array( 'info', 'warn', 'error' ), true ) ? $ev['level'] : 'info',
+				'level'   => in_array( $level, array( 'info', 'warn', 'error' ), true ) ? $level : 'info',
 				'message' => $str( $ev['message'] ?? '', 400 ),
 				'item'    => esc_url_raw( (string) ( $ev['item'] ?? '' ) ),
 				'data'    => $data,
@@ -136,6 +140,7 @@ final class LNH_Runs {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+		self::$memo = array();
 		update_post_meta( $id, 'lnh_run_data', wp_slash( wp_json_encode( $run, JSON_UNESCAPED_UNICODE ) ) );
 		update_post_meta( $id, 'lnh_run_started', (int) $run['started_at'] );
 		return $id;
@@ -161,6 +166,11 @@ final class LNH_Runs {
 
 	/** Most recent runs, newest first. */
 	public static function recent( int $limit = 20, int $page = 1 ): array {
+		// The activity screen asks for the same 200 runs several times (stats, funnel); decode them once per request.
+		$memo = $limit . ':' . $page;
+		if ( isset( self::$memo[ $memo ] ) ) {
+			return self::$memo[ $memo ];
+		}
 		$q = new WP_Query(
 			array(
 				'post_type'      => self::CPT,
@@ -180,6 +190,7 @@ final class LNH_Runs {
 				$out[] = $data;
 			}
 		}
+		self::$memo[ $memo ] = $out;
 		return $out;
 	}
 
@@ -224,7 +235,7 @@ final class LNH_Runs {
 		$since = time() - $days * DAY_IN_SECONDS;
 		$stats = array(
 			'rastreador' => array( 'searches' => 0, 'pages' => 0, 'findings' => 0, 'skipped' => 0, 'last' => 0, 'model' => '' ),
-			'redactor'   => array( 'drafts' => 0, 'revisions' => 0, 'images' => 0, 'prompts' => 0, 'last' => 0, 'model' => '' ),
+			'redactor'   => array( 'drafts' => 0, 'images' => 0, 'prompts' => 0, 'last' => 0, 'model' => '' ),
 			'auditor'    => array( 'audits' => 0, 'approved' => 0, 'flagged' => 0, 'submitted' => 0, 'last' => 0, 'model' => '' ),
 			'runs'       => 0,
 			'tokens'     => 0,

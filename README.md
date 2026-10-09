@@ -94,9 +94,9 @@ php wordpress/tests/run.php /ruta/a/wordpress
 agents/                      Agentes en Python (Gemini · Claude · OpenAI · imágenes)
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
-  tests/                       36 pruebas
+  tests/                       44 pruebas
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      Pruebas dentro de WordPress
+wordpress/tests/run.php      65 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 scripts/build-release.sh     Genera los .zip descargables
 ```

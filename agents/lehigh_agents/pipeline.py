@@ -12,7 +12,7 @@ from .imagegen import ImageGenError, ImageGenerator
 from .llm import LLM, LLMError
 from .net import Fetcher
 from .runlog import RunLog
-from .schemas import Articulo, Auditoria, Hallazgo
+from .schemas import Articulo, Hallazgo
 from .settings import Settings
 from .store import Store
 from .wordpress import WPError, WordPressClient
@@ -37,6 +37,7 @@ class Pipeline:
     def run_once(self) -> dict[str, Any]:
         runlog = RunLog()
         s = self.s
+        self.llm.usage = {}  # token usage is reported per run; the LLM client lives for the whole `watch` session
         report: dict[str, Any] = {
             "run_id": runlog.run_id, "started_at": int(time.time()), "dry_run": self.dry_run,
             "models": {"rastreador": s.rastreador_model, "redactor": s.redactor_model, "auditor": s.auditor_model,
@@ -95,11 +96,11 @@ class Pipeline:
                         posted=outcome["posted"], reason=outcome.get("reason", ""),
                         post=outcome.get("post"), article=art.to_dict(), finding=h.to_dict())
             posted = outcome["posted"]
-            self.store.remember(h.url, h.titulo_fuente, "published" if posted else aud.status)
+            self._remember(h, "published" if posted else aud.status)
         except (LLMError, ImageGenError, WPError) as exc:
             emit("pipeline", "error", f"Falló «{h.titulo_fuente}»: {exc}", level="error")
             item["error"] = str(exc)
-            self.store.remember(h.url, h.titulo_fuente, "failed")
+            self._remember(h, "failed")
             # don't leave the AI image we uploaded for an article that never reached WordPress
             if art is not None and not posted and self.wp is not None and art.featured_media_id:
                 if self.wp.delete_media(art.featured_media_id):
@@ -107,6 +108,11 @@ class Pipeline:
         return item
 
     # ───────────────────────── persistence ─────────────────────────
+    def _remember(self, h: Hallazgo, status: str) -> None:
+        """Anti-duplicate memory. A dry run must not consume stories: the real run that follows should still see them."""
+        if not self.dry_run:
+            self.store.remember(h.url, h.titulo_fuente, status)
+
     def _save(self, report: dict[str, Any]) -> None:
         out = Path(self.s.state_dir) / "runs"
         out.mkdir(parents=True, exist_ok=True)

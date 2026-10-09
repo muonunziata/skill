@@ -11,9 +11,30 @@ final class LNH_Shortcode {
 	public static function init(): void {
 		add_shortcode( self::TAG, array( __CLASS__, 'render' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
-		foreach ( array( 'save_post', 'deleted_post', 'trashed_post', 'untrashed_post', 'edited_term', 'delete_term' ) as $hook ) {
+		foreach ( array( 'save_post', 'deleted_post', 'trashed_post', 'untrashed_post' ) as $hook ) {
+			add_action( $hook, array( __CLASS__, 'bump_cache_for_post' ), 10, 2 );
+		}
+		foreach ( array( 'edited_term', 'delete_term' ) as $hook ) {
 			add_action( $hook, array( __CLASS__, 'bump_cache' ) );
 		}
+	}
+
+	/**
+	 * Only changes to regular posts affect the lists. save_post also fires for revisions, autosaves and the plugin's own
+	 * lnh_run log posts (once per agent run), which must not flush every cached list.
+	 *
+	 * @param int          $post_id Post ID.
+	 * @param WP_Post|null $post    Post (not passed by every hook).
+	 */
+	public static function bump_cache_for_post( $post_id, $post = null ): void {
+		$type = $post instanceof WP_Post ? $post->post_type : get_post_type( $post_id );
+		if ( $type && 'post' !== $type ) {
+			return;
+		}
+		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+		self::bump_cache();
 	}
 
 	public static function register_assets(): void {
@@ -244,7 +265,7 @@ final class LNH_Shortcode {
 			if ( $thumb && $a['show_ai_badge'] && get_post_meta( $post->ID, 'lnh_featured_image_ai', true ) ) {
 				$badge = '<span class="lnh-badge" title="' . esc_attr__( 'AI-generated illustration', 'lehigh-news-hub' ) . '">' . esc_html__( 'AI image', 'lehigh-news-hub' ) . '</span>';
 			}
-			$inner = $thumb ? $thumb : '<span class="lnh-card__ph" aria-hidden="true">' . esc_html( mb_strtoupper( mb_substr( wp_strip_all_tags( $post->post_title ), 0, 1 ) ) ) . '</span>';
+			$inner = $thumb ? $thumb : '<span class="lnh-card__ph" aria-hidden="true">' . esc_html( function_exists( 'mb_strtoupper' ) ? mb_strtoupper( mb_substr( wp_strip_all_tags( $post->post_title ), 0, 1 ) ) : strtoupper( substr( wp_strip_all_tags( $post->post_title ), 0, 1 ) ) ) . '</span>';
 			$media = '<a class="lnh-card__media" href="' . esc_url( $url ) . '"' . $target . ' tabindex="-1" aria-hidden="true">' . $inner . $badge . '</a>';
 		}
 		$excerpt = '';
@@ -335,7 +356,8 @@ final class LNH_Shortcode {
 				continue;
 			}
 			if ( (string) $v !== (string) $schema[ $k ]['default'] ) {
-				$parts[] = $k . '="' . str_replace( '"', '', (string) $v ) . '"';
+				// A shortcode attribute cannot contain a double quote or a closing bracket: swap them for harmless look-alikes.
+				$parts[] = $k . '="' . str_replace( array( '"', '[', ']' ), array( '”', '(', ')' ), (string) $v ) . '"';
 			}
 		}
 		return '[' . self::TAG . ( $parts ? ' ' . implode( ' ', $parts ) : '' ) . ']';

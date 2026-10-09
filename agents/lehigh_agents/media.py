@@ -145,20 +145,6 @@ def image_size(data: bytes) -> tuple[int, int]:
     return 0, 0
 
 
-def probe_image(fetcher: Fetcher, url: str, min_width: int = 400) -> tuple[int, int] | None:
-    """Return (w, h) if `url` is a real, reasonably large image; otherwise None."""
-    try:
-        res = fetcher.get(url, max_bytes=262_144, accept="image/*")
-    except FetchError:
-        return None
-    if not res.content_type.lower().startswith("image/") or "svg" in res.content_type.lower():
-        return None
-    w, h = image_size(res.body)
-    if w and w < min_width:
-        return None
-    return w, h
-
-
 # --------------------------------------------------------------------------- Wikimedia Commons
 def classify_license(short_name: str) -> str:
     s = (short_name or "").lower().replace("-", " ").strip()

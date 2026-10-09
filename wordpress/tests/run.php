@@ -24,6 +24,17 @@ if ( ! class_exists( 'LNH_Util' ) ) {
 	exit( 2 );
 }
 
+// Any PHP warning/notice raised by the plugin's own files is a test failure.
+$php_problems = array();
+set_error_handler(
+	function ( $no, $msg, $file, $line ) use ( &$php_problems ) {
+		if ( false !== strpos( $file, 'lehigh-news-hub' ) && ! ( $no & ( E_DEPRECATED | E_USER_DEPRECATED ) ) ) {
+			$php_problems[] = basename( $file ) . ":$line $msg";
+		}
+		return true;
+	}
+);
+
 $pass = 0;
 $fail = 0;
 function t( string $name, $cond, $detail = '' ) {
@@ -122,7 +133,7 @@ wp_set_current_user( $contrib );
 $p2 = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 70 ) );
 t( 'contributor cannot publish', is_wp_error( LNH_Queue::publish( $p2 ) ) && 'draft' === get_post_status( $p2 ) );
 t( 'contributor cannot reject/delete others', is_wp_error( LNH_Queue::reject( $p1 ) ) && is_wp_error( LNH_Queue::delete( $p1 ) ) );
-t( 'REST feed denied to contributor', ! LNH_Rest::can_review() && LNH_Rest::can_post() );
+t( 'contributors can neither read the feed nor forge run reports', ! LNH_Rest::can_review() && ! LNH_Rest::can_post() );
 wp_set_current_user( $admin );
 t( 'delete', true === LNH_Queue::delete( $p2 ) && null === get_post( $p2 ) );
 $c = LNH_Queue::counts();
@@ -131,6 +142,7 @@ wp_delete_user( $contrib );
 
 echo "REST: agent creates a post -> auto-publish + notification\n";
 update_option( LNH_Settings::OPTION, array_merge( LNH_Settings::all(), array( 'auto_publish' => 1, 'auto_publish_min_score' => 90, 'notify' => 1 ) ) );
+delete_transient( 'lnh_notify_' . gmdate( 'YmdH' ) ); // the hourly e-mail cap would otherwise make repeated runs fail
 $mails = array();
 add_filter( 'pre_wp_mail', function ( $r, $atts ) use ( &$mails ) { $mails[] = $atts; return true; }, 10, 2 );
 $post_via_rest = function ( array $meta ) {
@@ -160,6 +172,13 @@ $created[] = $bad['id'];
 t( 'meta sanitised on write (bad URL dropped, tags stripped)', '' === get_post_meta( $bad['id'], 'lnh_source_url', true ) && 'approved' === get_post_meta( $bad['id'], 'lnh_audit_status', true ) );
 $invalid = $post_via_rest( array( 'lnh_audit_score' => 'abc' ) );
 t( 'non-numeric score rejected by REST validation', isset( $invalid['code'] ) && 0 === strpos( $invalid['code'], 'rest_invalid' ), $invalid['code'] ?? 'accepted' );
+$contrib2 = wp_insert_user( array( 'user_login' => 'lnh_contrib2_' . wp_rand(), 'user_pass' => wp_generate_password(), 'role' => 'contributor' ) );
+wp_set_current_user( $contrib2 );
+$forged = $post_via_rest( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 100 ) );
+$created[] = $forged['id'];
+t( 'a contributor cannot self-publish by claiming an approved audit', 'draft' === get_post_status( $forged['id'] ), get_post_status( $forged['id'] ) );
+wp_set_current_user( $admin );
+wp_delete_user( $contrib2 );
 update_option( LNH_Settings::OPTION, $before );
 
 $xss = $post_via_rest( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 80 ) );
@@ -175,6 +194,24 @@ $req = new WP_REST_Request( 'POST', '/wp/v2/posts' );
 $req->set_header( 'content-type', 'application/json' );
 $req->set_body( wp_json_encode( array( 'title' => 'plain', 'status' => 'draft', 'content' => '<p>ok</p>' ) ) );
 $created[] = rest_do_request( $req )->get_data()['id'];
+echo "Queue: scheduled articles, dates\n";
+$sch = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 80 ) );
+LNH_Queue::publish( $sch, time() + 86400 * 3 );
+t( 'scheduled for the future', 'future' === get_post_status( $sch ) );
+t( '"Publish now" on a scheduled article really publishes it', true === LNH_Queue::publish( $sch ) && 'publish' === get_post_status( $sch ), get_post_status( $sch ) );
+$fd = $mk( array( 'lnh_audit_status' => 'approved' ) );
+t( 'draft timestamp falls back to the local date (drafts have no GMT date)', abs( LNH_Util::post_timestamp( get_post( $fd ) ) - time() ) < 300, LNH_Util::post_timestamp( get_post( $fd ) ) );
+t( 'a future date is never shown as "ago"', false === strpos( LNH_Util::ago( time() + 2 * DAY_IN_SECONDS ), 'ago' ) );
+t( 'words() never cuts a multibyte letter', mb_check_encoding( LNH_Util::words( 'El pozo se ABRIÓ ayer', 4 ), 'UTF-8' ) && 'El pozo se ABRIÓ…' === LNH_Util::words( 'El pozo se ABRIÓ ayer', 4 ) );
+echo "Public REST output\n";
+$pub = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 90, 'lnh_audit_notes' => '["secret note"]', 'lnh_trace' => '[]' ), 'publish' );
+wp_set_current_user( 0 );
+$res = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/posts/' . $pub ) )->get_data();
+t( 'visitors do not see lnh_* meta on published agent articles', 200 === ( $res ? 200 : 0 ) && ! isset( $res['meta']['lnh_audit_notes'] ) && ! isset( $res['meta']['lnh_trace'] ) && ! isset( $res['meta']['lnh_audit_score'] ), $res['meta'] ?? $res );
+wp_set_current_user( $admin );
+$res = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/posts/' . $pub ) )->get_data();
+t( 'editors still see it', 90 === ( $res['meta']['lnh_audit_score'] ?? null ) );
+t( 'to_string neutralises quotes and brackets', '[lehigh_news heading="Top (news) ”x”"]' === LNH_Shortcode::to_string( array( 'heading' => 'Top [news] "x"' ) ), LNH_Shortcode::to_string( array( 'heading' => 'Top [news] "x"' ) ) );
 echo "SEO sync\n";
 $sp = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_meta_description' => 'Meta desc' ) );
 wp_update_post( array( 'ID' => $sp, 'post_title' => 'T2' ) );
@@ -194,5 +231,7 @@ wp_reset_postdata();
 foreach ( $created as $id ) {
 	wp_delete_post( $id, true );
 }
+delete_transient( 'lnh_notify_' . gmdate( 'YmdH' ) );
+t( 'no PHP warnings or notices from the plugin', array() === $php_problems, $php_problems );
 echo "\n$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

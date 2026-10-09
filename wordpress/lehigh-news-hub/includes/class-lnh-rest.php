@@ -53,8 +53,9 @@ final class LNH_Rest {
 		);
 	}
 
+	/** Agents authenticate as Author or higher. Contributors must not be able to forge activity logs. */
 	public static function can_post(): bool {
-		return current_user_can( 'edit_posts' );
+		return current_user_can( 'publish_posts' );
 	}
 
 	public static function can_review(): bool {
@@ -81,7 +82,6 @@ final class LNH_Rest {
 		if ( is_wp_error( $id ) ) {
 			return new WP_Error( 'lnh_store_failed', $id->get_error_message(), array( 'status' => 500 ) );
 		}
-		update_option( 'lnh_last_heartbeat', time(), false );
 		return new WP_REST_Response( array( 'ok' => true, 'id' => $id ), 201 );
 	}
 

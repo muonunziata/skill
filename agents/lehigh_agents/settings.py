@@ -46,10 +46,14 @@ def _image_provider(e) -> str:
     explicit = (e("IMAGE_PROVIDER") or "").strip().lower()
     if explicit in {"none", "off", "disabled", "false"}:
         return ""
+    has_key = bool((e("IMAGE_API_KEY") or "").strip())
     if explicit:
-        return explicit
+        # .env.example ships IMAGE_PROVIDER=replicate with an empty key and documents "leave IMAGE_API_KEY empty to
+        # disable", so a named provider without credentials means "off" (Gemini can reuse its text-model key).
+        gemini_key = explicit == "gemini" and bool((e("GEMINI_API_KEY") or e("GOOGLE_API_KEY") or "").strip())
+        return explicit if (has_key or gemini_key) else ""
     endpoint = (e("IMAGE_API_ENDPOINT") or "").lower()
-    if not (e("IMAGE_API_KEY") or "").strip():
+    if not has_key:
         return ""
     if "replicate" in endpoint or not endpoint:
         return "replicate"

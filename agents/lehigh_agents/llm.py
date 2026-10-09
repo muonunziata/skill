@@ -153,15 +153,10 @@ class LLM:
             return LLMError(f"Gemini rejected the API key / permissions ({code}): {msg}")
         return LLMError(f"Gemini API error {code}: {msg}", retryable=code == 429 or code >= 500 or code == 0)
 
-    def _gemini(self, model: str, system: str, prompt: str, max_tokens: int, want_json: bool) -> str:
-        from google.genai import errors, types
+    def _gemini_generate(self, model: str, prompt: str, cfg: Any) -> Any:
+        """One generate_content call with error mapping and token accounting (shared by plain and grounded requests)."""
+        from google.genai import errors
 
-        cfg = types.GenerateContentConfig(
-            system_instruction=system,
-            max_output_tokens=max_tokens,
-            temperature=0.3,
-            response_mime_type="application/json" if want_json else None,
-        )
         try:
             resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
         except errors.APIError as exc:
@@ -170,13 +165,25 @@ class LLM:
             raise LLMError(f"Gemini request failed: {exc}", retryable=True) from exc
         meta = getattr(resp, "usage_metadata", None)
         self._track(model, getattr(meta, "prompt_token_count", 0), getattr(meta, "candidates_token_count", 0))
+        return resp
+
+    def _gemini(self, model: str, system: str, prompt: str, max_tokens: int, want_json: bool) -> str:
+        from google.genai import types
+
+        cfg = types.GenerateContentConfig(
+            system_instruction=system,
+            max_output_tokens=max_tokens,
+            temperature=0.3,
+            response_mime_type="application/json" if want_json else None,
+        )
+        resp = self._gemini_generate(model, prompt, cfg)
         text = getattr(resp, "text", None)
         if not text:
             raise LLMError("Gemini returned an empty response (it may have been blocked by a safety filter)")
         return text
 
     def _gemini_grounded(self, model: str, system: str, prompt: str) -> Grounded:
-        from google.genai import errors, types
+        from google.genai import types
 
         if model.lower().startswith("gemini-1."):  # legacy tool name for the 1.x family
             tool = types.Tool(google_search_retrieval=types.GoogleSearchRetrieval())
@@ -184,14 +191,7 @@ class LLM:
             tool = types.Tool(google_search=types.GoogleSearch())
         cfg = types.GenerateContentConfig(system_instruction=system, tools=[tool], temperature=0.2,
                                           max_output_tokens=8192)
-        try:
-            resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
-        except errors.APIError as exc:
-            raise self._gemini_error(exc, model) from exc
-        except Exception as exc:
-            raise LLMError(f"Gemini request failed: {exc}", retryable=True) from exc
-        meta = getattr(resp, "usage_metadata", None)
-        self._track(model, getattr(meta, "prompt_token_count", 0), getattr(meta, "candidates_token_count", 0))
+        resp = self._gemini_generate(model, prompt, cfg)
         cand = (getattr(resp, "candidates", None) or [None])[0]
         gm = getattr(cand, "grounding_metadata", None)
         sources: list[dict[str, str]] = []

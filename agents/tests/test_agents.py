@@ -448,3 +448,89 @@ def test_env_file_discovery_prefers_cwd(tmp_path, monkeypatch):
     assert s.gemini_api_key == "from-dotenv" and s.redactor_model == "gpt-4o-mini"
     monkeypatch.setenv("GEMINI_API_KEY", "from-env")  # real environment wins over the file
     assert Settings.from_env().gemini_api_key == "from-env"
+
+
+# ───────────────────────── regressions found in review ─────────────────────────
+def test_sanitizer_removes_whole_blocks_and_separatorless_event_handlers():
+    from lehigh_agents.htmlutil import sanitize_html, unsafe_html_problems
+    out = sanitize_html('<p>a</p><script>alert(1)</script><style>p{display:none}</style><iframe src="//x"></iframe><p>b</p>')
+    assert out == "<p>a</p><p>b</p>"
+    for evil in ('<a href="x"onclick="e()">k</a>', "<img/src=x/onerror=alert(1)>", "<p onclick='x()'>k</p>"):
+        assert unsafe_html_problems(sanitize_html(evil)) == []
+        assert "onerror" not in sanitize_html(evil) and "onclick" not in sanitize_html(evil)
+    assert unsafe_html_problems("<img src=x onerror=alert(1)>")
+    assert unsafe_html_problems("<p>one = two, see https://x.example/online=1</p>") == []
+
+
+def test_env_example_defaults_run_without_an_image_key(monkeypatch, tmp_path):
+    import shutil
+    from pathlib import Path
+    for k in ("IMAGE_API_KEY", "IMAGE_PROVIDER", "IMAGE_API_ENDPOINT", "IMAGE_MODEL", "GOOGLE_API_KEY", "REDACCTOR_MODEL",
+              "REDACTOR_MODEL", "RASTREADOR_MODEL", "AUDITOR_MODEL"):
+        monkeypatch.delenv(k, raising=False)  # other tests load .env files straight into os.environ
+    env = tmp_path / ".env"
+    shutil.copy(Path(__file__).resolve().parent.parent / ".env.example", env)
+    monkeypatch.setenv("GEMINI_API_KEY", "g")
+    monkeypatch.setenv("WP_REST_URL", "https://x.example")
+    monkeypatch.setenv("WP_AUTH_TOKEN", "u:p")
+    s = Settings.from_env(env)
+    assert s.image_provider == "" and s.problems() == []  # "leave IMAGE_API_KEY empty to disable"
+    monkeypatch.setenv("IMAGE_API_KEY", "k")
+    assert Settings.from_env(env).image_provider == "replicate"
+
+
+def test_malformed_urls_are_fetch_errors_not_crashes():
+    from lehigh_agents.net import Fetcher
+    for url in ("http://example.com:abc/", "http://" + "a" * 70 + ".com/", "http://[::1/"):
+        with pytest.raises(FetchError):
+            Fetcher().get(url)
+
+
+def test_timeouts_and_blocked_hosts_are_not_broken_links(settings):
+    from lehigh_agents.checks import check_links
+    fetch = FakeFetcher({"https://slow.example/a": FetchError("network error: timed out", inconclusive=True),
+                         "https://nxdomain.example/a": FetchError("cannot resolve nxdomain.example")})
+    res = {r.url: r.state for r in check_links(fetch, ["https://slow.example/a", "https://nxdomain.example/a", "https://gone.example/a"])}
+    assert res == {"https://slow.example/a": "unverifiable", "https://nxdomain.example/a": "broken", "https://gone.example/a": "broken"}
+
+
+def test_dry_run_does_not_consume_stories_for_the_real_run(settings, wp_server):
+    fetch = FakeFetcher({URL: article_page()})
+    grounded = Grounded("n", [], [{"uri": URL, "title": "w", "domain": "w"}])
+
+    def llm():
+        return FakeLLM(settings, {"rastreador": [[{"titulo_fuente": "Road", "url": URL, "resumen_hechos": FACTS}]],
+                                  "redactor": [ARTICLE_JSON], "imagen": [{"image_prompt": IMG_PROMPT, "alt_text": "a"}],
+                                  "auditor": [audit_json(90)]}, grounded)
+
+    assert Pipeline(settings, llm=llm(), imagegen=FakeGen(), fetcher=fetch, dry_run=True).run_once()["counts"]["found"] == 1
+    real = Pipeline(settings, llm=llm(), wp=WordPressClient(settings.wp_rest_url, settings.wp_auth_token), imagegen=FakeGen(), fetcher=fetch)
+    assert real.run_once()["counts"]["approved"] == 1
+
+
+def test_token_usage_is_reported_per_run(settings, wp_server):
+    llm = FakeLLM(settings, {"rastreador": [[]]}, Grounded("n", [], []))
+    pipe = Pipeline(settings, llm=llm, wp=WordPressClient(settings.wp_rest_url, settings.wp_auth_token), imagegen=FakeGen(), fetcher=FakeFetcher())
+    llm._track("m", 100, 10)
+    first = {k: dict(v) for k, v in pipe.run_once()["usage"].items()}
+    assert first == {}  # usage recorded before the run started does not leak into its report
+    llm._track("m", 5, 1)
+    assert pipe.run_once()["usage"] == {} and llm.usage == {}
+
+
+def test_revision_keeps_pending_media_todos_and_neutral_alt_text(settings):
+    llm = FakeLLM(settings, {"redactor": [ARTICLE_JSON]})
+    red = make_redactor(settings, llm, FakeFetcher())
+    art = article(media_todo=["imagen destacada", "imagen: calle"], featured_image_url="https://x.example/i.jpg")
+    new = red.revise(H(), art, ["nota"])
+    assert "imagen destacada" in new.media_todo and "imagen: calle" in new.media_todo
+    assert len(new.media_todo) == len(set(new.media_todo))
+    bad = {"image_prompt": IMG_PROMPT.replace("residential street", "crime scene with a victim and a child"),
+           "alt_text": "Un niño víctima en la escena del crimen", "sensitive": True}
+    _, alt, _ = make_redactor(settings, FakeLLM(settings, {"imagen": [bad]}), FakeFetcher()).build_image_prompt(H(), art)
+    assert "niño" not in alt and "Lehigh Acres" in alt
+
+
+def test_placeholder_text_cannot_close_its_html_comment():
+    from lehigh_agents.agents.redactor import _comment_text
+    assert "--" not in _comment_text("foto --- de --->la calle") and ">" not in _comment_text("a --> b")

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
 from .htmlutil import extract_urls, strip_tags, unsafe_html_problems, word_count
@@ -18,20 +19,26 @@ class LinkResult:
     detail: str = ""
 
 
-def check_links(fetcher: Fetcher, urls: list[str], limit: int = 15) -> list[LinkResult]:
-    results: list[LinkResult] = []
-    for url in urls[:limit]:
-        try:
-            fetcher.get(url, max_bytes=2048)
-            results.append(LinkResult(url, "ok"))
-        except FetchError as exc:
-            if exc.status in UNVERIFIABLE:
-                results.append(LinkResult(url, "unverifiable", f"HTTP {exc.status}"))
-            elif exc.status >= 500:
-                results.append(LinkResult(url, "unverifiable", f"HTTP {exc.status} (server error, retry later)"))
-            else:
-                results.append(LinkResult(url, "broken", str(exc)[:160]))
-    return results
+def _probe(fetcher: Fetcher, url: str) -> LinkResult:
+    try:
+        fetcher.get(url, max_bytes=2048)
+        return LinkResult(url, "ok")
+    except FetchError as exc:
+        if exc.status in UNVERIFIABLE:
+            return LinkResult(url, "unverifiable", f"HTTP {exc.status}")
+        if exc.status >= 500:
+            return LinkResult(url, "unverifiable", f"HTTP {exc.status} (server error, retry later)")
+        if exc.inconclusive:  # timeout / refused by our SSRF policy: we cannot say the link is dead
+            return LinkResult(url, "unverifiable", str(exc)[:160])
+        return LinkResult(url, "broken", str(exc)[:160])
+
+
+def check_links(fetcher: Fetcher, urls: list[str], limit: int = 15, workers: int = 5) -> list[LinkResult]:
+    batch = urls[:limit]
+    if len(batch) < 2:
+        return [_probe(fetcher, u) for u in batch]
+    with ThreadPoolExecutor(max_workers=min(workers, len(batch))) as pool:  # independent requests; map keeps the order
+        return list(pool.map(lambda u: _probe(fetcher, u), batch))
 
 
 _NUM = re.compile(r"(?<![\w.,])\$?\d[\d.,]*\d%?|(?<![\w.,])\$?\d%?")

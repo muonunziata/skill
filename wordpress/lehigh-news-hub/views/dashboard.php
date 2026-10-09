@@ -39,7 +39,7 @@ $state  = $health['state'];
 							<span class="lnh-thumb"><?php echo has_post_thumbnail( $p ) ? get_the_post_thumbnail( $p, array( 72, 48 ) ) : '<i></i>'; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 							<div class="lnh-list__main">
 								<a class="lnh-list__title" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-review&post=' . $p->ID ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a>
-								<span class="lnh-muted"><?php echo esc_html( LNH_Util::host( (string) get_post_meta( $p->ID, 'lnh_source_url', true ) ) ); ?> · <?php echo esc_html( LNH_Util::ago( (int) get_post_time( 'U', true, $p ) ) ); ?></span>
+								<span class="lnh-muted"><?php echo esc_html( LNH_Util::host( (string) get_post_meta( $p->ID, 'lnh_source_url', true ) ) ); ?> · <?php echo esc_html( LNH_Util::ago( LNH_Util::post_timestamp( $p ) ) ); ?></span>
 							</div>
 							<?php echo LNH_Admin::ring( $score ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 							<a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-review&post=' . $p->ID ) ); ?>"><?php esc_html_e( 'Review', 'lehigh-news-hub' ); ?></a>

@@ -84,7 +84,8 @@ final class LNH_Util {
 		if ( ! $parts || count( $parts ) <= $n ) {
 			return $text;
 		}
-		return rtrim( implode( ' ', array_slice( $parts, 0, $n ) ), ".,;:–-" ) . '…';
+		// preg (not rtrim): rtrim's character list is bytes, and the bytes of "–" also end letters such as "Ó".
+		return preg_replace( '/[.,;:–-]+$/u', '', implode( ' ', array_slice( $parts, 0, $n ) ) ) . '…';
 	}
 
 	/** CSS aspect-ratio value from "16:9" ("" for auto). */
@@ -132,12 +133,27 @@ final class LNH_Util {
 		return $out;
 	}
 
+	/**
+	 * Unix time of a post. Drafts and pending posts have a "floating" GMT date (0000-00-00), for which get_post_time()
+	 * with $gmt = true returns false, so fall back to the local post_date, which is always set.
+	 *
+	 * @param WP_Post|int $post Post.
+	 */
+	public static function post_timestamp( $post ): int {
+		$ts = get_post_time( 'U', true, $post );
+		if ( ! $ts ) {
+			$ts = get_post_time( 'U', false, $post );
+		}
+		return (int) $ts;
+	}
+
 	/** Human time like "5 minutes ago" or the date for old items. */
 	public static function ago( int $ts ): string {
 		if ( $ts <= 0 ) {
 			return '—';
 		}
-		if ( time() - $ts < 7 * DAY_IN_SECONDS ) {
+		$age = time() - $ts;
+		if ( $age >= 0 && $age < 7 * DAY_IN_SECONDS ) { // A scheduled (future) date is shown as a date, never as "2 days ago".
 			/* translators: %s: human readable time difference */
 			return sprintf( __( '%s ago', 'lehigh-news-hub' ), human_time_diff( $ts ) );
 		}

@@ -6,4 +6,9 @@ services:
     environment:
       STATE_DIR: /app/state
     volumes:
-      - ./state:/app/state
+      # A named volume inherits the image's /app/state ownership (user "agent"); a ./state bind mount would be created
+      # root-owned by Docker and the unprivileged container user could not open the SQLite memory.
+      - state:/app/state
+
+volumes:
+  state:

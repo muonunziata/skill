@@ -35,279 +35,283 @@ msgstr ""
 msgid "Review article"
 msgstr ""
 
-#: includes/class-lnh-admin.php:72
+#: includes/class-lnh-admin.php:79
+msgid "%s ago"
+msgstr ""
+
+#: includes/class-lnh-admin.php:80
 msgid "Copied!"
 msgstr ""
 
-#: includes/class-lnh-admin.php:73
+#: includes/class-lnh-admin.php:81
 msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
 msgstr ""
 
-#: includes/class-lnh-admin.php:74
+#: includes/class-lnh-admin.php:82
 msgid "Delete permanently? This cannot be undone."
 msgstr ""
 
-#: includes/class-lnh-admin.php:75
+#: includes/class-lnh-admin.php:83
 msgid "No activity yet."
 msgstr ""
 
-#: includes/class-lnh-admin.php:76
+#: includes/class-lnh-admin.php:84
 msgid "Live"
 msgstr ""
 
-#: includes/class-lnh-admin.php:77
+#: includes/class-lnh-admin.php:85
 msgid "Paused"
 msgstr ""
 
-#: includes/class-lnh-admin.php:78
+#: includes/class-lnh-admin.php:86
 msgid "Could not render the preview."
 msgstr ""
 
-#: includes/class-lnh-admin.php:100
+#: includes/class-lnh-admin.php:108
 msgid "Researcher"
 msgstr ""
 
-#: includes/class-lnh-admin.php:100
+#: includes/class-lnh-admin.php:108
 msgid "Searches the web and reads the sources"
 msgstr ""
 
-#: includes/class-lnh-admin.php:101
+#: includes/class-lnh-admin.php:109
 msgid "Writer"
 msgstr ""
 
-#: includes/class-lnh-admin.php:101
+#: includes/class-lnh-admin.php:109
 msgid "Writes the article and its featured image"
 msgstr ""
 
-#: includes/class-lnh-admin.php:102
+#: includes/class-lnh-admin.php:110
 msgid "Auditor"
 msgstr ""
 
-#: includes/class-lnh-admin.php:102
+#: includes/class-lnh-admin.php:110
 msgid "Fact-checks, then decides if it can be sent"
 msgstr ""
 
-#: includes/class-lnh-admin.php:103
+#: includes/class-lnh-admin.php:111
 msgid "Coordinator"
 msgstr ""
 
-#: includes/class-lnh-admin.php:103
+#: includes/class-lnh-admin.php:111
 msgid "Runs the three agents in order"
 msgstr ""
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:122
 msgid "Run started"
 msgstr ""
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:123
 msgid "Run finished"
 msgstr ""
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:124
 msgid "Working"
 msgstr ""
 
-#: includes/class-lnh-admin.php:112
+#: includes/class-lnh-admin.php:125
 msgid "Web search"
 msgstr ""
 
-#: includes/class-lnh-admin.php:113
+#: includes/class-lnh-admin.php:126
 msgid "Read a page"
 msgstr ""
 
-#: includes/class-lnh-admin.php:114
+#: includes/class-lnh-admin.php:127
 msgid "Story found"
 msgstr ""
 
-#: includes/class-lnh-admin.php:115
+#: includes/class-lnh-admin.php:128
 msgid "Skipped"
 msgstr ""
 
-#: includes/class-lnh-admin.php:116
+#: includes/class-lnh-admin.php:129
 msgid "Draft written"
 msgstr ""
 
-#: includes/class-lnh-admin.php:117
+#: includes/class-lnh-admin.php:130
 msgid "Media"
 msgstr ""
 
-#: includes/class-lnh-admin.php:118
+#: includes/class-lnh-admin.php:131
 msgid "Image prompt"
 msgstr ""
 
-#: includes/class-lnh-admin.php:119
+#: includes/class-lnh-admin.php:132
 msgid "Image generated"
 msgstr ""
 
-#: includes/class-lnh-admin.php:120
+#: includes/class-lnh-admin.php:133
 msgid "Image attached"
 msgstr ""
 
-#: includes/class-lnh-admin.php:121
+#: includes/class-lnh-admin.php:134
 msgid "Automatic check"
 msgstr ""
 
-#: includes/class-lnh-admin.php:122
+#: includes/class-lnh-admin.php:135
 msgid "Audit result"
 msgstr ""
 
-#: includes/class-lnh-admin.php:123
+#: includes/class-lnh-admin.php:136
 msgid "Sent to WordPress"
 msgstr ""
 
-#: includes/class-lnh-admin.php:124
+#: includes/class-lnh-admin.php:137
 msgid "Held back"
 msgstr ""
 
-#: includes/class-lnh-admin.php:125
+#: includes/class-lnh-admin.php:138
 msgid "Cleanup"
 msgstr ""
 
-#: includes/class-lnh-admin.php:126
+#: includes/class-lnh-admin.php:139
 msgid "Test mode"
 msgstr ""
 
-#: includes/class-lnh-admin.php:127
+#: includes/class-lnh-admin.php:140
 msgid "Warning"
 msgstr ""
 
-#: includes/class-lnh-admin.php:128
+#: includes/class-lnh-admin.php:141
 msgid "Error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:129
+#: includes/class-lnh-admin.php:142
 msgid "Page unavailable"
 msgstr ""
 
-#: includes/class-lnh-admin.php:130
+#: includes/class-lnh-admin.php:143
 msgid "Retry"
 msgstr ""
 
-#: includes/class-lnh-admin.php:140
+#: includes/class-lnh-admin.php:152
 msgid "Waiting for the first run"
 msgstr ""
 
-#: includes/class-lnh-admin.php:145
+#: includes/class-lnh-admin.php:157
 msgid "The last run reported an error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:148
+#: includes/class-lnh-admin.php:160
 msgid "Agents have not reported for a while"
 msgstr ""
 
-#: includes/class-lnh-admin.php:150
+#: includes/class-lnh-admin.php:162
 msgid "Agents are running normally"
 msgstr ""
 
-#: includes/class-lnh-admin.php:170
+#: includes/class-lnh-admin.php:182
 msgid "Settings saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:171
+#: includes/class-lnh-admin.php:183
 msgid "Preset saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:172
+#: includes/class-lnh-admin.php:184
 msgid "Preset deleted."
 msgstr ""
 
-#: includes/class-lnh-admin.php:173
+#: includes/class-lnh-admin.php:185
 msgid "Something went wrong. Nothing was changed."
 msgstr ""
 
-#: includes/class-lnh-admin.php:174
+#: includes/class-lnh-admin.php:186
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:201
+#: includes/class-lnh-admin.php:213
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:232
+#: includes/class-lnh-admin.php:245
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:249
+#: includes/class-lnh-admin.php:262
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:249
+#: includes/class-lnh-admin.php:262
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:260
+#: includes/class-lnh-admin.php:273
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:304
+#: includes/class-lnh-admin.php:317
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:318
+#: includes/class-lnh-admin.php:331
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:335
+#: includes/class-lnh-admin.php:348
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:461
+#: includes/class-lnh-admin.php:474
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:470
+#: includes/class-lnh-admin.php:483
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:483
+#: includes/class-lnh-admin.php:496
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:491
+#: includes/class-lnh-admin.php:504
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:491
+#: includes/class-lnh-admin.php:504
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:508
+#: includes/class-lnh-admin.php:521
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:513
+#: includes/class-lnh-admin.php:526
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:514
+#: includes/class-lnh-admin.php:527
 msgid "Flagged"
 msgstr ""
 
-#: includes/class-lnh-admin.php:161
+#: includes/class-lnh-admin.php:173
 msgid "%d article published."
 msgid_plural "%d articles published."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:163
+#: includes/class-lnh-admin.php:175
 msgid "%d article scheduled."
 msgid_plural "%d articles scheduled."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:165
+#: includes/class-lnh-admin.php:177
 msgid "%d article rejected."
 msgid_plural "%d articles rejected."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:167
+#: includes/class-lnh-admin.php:179
 msgid "%d article moved back to review."
 msgid_plural "%d articles moved back to review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:169
+#: includes/class-lnh-admin.php:181
 msgid "%d article deleted."
 msgid_plural "%d articles deleted."
 msgstr[0] ""
@@ -317,55 +321,55 @@ msgstr[1] ""
 msgid "AI-generated illustration"
 msgstr ""
 
-#: includes/class-lnh-queue.php:52
+#: includes/class-lnh-queue.php:60
 msgid "To review"
 msgstr ""
 
-#: includes/class-lnh-queue.php:54
+#: includes/class-lnh-queue.php:62
 msgid "Scheduled"
 msgstr ""
 
-#: includes/class-lnh-queue.php:55
+#: includes/class-lnh-queue.php:63
 msgid "Published"
 msgstr ""
 
-#: includes/class-lnh-queue.php:56
+#: includes/class-lnh-queue.php:64
 msgid "Rejected"
 msgstr ""
 
-#: includes/class-lnh-queue.php:124
+#: includes/class-lnh-queue.php:132
 msgid "You are not allowed to publish this article."
 msgstr ""
 
-#: includes/class-lnh-queue.php:128
+#: includes/class-lnh-queue.php:136
 msgid "This is not an agent article."
 msgstr ""
 
-#: includes/class-lnh-queue.php:160
+#: includes/class-lnh-queue.php:169
 msgid "You are not allowed to reject this article."
 msgstr ""
 
-#: includes/class-lnh-queue.php:176
+#: includes/class-lnh-queue.php:185
 msgid "You are not allowed to restore this article."
 msgstr ""
 
-#: includes/class-lnh-queue.php:189
+#: includes/class-lnh-queue.php:198
 msgid "You are not allowed to delete this article."
 msgstr ""
 
-#: includes/class-lnh-queue.php:240
+#: includes/class-lnh-queue.php:250
 msgid "[%1$s] New AI draft to review: %2$s (score %3$d)"
 msgstr ""
 
-#: includes/class-lnh-queue.php:243
+#: includes/class-lnh-queue.php:253
 msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
 msgstr ""
 
-#: includes/class-lnh-rest.php:78
+#: includes/class-lnh-rest.php:79
 msgid "The run report is missing run_id."
 msgstr ""
 
-#: includes/class-lnh-runs.php:21
+#: includes/class-lnh-runs.php:24
 msgid "Agent runs"
 msgstr ""
 
@@ -649,23 +653,19 @@ msgstr ""
 msgid "Removes settings, presets and activity logs. Articles and their audit metadata are never deleted."
 msgstr ""
 
-#: includes/class-lnh-shortcode.php:64
+#: includes/class-lnh-shortcode.php:85
 msgid "View all"
 msgstr ""
 
-#: includes/class-lnh-shortcode.php:70
+#: includes/class-lnh-shortcode.php:91
 msgid "No articles yet."
 msgstr ""
 
-#: includes/class-lnh-shortcode.php:204
-msgid "%s ago"
-msgstr ""
-
-#: includes/class-lnh-shortcode.php:245
+#: includes/class-lnh-shortcode.php:266
 msgid "AI image"
 msgstr ""
 
-#: includes/class-lnh-shortcode.php:322
+#: includes/class-lnh-shortcode.php:343
 msgid "Articles pagination"
 msgstr ""
 

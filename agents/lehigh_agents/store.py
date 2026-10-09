@@ -38,7 +38,6 @@ class Store:
         self.db.execute(
             "CREATE TABLE IF NOT EXISTS seen (url TEXT PRIMARY KEY, title TEXT, status TEXT, ts REAL)"
         )
-        self.db.execute("CREATE TABLE IF NOT EXISTS counters (day TEXT, kind TEXT, n INTEGER, PRIMARY KEY(day, kind))")
         self.db.commit()
 
     def close(self) -> None:
@@ -63,22 +62,5 @@ class Store:
             "INSERT INTO seen(url,title,status,ts) VALUES(?,?,?,?) "
             "ON CONFLICT(url) DO UPDATE SET status=excluded.status, ts=excluded.ts",
             (canonical_url(url), title, status, time.time()),
-        )
-        self.db.commit()
-
-    def recent_titles(self, limit: int = 40) -> list[str]:
-        return [t for (t,) in self.db.execute("SELECT title FROM seen ORDER BY ts DESC LIMIT ?", (limit,)) if t]
-
-    def count_today(self, kind: str) -> int:
-        row = self.db.execute(
-            "SELECT n FROM counters WHERE day=? AND kind=?", (time.strftime("%Y-%m-%d"), kind)
-        ).fetchone()
-        return row[0] if row else 0
-
-    def bump(self, kind: str, n: int = 1) -> None:
-        day = time.strftime("%Y-%m-%d")
-        self.db.execute(
-            "INSERT INTO counters(day,kind,n) VALUES(?,?,?) ON CONFLICT(day,kind) DO UPDATE SET n=n+excluded.n",
-            (day, kind, n),
         )
         self.db.commit()

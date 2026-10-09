@@ -7,9 +7,11 @@ name = "lehigh-agents"
 version = "1.0.0"
 description = "Research, writing and audit agents for the Lehigh News Hub WordPress plugin"
 requires-python = ">=3.11"
-dependencies = ["anthropic>=1.12"]
+dependencies = ["google-genai>=1.0", "python-dotenv>=1.0", "requests>=2.31"]
 
 [project.optional-dependencies]
+claude = ["anthropic>=0.40"]  # only when REDACCTOR_MODEL is a claude-* model
+openai = ["openai>=1.50"]     # only when REDACCTOR_MODEL is a gpt-* / o* model
 dev = ["pytest>=8"]
 
 [project.scripts]

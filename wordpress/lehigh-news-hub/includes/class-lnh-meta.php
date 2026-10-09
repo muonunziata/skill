@@ -41,6 +41,30 @@ final class LNH_Meta {
 		add_action( 'init', array( __CLASS__, 'register' ) );
 		add_filter( 'is_protected_meta', array( __CLASS__, 'protect' ), 10, 2 );
 		add_action( 'wp_after_insert_post', array( __CLASS__, 'sync_seo' ), 20, 4 );
+		add_filter( 'rest_prepare_post', array( __CLASS__, 'hide_internal_meta' ), 10, 2 );
+	}
+
+	/**
+	 * The audit data (auditor notes, source facts, image prompt, reviewer, agent trace) is internal: registering it for the
+	 * REST API would otherwise expose it to every visitor on published articles. Only people who can edit the post see it.
+	 *
+	 * @param WP_REST_Response $response Response.
+	 * @param WP_Post          $post     Post.
+	 */
+	public static function hide_internal_meta( $response, $post ) {
+		if ( ! $response instanceof WP_REST_Response || ! $post instanceof WP_Post || current_user_can( 'edit_post', $post->ID ) ) {
+			return $response;
+		}
+		$data = $response->get_data();
+		if ( isset( $data['meta'] ) && is_array( $data['meta'] ) ) {
+			foreach ( array_keys( $data['meta'] ) as $key ) {
+				if ( 0 === strpos( (string) $key, 'lnh_' ) ) {
+					unset( $data['meta'][ $key ] );
+				}
+			}
+			$response->set_data( $data );
+		}
+		return $response;
 	}
 
 	public static function register(): void {

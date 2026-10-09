@@ -116,7 +116,7 @@ class Auditor:
             llm_notes = [str(n).strip() for n in data.get("audit_notes", []) if str(n).strip()]
         except LLMError as exc:
             notes.append(f"[auto] La auditoría con IA no pudo completarse: {exc}")
-            llm_score = min(60, 100 - penalty)  # never approve without the model's fact check
+            llm_score = 60  # never approve without the model's fact check (the penalty is subtracted below)
             critical = True
 
         score = max(0, min(100, llm_score - penalty))

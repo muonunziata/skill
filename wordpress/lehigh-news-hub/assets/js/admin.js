@@ -66,20 +66,24 @@
 	if (feed) {
 		var agentSel = qs('[data-lnh-feed-agent]');
 		var liveBox = qs('[data-lnh-live]');
-		var icons = { rastreador: '🔎', redactor: '✍️', auditor: '🛡️', pipeline: '⚙️' };
-		var labels = { rastreador: 'Researcher', redactor: 'Writer', auditor: 'Auditor', pipeline: 'Coordinator' };
+		// Agent names, icons and event labels come from PHP so the refreshed feed stays translated like the first render.
+		var agents = L.agents || {};
+		var labelOf = function (a) { return (agents[a] && agents[a].label) || a; };
+		var iconOf = function (a) { return (agents[a] && agents[a].icon) || ''; };
+		var typeLabel = function (t) { return (L.events && L.events[t]) || String(t).replace(/_/g, ' '); };
 		var ago = function (ts) {
 			var s = Math.max(0, Math.round(Date.now() / 1000 - ts));
 			if (s < 60) { return s + 's'; } if (s < 3600) { return Math.round(s / 60) + 'm'; }
 			if (s < 86400) { return Math.round(s / 3600) + 'h'; } return Math.round(s / 86400) + 'd';
 		};
+		var agoText = function (ts) { return (L.i18n.ago || '%s ago').replace('%s', ago(ts)); };
 		var render = function (events) {
 			if (!events.length) { feed.innerHTML = '<li class="lnh-empty">' + esc(L.i18n.noEvents) + '</li>'; return; }
 			feed.innerHTML = events.map(function (ev) {
 				return '<li class="lnh-tl lnh-tl--' + esc(ev.level) + '" data-agent="' + esc(ev.agent) + '" data-ts="' + esc(ev.ts) + '">' +
-					'<span class="lnh-tl__ico" title="' + esc(labels[ev.agent] || ev.agent) + '">' + (icons[ev.agent] || '') + '</span>' +
-					'<div><span class="lnh-tl__type">' + esc(String(ev.type).replace(/_/g, ' ')) + '</span> <span class="lnh-tl__msg">' + esc(ev.message) + '</span>' +
-					' <span class="lnh-muted lnh-tl__time">' + esc(ago(ev.ts)) + ' ago</span></div></li>';
+					'<span class="lnh-tl__ico" title="' + esc(labelOf(ev.agent)) + '">' + esc(iconOf(ev.agent)) + '</span>' +
+					'<div><span class="lnh-tl__type">' + esc(typeLabel(ev.type)) + '</span> <span class="lnh-tl__msg">' + esc(ev.message) + '</span>' +
+					' <span class="lnh-muted lnh-tl__time">' + esc(agoText(ev.ts)) + '</span></div></li>';
 			}).join('');
 		};
 		var poll = function () {
