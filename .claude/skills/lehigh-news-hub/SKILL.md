@@ -15,10 +15,10 @@ A news desk for **Lehigh Acres, Florida** that publishes under the **GoLehighAcr
 | 3 | Auditor | `agents/auditor.py` + `checks.py` | Fact check vs. the finding and source text, links, unsafe HTML, invented figures, copy overlap. Approved drafts are POSTed to WordPress (`wordpress.py`). |
 | 4 | Social designer | `social/designer.py` | Instagram + TikTok carousels (PNG) and a 9:16 video (MP4) from an approved article, plus captions/hashtags. Never fatal to the article. |
 
-`pipeline.py` runs 1 -> 2 -> 3 per story, then 4 for approved ones. `cli.py` is the entry point: `python main.py check | setup | run | watch | social`.
+`pipeline.py` runs 1 -> 2 -> 3 per story, then 4 for approved ones. `worker.py` (behind `watch`) + `control.py` connect the agents to the plugin's **Start / Pause / Run now** card (`POST /lnh/v1/control/sync`; the agents always call out; default state is paused; Pause stops between stories). `cli.py` is the entry point: `python main.py check | setup | run | watch | social`.
 
 ## WordPress plugin (`wordpress/lehigh-news-hub/`, PHP 7.4+)
-Review queue, per-article review screen (audit, source, image prompt, agent trace, **Social kit** card), agent activity feed (CPT `lnh_run`), shortcode `[lehigh_news]` + builder, pages created on activation, REST namespace `lnh/v1`, post meta `lnh_*` (hidden from visitors). Spanish translation is generated: edit `wordpress/tools/translations_es.py` then run `python3 wordpress/tools/build_i18n.py`.
+**Start/Pause control card** (`class-lnh-control.php`, `views/control.php`), review queue, per-article review screen (audit, source, image prompt, agent trace, **Social kit** card), agent activity feed (CPT `lnh_run`), shortcode `[lehigh_news]` + builder, pages created on activation, REST namespace `lnh/v1`, post meta `lnh_*` (hidden from visitors). Spanish translation is generated: edit `wordpress/tools/translations_es.py` then run `python3 wordpress/tools/build_i18n.py`.
 
 ## Non-negotiable design rules
 1. **Anti-hallucination**: agents only use facts from pages they read; figures must appear in the source (`checks.unsupported_numbers`). Never relax this to make a test or an article pass.

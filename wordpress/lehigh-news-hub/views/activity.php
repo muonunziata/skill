@@ -1,9 +1,10 @@
 <?php
-/** @var array $health @var array $stats @var array $runs @var array $feed @var array $funnel */
+/** @var array $control @var array $health @var array $stats @var array $runs @var array $feed @var array $funnel */
 defined( 'ABSPATH' ) || exit;
 $agents = LNH_Admin::agents();
 $state  = $health['state'];
 ?>
+<?php LNH_Admin::view( 'control', array( 'control' => $control, 'back' => admin_url( 'admin.php?page=lnh-activity' ) ) ); ?>
 <div class="lnh-banner lnh-banner--<?php echo esc_attr( $state ); ?>">
 	<span class="lnh-dot lnh-dot--<?php echo esc_attr( $state ); ?>"></span>
 	<div><strong><?php echo esc_html( $health['label'] ); ?></strong>

@@ -39,325 +39,349 @@ msgstr ""
 msgid "Review article"
 msgstr ""
 
-#: includes/class-lnh-admin.php:80
+#: includes/class-lnh-admin.php:81
 msgid "%s ago"
 msgstr ""
 
-#: includes/class-lnh-admin.php:81
+#: includes/class-lnh-admin.php:82
 msgid "Copied!"
 msgstr ""
 
-#: includes/class-lnh-admin.php:82
+#: includes/class-lnh-admin.php:83
 msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
 msgstr ""
 
-#: includes/class-lnh-admin.php:83
+#: includes/class-lnh-admin.php:84
 msgid "Delete permanently? This cannot be undone."
 msgstr ""
 
-#: includes/class-lnh-admin.php:84
+#: includes/class-lnh-admin.php:85
 msgid "No activity yet."
 msgstr ""
 
-#: includes/class-lnh-admin.php:85
+#: includes/class-lnh-admin.php:86
 msgid "Live"
 msgstr ""
 
-#: includes/class-lnh-admin.php:86
+#: includes/class-lnh-admin.php:87
 msgid "Paused"
 msgstr ""
 
-#: includes/class-lnh-admin.php:87
+#: includes/class-lnh-admin.php:88
 msgid "Could not render the preview."
 msgstr ""
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:89
+msgid "next cycle in %s"
+msgstr ""
+
+#: includes/class-lnh-admin.php:90
+msgid "Agents connected · last seen %s"
+msgstr ""
+
+#: includes/class-lnh-admin.php:112
 msgid "Researcher"
 msgstr ""
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:112
 msgid "Searches the web and reads the sources"
 msgstr ""
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:113
 msgid "Writer"
 msgstr ""
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:113
 msgid "Writes the article and its featured image"
 msgstr ""
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:114
 msgid "Auditor"
 msgstr ""
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:114
 msgid "Fact-checks, then decides if it can be sent"
 msgstr ""
 
-#: includes/class-lnh-admin.php:112
+#: includes/class-lnh-admin.php:115
 msgid "Social designer"
 msgstr ""
 
-#: includes/class-lnh-admin.php:112
+#: includes/class-lnh-admin.php:115
 msgid "Designs Instagram and TikTok carousels and videos"
 msgstr ""
 
-#: includes/class-lnh-admin.php:113
+#: includes/class-lnh-admin.php:116
 msgid "Coordinator"
 msgstr ""
 
-#: includes/class-lnh-admin.php:113
+#: includes/class-lnh-admin.php:116
 msgid "Runs the agents in order"
 msgstr ""
 
-#: includes/class-lnh-admin.php:124
+#: includes/class-lnh-admin.php:127
 msgid "Run started"
 msgstr ""
 
-#: includes/class-lnh-admin.php:125
+#: includes/class-lnh-admin.php:128
 msgid "Run finished"
 msgstr ""
 
-#: includes/class-lnh-admin.php:126
+#: includes/class-lnh-admin.php:129
 msgid "Working"
 msgstr ""
 
-#: includes/class-lnh-admin.php:127
+#: includes/class-lnh-admin.php:130
 msgid "Web search"
 msgstr ""
 
-#: includes/class-lnh-admin.php:128
+#: includes/class-lnh-admin.php:131
 msgid "Read a page"
 msgstr ""
 
-#: includes/class-lnh-admin.php:129
+#: includes/class-lnh-admin.php:132
 msgid "Story found"
 msgstr ""
 
-#: includes/class-lnh-admin.php:130
+#: includes/class-lnh-admin.php:133
 msgid "Skipped"
 msgstr ""
 
-#: includes/class-lnh-admin.php:131
+#: includes/class-lnh-admin.php:134
 msgid "Draft written"
 msgstr ""
 
-#: includes/class-lnh-admin.php:132
+#: includes/class-lnh-admin.php:135
 msgid "Media"
 msgstr ""
 
-#: includes/class-lnh-admin.php:133
+#: includes/class-lnh-admin.php:136
 msgid "Image prompt"
 msgstr ""
 
-#: includes/class-lnh-admin.php:134
+#: includes/class-lnh-admin.php:137
 msgid "Image generated"
 msgstr ""
 
-#: includes/class-lnh-admin.php:135
+#: includes/class-lnh-admin.php:138
 msgid "Image attached"
 msgstr ""
 
-#: includes/class-lnh-admin.php:136
+#: includes/class-lnh-admin.php:139
 msgid "Automatic check"
 msgstr ""
 
-#: includes/class-lnh-admin.php:137
+#: includes/class-lnh-admin.php:140
 msgid "Audit result"
 msgstr ""
 
-#: includes/class-lnh-admin.php:138
+#: includes/class-lnh-admin.php:141
 msgid "Sent to WordPress"
 msgstr ""
 
-#: includes/class-lnh-admin.php:139
+#: includes/class-lnh-admin.php:142
 msgid "Held back"
 msgstr ""
 
-#: includes/class-lnh-admin.php:140
+#: includes/class-lnh-admin.php:143
 msgid "Cleanup"
 msgstr ""
 
-#: includes/class-lnh-admin.php:141
+#: includes/class-lnh-admin.php:144
 msgid "Test mode"
 msgstr ""
 
-#: includes/class-lnh-admin.php:142
+#: includes/class-lnh-admin.php:145
 msgid "Warning"
 msgstr ""
 
-#: includes/class-lnh-admin.php:143
+#: includes/class-lnh-admin.php:146
 msgid "Error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:144
+#: includes/class-lnh-admin.php:147
 msgid "Page unavailable"
 msgstr ""
 
-#: includes/class-lnh-admin.php:145
+#: includes/class-lnh-admin.php:148
 msgid "Retry"
 msgstr ""
 
-#: includes/class-lnh-admin.php:146
+#: includes/class-lnh-admin.php:149
 msgid "Social plan"
 msgstr ""
 
-#: includes/class-lnh-admin.php:147
+#: includes/class-lnh-admin.php:150
 msgid "Slides drawn"
 msgstr ""
 
-#: includes/class-lnh-admin.php:148
+#: includes/class-lnh-admin.php:151
 msgid "Video made"
 msgstr ""
 
-#: includes/class-lnh-admin.php:149
+#: includes/class-lnh-admin.php:152
 msgid "Kit uploaded"
 msgstr ""
 
-#: includes/class-lnh-admin.php:150
+#: includes/class-lnh-admin.php:153
 msgid "Kit attached"
 msgstr ""
 
-#: includes/class-lnh-admin.php:151
+#: includes/class-lnh-admin.php:154
 msgid "Webhook sent"
 msgstr ""
 
-#: includes/class-lnh-admin.php:152
+#: includes/class-lnh-admin.php:155
 msgid "Kit ready"
 msgstr ""
 
-#: includes/class-lnh-admin.php:161
+#: includes/class-lnh-admin.php:163
+msgid "The agents are paused"
+msgstr ""
+
+#: includes/class-lnh-admin.php:168
 msgid "Waiting for the first run"
 msgstr ""
 
-#: includes/class-lnh-admin.php:166
+#: includes/class-lnh-admin.php:173
 msgid "The last run reported an error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:169
+#: includes/class-lnh-admin.php:176
 msgid "Agents have not reported for a while"
 msgstr ""
 
-#: includes/class-lnh-admin.php:171
+#: includes/class-lnh-admin.php:178
 msgid "Agents are running normally"
 msgstr ""
 
-#: includes/class-lnh-admin.php:191
+#: includes/class-lnh-admin.php:198
 msgid "Settings saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:192
+#: includes/class-lnh-admin.php:199
 msgid "Preset saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:195
+#: includes/class-lnh-admin.php:202
 msgid "Preset deleted."
 msgstr ""
 
-#: includes/class-lnh-admin.php:196
+#: includes/class-lnh-admin.php:203
+msgid "The agents will start working as soon as they connect."
+msgstr ""
+
+#: includes/class-lnh-admin.php:204
+msgid "The agents are paused. They finish the article in progress and then stop."
+msgstr ""
+
+#: includes/class-lnh-admin.php:205
+msgid "A run was requested: the agents will start within seconds."
+msgstr ""
+
+#: includes/class-lnh-admin.php:206
 msgid "Something went wrong. Nothing was changed."
 msgstr ""
 
-#: includes/class-lnh-admin.php:197
+#: includes/class-lnh-admin.php:207
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:225
+#: includes/class-lnh-admin.php:235
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:259
+#: includes/class-lnh-admin.php:270
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:276
+#: includes/class-lnh-admin.php:287
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:276
+#: includes/class-lnh-admin.php:287
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:287
+#: includes/class-lnh-admin.php:298
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:331
+#: includes/class-lnh-admin.php:343
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:357
+#: includes/class-lnh-admin.php:369
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:374
+#: includes/class-lnh-admin.php:386
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:500
+#: includes/class-lnh-admin.php:512
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:509
+#: includes/class-lnh-admin.php:521
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:522
+#: includes/class-lnh-admin.php:534
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:530
+#: includes/class-lnh-admin.php:542
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:530
+#: includes/class-lnh-admin.php:542
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:547
+#: includes/class-lnh-admin.php:559
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:552
+#: includes/class-lnh-admin.php:564
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:553
+#: includes/class-lnh-admin.php:565
 msgid "Flagged"
 msgstr ""
 
-#: includes/class-lnh-admin.php:182
+#: includes/class-lnh-admin.php:189
 msgid "%d article published."
 msgid_plural "%d articles published."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:184
+#: includes/class-lnh-admin.php:191
 msgid "%d article scheduled."
 msgid_plural "%d articles scheduled."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:186
+#: includes/class-lnh-admin.php:193
 msgid "%d article rejected."
 msgid_plural "%d articles rejected."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:188
+#: includes/class-lnh-admin.php:195
 msgid "%d article moved back to review."
 msgid_plural "%d articles moved back to review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:190
+#: includes/class-lnh-admin.php:197
 msgid "%d article deleted."
 msgid_plural "%d articles deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:194
+#: includes/class-lnh-admin.php:201
 msgid "%d page created."
 msgid_plural "%d pages created."
 msgstr[0] ""
@@ -377,6 +401,26 @@ msgstr ""
 
 #: includes/class-lnh-connect.php:76
 msgid "Lehigh agents – %s"
+msgstr ""
+
+#: includes/class-lnh-control.php:146
+msgid "Pausing after the current article…"
+msgstr ""
+
+#: includes/class-lnh-control.php:147
+msgid "Waiting for the agents to connect"
+msgstr ""
+
+#: includes/class-lnh-control.php:148
+msgid "Working now"
+msgstr ""
+
+#: includes/class-lnh-control.php:149
+msgid "Running – waiting for the next cycle"
+msgstr ""
+
+#: includes/class-lnh-control.php:166
+msgid "You are not allowed to do this."
 msgstr ""
 
 #: includes/class-lnh-front.php:25
@@ -439,8 +483,12 @@ msgstr ""
 msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
 msgstr ""
 
-#: includes/class-lnh-rest.php:79
+#: includes/class-lnh-rest.php:104
 msgid "The run report is missing run_id."
+msgstr ""
+
+#: includes/class-lnh-rest.php:141
+msgid "Unknown action. Use start, pause or run_now."
 msgstr ""
 
 #: includes/class-lnh-runs.php:24
@@ -716,11 +764,11 @@ msgid "Agents"
 msgstr ""
 
 #: includes/class-lnh-settings.php:146
-msgid "Expected run interval (minutes)"
+msgid "Run every (minutes)"
 msgstr ""
 
 #: includes/class-lnh-settings.php:146
-msgid "The dashboard warns you when the agents have not reported for twice this time."
+msgid "How often the connected agents start a new cycle while they are running. The dashboard warns you when they have not reported for twice this time."
 msgstr ""
 
 #: includes/class-lnh-settings.php:147
@@ -755,95 +803,95 @@ msgstr ""
 msgid "Articles pagination"
 msgstr ""
 
-#: views/activity.php:10
+#: views/activity.php:11
 msgid "last report %s"
 msgstr ""
 
-#: views/activity.php:18
+#: views/activity.php:19
 msgid "web searches"
 msgstr ""
 
-#: views/activity.php:19
+#: views/activity.php:20
 msgid "pages read"
 msgstr ""
 
-#: views/activity.php:20
+#: views/activity.php:21
 msgid "stories found"
 msgstr ""
 
-#: views/activity.php:21
+#: views/activity.php:22
 msgid "skipped"
 msgstr ""
 
-#: views/activity.php:24
+#: views/activity.php:25
 msgid "drafts written"
 msgstr ""
 
-#: views/activity.php:25
+#: views/activity.php:26
 msgid "image prompts"
 msgstr ""
 
-#: views/activity.php:26
+#: views/activity.php:27
 msgid "images generated"
 msgstr ""
 
-#: views/activity.php:29
+#: views/activity.php:30
 msgid "audits"
 msgstr ""
 
-#: views/activity.php:30
+#: views/activity.php:31
 msgid "approved"
 msgstr ""
 
-#: views/activity.php:31
+#: views/activity.php:32
 msgid "flagged"
 msgstr ""
 
-#: views/activity.php:32
+#: views/activity.php:33
 msgid "sent to WordPress"
 msgstr ""
 
-#: views/activity.php:40
+#: views/activity.php:41
 msgid "idle"
 msgstr ""
 
-#: views/activity.php:49
+#: views/activity.php:50
 msgid "Pipeline – last 7 days"
 msgstr ""
 
-#: views/activity.php:52
+#: views/activity.php:53
 msgid "Stories found"
 msgstr ""
 
-#: views/activity.php:53
+#: views/activity.php:54
 msgid "Articles written"
 msgstr ""
 
-#: views/activity.php:54
+#: views/activity.php:55
 msgid "Approved by auditor"
 msgstr ""
 
-#: views/activity.php:56
+#: views/activity.php:57
 msgid "Published by you"
 msgstr ""
 
-#: views/activity.php:70
+#: views/activity.php:71
 msgid "Live feed"
 msgstr ""
 
-#: views/activity.php:73
+#: views/activity.php:74
 msgid "All agents"
 msgstr ""
 
-#: views/activity.php:95
+#: views/activity.php:96
 msgid "Runs"
 msgstr ""
 
-#: views/activity.php:96
+#: views/activity.php:97
 msgid "No runs yet."
 msgstr ""
 
-#: views/activity.php:11
+#: views/activity.php:12
 msgid "%d run in the last 7 days"
 msgid_plural "%d runs in the last 7 days"
 msgstr[0] ""
@@ -1109,24 +1157,68 @@ msgstr ""
 msgid "it asks only for your Gemini key and configures everything else."
 msgstr ""
 
-#: views/connect.php:32
+#: views/connect.php:31
+msgid "Start the agents with ./start.sh (Windows: start.bat). They connect by themselves; then press “Start working” in the News Hub dashboard."
+msgstr ""
+
+#: views/connect.php:33
 msgid "You can revoke this access any time in Users → Profile → Application Passwords."
 msgstr ""
 
-#: views/connect.php:36
+#: views/connect.php:37
 msgid "Connect your agents in one click"
 msgstr ""
 
-#: views/connect.php:37
+#: views/connect.php:38
 msgid "We create a dedicated “Lehigh Agents” account with the Author role and an Application Password, and give you the two lines your agents need. Nothing is stored in plain text."
 msgstr ""
 
-#: views/connect.php:39
+#: views/connect.php:40
 msgid "The account “%s” already exists; a new password will be added to it."
 msgstr ""
 
-#: views/connect.php:46
+#: views/connect.php:47
 msgid "Generate agent credentials"
+msgstr ""
+
+#: views/control.php:17
+msgid "a run was requested"
+msgstr ""
+
+#: views/control.php:38
+msgid "Agents disconnected · last seen %s"
+msgstr ""
+
+#: views/control.php:40
+msgid "The agents have not connected yet."
+msgstr ""
+
+#: views/control.php:48
+msgid "Run now"
+msgstr ""
+
+#: views/control.php:49
+msgid "Pause"
+msgstr ""
+
+#: views/control.php:51
+msgid "Start working"
+msgstr ""
+
+#: views/control.php:56
+msgid "The buttons control the agents, but the agents have to be running to obey."
+msgstr ""
+
+#: views/control.php:57
+msgid "On the computer or server where you installed them, start them once; they connect to this site by themselves with the credentials in their .env file:"
+msgstr ""
+
+#: views/control.php:59
+msgid "Windows: start.bat. Servers: Docker or systemd keep them running (see the README)."
+msgstr ""
+
+#: views/control.php:63
+msgid "Pausing never cuts an article in half: the agents finish the one in progress, then wait until you press Start."
 msgstr ""
 
 #: views/dashboard.php:9
@@ -1157,88 +1249,88 @@ msgstr ""
 msgid "Add the pages to my menu"
 msgstr ""
 
-#: views/dashboard.php:35
+#: views/dashboard.php:37
 msgid "See what the agents did"
 msgstr ""
 
-#: views/dashboard.php:39
+#: views/dashboard.php:41
 msgid "Waiting for review"
 msgstr ""
 
-#: views/dashboard.php:40
+#: views/dashboard.php:42
 msgid "Flagged by the auditor"
 msgstr ""
 
-#: views/dashboard.php:41
+#: views/dashboard.php:43
 msgid "Published this week"
 msgstr ""
 
-#: views/dashboard.php:42
+#: views/dashboard.php:44
 msgid "Average audit score (30 days)"
 msgstr ""
 
-#: views/dashboard.php:43
+#: views/dashboard.php:45
 msgid "Social kits this week"
 msgstr ""
 
-#: views/dashboard.php:44
+#: views/dashboard.php:46
 msgid "AI images this week"
 msgstr ""
 
-#: views/dashboard.php:45
+#: views/dashboard.php:47
 msgid "Tokens used this week"
 msgstr ""
 
-#: views/dashboard.php:51
+#: views/dashboard.php:53
 msgid "Waiting for your decision"
 msgstr ""
 
-#: views/dashboard.php:51
+#: views/dashboard.php:53
 msgid "Open the queue"
 msgstr ""
 
-#: views/dashboard.php:53
+#: views/dashboard.php:55
 msgid "Nothing to review right now. New articles appear here as soon as the agents finish them."
 msgstr ""
 
-#: views/dashboard.php:74
+#: views/dashboard.php:76
 msgid "Recent agent runs"
 msgstr ""
 
-#: views/dashboard.php:74
+#: views/dashboard.php:76
 msgid "All activity"
 msgstr ""
 
-#: views/dashboard.php:85
+#: views/dashboard.php:87
 msgid "Your agents"
 msgstr ""
 
-#: views/dashboard.php:97
+#: views/dashboard.php:99
 msgid "active %s"
 msgstr ""
 
-#: views/dashboard.php:97
+#: views/dashboard.php:99
 msgid "no activity yet"
 msgstr ""
 
-#: views/dashboard.php:108
+#: views/dashboard.php:110
 msgid "One click: creates the account and gives you the .env lines."
 msgstr ""
 
-#: views/dashboard.php:114
+#: views/dashboard.php:116
 msgid "Create an %s for the account the agents will post with."
 msgstr ""
 
-#: views/dashboard.php:115
+#: views/dashboard.php:117
 msgid "Application Password"
 msgstr ""
 
-#: views/dashboard.php:118
+#: views/dashboard.php:120
 msgid "Put these two lines in the agents’ .env file:"
 msgstr ""
 
-#: views/dashboard.php:121
-msgid "Run python main.py setup (it configures the rest for you), then python main.py run."
+#: views/dashboard.php:123
+msgid "Run python main.py setup (it configures the rest for you), then start them with ./start.sh and press “Start working” above."
 msgstr ""
 
 #: views/metabox.php:14

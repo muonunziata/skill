@@ -323,6 +323,90 @@ wp_delete_user( $u->ID );
 wp_delete_user( $contrib2 );
 t( 'cleanup leaves no agents account', null === LNH_Connect::agent_user() );
 
+echo "Start / pause control\n";
+delete_option( LNH_Control::STATE_OPTION );
+delete_option( LNH_Control::WORKER_OPTION );
+t( 'safe default: paused until someone presses Start', 'paused' === LNH_Control::desired()['state'] && ! LNH_Control::is_running() && 'paused' === LNH_Control::status()['phase'] );
+t( 'unknown actions are refused', false === LNH_Control::apply( 'explode' ) && 'paused' === LNH_Control::desired()['state'] );
+LNH_Control::apply( 'start', $admin );
+t( 'Start: running, but nobody listening yet', LNH_Control::is_running() && 'offline' === LNH_Control::status()['phase'] && $admin === LNH_Control::desired()['by'] );
+$d = LNH_Control::sync( array( 'status' => 'idle', 'host' => 'laptop-<b>1</b>', 'version' => '1.4.0', 'message' => str_repeat( 'x', 500 ), 'next_run_at' => time() + 600 ) );
+t( 'sync returns the desired state and the interval', 'running' === $d['state'] && $d['interval_minutes'] >= 5 && $d['server_time'] >= time() - 5, $d );
+$st = LNH_Control::status();
+t( 'a reporting worker means connected + waiting for the next cycle', true === $st['worker']['connected'] && 'waiting' === $st['phase'] && '' !== $st['next_in'], $st );
+t( 'worker text is clipped and stripped of HTML', 'laptop-1' === $st['worker']['host'] && mb_strlen( $st['worker']['message'] ) <= 200 );
+LNH_Control::sync( array( 'status' => 'working', 'message' => 'Auditor: revisando enlaces' ) );
+t( 'working phase shows what the agents are doing', 'working' === LNH_Control::status()['phase'] && 'Auditor: revisando enlaces' === LNH_Control::status()['worker']['message'] );
+LNH_Control::apply( 'pause', $admin );
+t( 'Pause while working = pausing after the current article', 'pausing' === LNH_Control::status()['phase'] && 'paused' === LNH_Control::sync( array( 'status' => 'working' ) )['state'] );
+LNH_Control::sync( array( 'status' => 'paused' ) );
+t( 'Pause once the worker is idle = paused', 'paused' === LNH_Control::status()['phase'] );
+t( 'health says paused, not "late"', 'paused' === LNH_Admin::health()['state'] );
+LNH_Control::apply( 'run_now', $admin );
+$req = LNH_Control::desired();
+t( 'Run now starts the agents and queues exactly one request', 'running' === $req['state'] && $req['run_now'] > 0 && true === LNH_Control::status()['run_queued'] );
+t( 'an older confirmation does not clear a newer request', $req['run_now'] === LNH_Control::sync( array( 'status' => 'idle', 'handled_run_now' => $req['run_now'] - 5 ) )['run_now'] );
+t( 'the worker confirming the request clears it', 0 === LNH_Control::sync( array( 'status' => 'working', 'handled_run_now' => $req['run_now'] ) )['run_now'] && false === LNH_Control::status()['run_queued'] );
+LNH_Control::sync( array( 'status' => 'stopped' ) );
+t( 'a stopped worker is shown as not connected at once', false === LNH_Control::worker()['connected'] && 'offline' === LNH_Control::status()['phase'] );
+LNH_Control::sync( array( 'status' => 'idle' ) );
+$w = get_option( LNH_Control::WORKER_OPTION );
+$w['last_seen'] = time() - 600;
+update_option( LNH_Control::WORKER_OPTION, $w );
+t( 'a silent worker times out', false === LNH_Control::worker()['connected'] && true === LNH_Control::worker()['seen'] );
+LNH_Control::sync( array( 'status' => 'idle' ) );
+t( 'the "run every" setting reaches the agents', LNH_Control::interval_minutes() === LNH_Control::sync( array() )['interval_minutes'] );
+
+$mk_user = function ( string $role ) {
+	$id = wp_insert_user( array( 'user_login' => 'lnh_ctl_' . $role . wp_rand(), 'user_pass' => wp_generate_password(), 'role' => $role, 'user_email' => $role . wp_rand() . '@example.test' ) );
+	return $id;
+};
+$u_author = $mk_user( 'author' );
+$u_editor = $mk_user( 'editor' );
+$u_contrib = $mk_user( 'contributor' );
+$rest = function ( string $method, string $route, array $body, int $uid ) {
+	wp_set_current_user( $uid );
+	$r = new WP_REST_Request( $method, $route );
+	$r->set_header( 'content-type', 'application/json' );
+	$r->set_body( wp_json_encode( $body ) );
+	return rest_do_request( $r );
+};
+t( 'REST: the agents (Author) can sync', 200 === $rest( 'POST', '/lnh/v1/control/sync', array( 'status' => 'idle' ), $u_author )->get_status() );
+t( 'REST: a contributor cannot spoof the worker', 403 === $rest( 'POST', '/lnh/v1/control/sync', array( 'status' => 'idle' ), $u_contrib )->get_status() );
+t( 'REST: anonymous cannot sync', in_array( $rest( 'POST', '/lnh/v1/control/sync', array(), 0 )->get_status(), array( 401, 403 ), true ) );
+t( 'REST: the agents\' account cannot press the buttons', 403 === $rest( 'POST', '/lnh/v1/control', array( 'action' => 'start' ), $u_author )->get_status() );
+$res = $rest( 'POST', '/lnh/v1/control', array( 'action' => 'start' ), $u_editor );
+t( 'REST: an editor can start the agents', 200 === $res->get_status() && 'running' === $res->get_data()['state'] );
+t( 'REST: bad action is a 400', 400 === $rest( 'POST', '/lnh/v1/control', array( 'action' => 'nope' ), $u_editor )->get_status() );
+t( 'REST: status for editors', 200 === $rest( 'GET', '/lnh/v1/control', array(), $u_editor )->get_status() && 403 === $rest( 'GET', '/lnh/v1/control', array(), $u_author )->get_status() );
+wp_set_current_user( $admin );
+foreach ( array( $u_author, $u_editor, $u_contrib ) as $uid ) {
+	wp_delete_user( $uid );
+}
+t( 'the admin-post handler is registered', false !== has_action( 'admin_post_lnh_control' ) );
+
+LNH_Control::apply( 'pause', $admin );
+delete_option( LNH_Control::WORKER_OPTION );
+$render = function () use ( $admin ) {
+	wp_set_current_user( $admin );
+	ob_start();
+	LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => admin_url( 'admin.php?page=lnh' ) ) );
+	return ob_get_clean();
+};
+$html = $render();
+t( 'paused view: Start button, no Pause, start instructions, nonce', false !== strpos( $html, 'data-lnh-do="start"' ) && false === strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, './start.sh' ) && false !== strpos( $html, '_wpnonce' ) );
+LNH_Control::apply( 'start', $admin );
+LNH_Control::sync( array( 'status' => 'idle', 'host' => 'srv1' ) );
+$html = $render();
+t( 'running view: Pause + Run now, connected line, no setup help', false !== strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, 'data-lnh-do="run_now"' ) && false !== strpos( $html, 'Agents connected' ) && false === strpos( $html, './start.sh' ), $html );
+wp_set_current_user( $mk_user( 'subscriber' ) );
+ob_start();
+LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
+t( 'people who cannot review do not even see the buttons', '' === ob_get_clean() );
+wp_set_current_user( $admin );
+delete_option( LNH_Control::STATE_OPTION );
+delete_option( LNH_Control::WORKER_OPTION );
+
 echo "Social kit (Agent 4)\n";
 $kit_in = array(
 	'generated_at' => 1790000000, 'model' => 'gemini-2.5-flash', 'voice' => '', 'seconds' => 14.04, 'ai_image' => true, 'hook' => 'Cuatro carriles <script>alert(1)</script>',
@@ -375,7 +459,7 @@ $st  = LNH_Runs::agent_stats( 7 );
 t( 'agent stats count kits, slides and videos', $st['social']['kits'] >= 1 && $st['social']['slides'] >= 6 && $st['social']['videos'] >= 1 && 'gemini-2.5-flash' === $st['social']['model'], $st['social'] );
 wp_delete_post( $rid, true );
 ob_start();
-LNH_Admin::view( 'dashboard', array( 'welcome' => array(), 'pages' => array(), 'counts' => array( 'review' => 0, 'flagged' => 0 ), 'health' => LNH_Admin::health(), 'stats' => LNH_Runs::agent_stats( 7 ), 'waiting' => array(), 'runs' => array(), 'published7' => 0, 'avg' => 0, 'rest_url' => rest_url(), 'profile' => '' ) );
+LNH_Admin::view( 'dashboard', array( 'control' => LNH_Control::status(), 'welcome' => array(), 'pages' => array(), 'counts' => array( 'review' => 0, 'flagged' => 0 ), 'health' => LNH_Admin::health(), 'stats' => LNH_Runs::agent_stats( 7 ), 'waiting' => array(), 'runs' => array(), 'published7' => 0, 'avg' => 0, 'rest_url' => rest_url(), 'profile' => '' ) );
 $dash = ob_get_clean();
 t( 'dashboard lists the 4th agent and its KPI', false !== strpos( $dash, 'Social designer' ) && false !== strpos( $dash, 'Social kits this week' ) );
 t( 'brand: default accent is the GoLehighAcres.org green', '#1b6a55' === LNH_Settings::defaults()['ds_accent'] );

@@ -116,6 +116,11 @@ class _WPHandler(BaseHTTPRequestHandler):
             return self._send(200, {"name": "bot", "roles": ["editor"]})
         if path.endswith("/lnh/v1/ping"):
             return self._send(200, {"version": "1.0.0"})
+        if path.endswith("/lnh/v1/control/sync") and method == "POST":
+            srv.syncs.append(json.loads(body))
+            if srv.control is None:
+                return self._send(404, {"message": "no route"})
+            return self._send(200, srv.control)
         if path.endswith("/lnh/v1/runs"):
             return self._send(200, {"ok": True})
         if path.endswith("/wp/v2/media") and method == "POST":
@@ -159,6 +164,7 @@ def wp_server():
     srv = HTTPServer(("127.0.0.1", 0), _WPHandler)
     srv.requests, srv.posts, srv.deleted, srv.media_id, srv.tag_id = [], [], [], 76, 10
     srv.post_updates = []
+    srv.syncs, srv.control = [], {"state": "running", "run_now": 0, "interval_minutes": 60, "server_time": 1}
     t = threading.Thread(target=srv.serve_forever, daemon=True)
     t.start()
     yield srv

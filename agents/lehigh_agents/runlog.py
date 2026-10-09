@@ -14,10 +14,16 @@ class RunLog:
         self.run_id = run_id or time.strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
         self.events: list[dict[str, Any]] = []
         self.started = time.time()
+        self.listener = None   # optional callable(event) used by the worker to report live progress
 
     def __call__(self, agent: str, type_: str, message: str, item: str = "", level: str = "info", **data: Any) -> None:
         self.events.append({"t": round(time.time() - self.started, 2), "ts": int(time.time()), "agent": agent,
                             "type": type_, "level": level, "message": message[:400], "item": item, "data": data})
+        if self.listener is not None:
+            try:
+                self.listener(self.events[-1])
+            except Exception:  # noqa: BLE001 - progress reporting must never break a run
+                pass
         log.log({"error": 40, "warn": 30}.get(level, 20), "[%s] %s", agent, message)
 
     def bind(self, item: str):

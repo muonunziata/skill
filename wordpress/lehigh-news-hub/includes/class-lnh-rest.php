@@ -39,6 +39,31 @@ final class LNH_Rest {
 		);
 		register_rest_route(
 			'lnh/v1',
+			'/control/sync',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'control_sync' ),
+				'permission_callback' => array( __CLASS__, 'can_post' ),
+			)
+		);
+		register_rest_route(
+			'lnh/v1',
+			'/control',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( __CLASS__, 'control_status' ),
+					'permission_callback' => array( __CLASS__, 'can_review' ),
+				),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( __CLASS__, 'control_set' ),
+					'permission_callback' => array( __CLASS__, 'can_review' ),
+				),
+			)
+		);
+		register_rest_route(
+			'lnh/v1',
 			'/feed',
 			array(
 				'methods'             => 'GET',
@@ -97,5 +122,24 @@ final class LNH_Rest {
 
 	public static function feed( WP_REST_Request $request ): array {
 		return LNH_Runs::feed( (string) $request['agent'], min( 200, max( 1, (int) $request['limit'] ) ), (int) $request['since'] );
+	}
+
+	/** The agents report in and learn whether they should be working. */
+	public static function control_sync( WP_REST_Request $request ): array {
+		return LNH_Control::sync( (array) $request->get_json_params() );
+	}
+
+	public static function control_status(): array {
+		return LNH_Control::status();
+	}
+
+	/** Start / pause / run now from the admin screens (cookie + nonce) or any editor-level credential. */
+	public static function control_set( WP_REST_Request $request ) {
+		$body = (array) $request->get_json_params();
+		$ok   = LNH_Control::apply( sanitize_key( (string) ( $body['action'] ?? $request['action'] ) ) );
+		if ( ! $ok ) {
+			return new WP_Error( 'lnh_bad_action', __( 'Unknown action. Use start, pause or run_now.', 'lehigh-news-hub' ), array( 'status' => 400 ) );
+		}
+		return LNH_Control::status();
 	}
 }

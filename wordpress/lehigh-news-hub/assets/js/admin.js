@@ -74,6 +74,30 @@
 		});
 	}
 
+	/* ---------- start / pause control: keep the status card live ---------- */
+	var ctl = qs('[data-lnh-control]');
+	if (ctl && L.controlUrl) {
+		var refreshControl = function () {
+			if (document.hidden) { return; }
+			fetch(L.controlUrl, { headers: { 'X-WP-Nonce': L.restNonce }, credentials: 'same-origin' })
+				.then(function (r) { return r.ok ? r.json() : null; })
+				.then(function (d) {
+					if (!d) { return; }
+					var connected = d.worker && d.worker.connected ? '1' : '0';
+					// Buttons and the help block depend on these: re-render the page instead of patching them.
+					if (d.state !== ctl.getAttribute('data-state') || connected !== ctl.getAttribute('data-connected')) { window.location.reload(); return; }
+					ctl.setAttribute('data-phase', d.phase);
+					ctl.className = ctl.className.replace(/lnh-control--\w+/, 'lnh-control--' + d.phase);
+					var ph = qs('[data-lnh-control-phase]', ctl), dt = qs('[data-lnh-control-detail]', ctl), wk = qs('[data-lnh-control-worker]', ctl);
+					if (ph) { ph.textContent = d.label; }
+					var detail = d.phase === 'working' ? (d.worker.message || '') : (d.phase === 'waiting' && d.next_in ? L.i18n.nextIn.replace('%s', d.next_in) : '');
+					if (dt) { dt.textContent = detail ? '· ' + detail : ''; }
+					if (wk && d.worker && d.worker.connected) { wk.textContent = L.i18n.connectedAgo.replace('%s', d.worker.seen_ago) + (d.worker.host ? ' · ' + d.worker.host : ''); }
+				}).catch(function () { /* offline: keep what is shown */ });
+		};
+		setInterval(refreshControl, 8000);
+	}
+
 	/* ---------- live feed ---------- */
 	var feed = qs('[data-lnh-feed]');
 	if (feed) {

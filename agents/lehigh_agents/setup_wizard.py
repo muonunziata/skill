@@ -502,5 +502,6 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
         if rc != 0:
             return rc
     con.say("\n🎉 Listo. Siguiente paso, una prueba sin escribir en WordPress:\n    python main.py run --dry-run\n"
-            "y para el funcionamiento continuo:\n    python main.py watch")
+            "y para dejarlos trabajando (se conectan solos a WordPress):\n    ./start.sh        (Windows: start.bat)\n"
+            "Luego pulsa «Iniciar a trabajar» en el panel de News Hub: hasta entonces están en pausa.")
     return 0

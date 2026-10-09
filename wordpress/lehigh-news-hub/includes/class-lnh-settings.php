@@ -143,7 +143,7 @@ final class LNH_Settings {
 			'agents'     => array(
 				'label'  => __( 'Agents', 'lehigh-news-hub' ),
 				'fields' => array(
-					'expected_interval' => array( 'type' => 'number', 'label' => __( 'Expected run interval (minutes)', 'lehigh-news-hub' ), 'min' => 5, 'max' => 1440, 'desc' => __( 'The dashboard warns you when the agents have not reported for twice this time.', 'lehigh-news-hub' ) ),
+					'expected_interval' => array( 'type' => 'number', 'label' => __( 'Run every (minutes)', 'lehigh-news-hub' ), 'min' => 5, 'max' => 1440, 'desc' => __( 'How often the connected agents start a new cycle while they are running. The dashboard warns you when they have not reported for twice this time.', 'lehigh-news-hub' ) ),
 					'retention_days'    => array( 'type' => 'number', 'label' => __( 'Keep activity logs (days)', 'lehigh-news-hub' ), 'min' => 7, 'max' => 365 ),
 				),
 			),

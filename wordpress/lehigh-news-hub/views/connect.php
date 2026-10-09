@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<ol class="lnh-steps">
 			<li><?php esc_html_e( 'Save these two lines in the .env file inside the agents folder (or download the file and move it there).', 'lehigh-news-hub' ); ?></li>
 			<li><?php esc_html_e( 'In a terminal inside that folder run:', 'lehigh-news-hub' ); ?> <code>python main.py setup</code> — <?php esc_html_e( 'it asks only for your Gemini key and configures everything else.', 'lehigh-news-hub' ); ?></li>
+			<li><?php esc_html_e( 'Start the agents with ./start.sh (Windows: start.bat). They connect by themselves; then press “Start working” in the News Hub dashboard.', 'lehigh-news-hub' ); ?></li>
 		</ol>
 		<p class="lnh-small lnh-muted"><?php esc_html_e( 'You can revoke this access any time in Users → Profile → Application Passwords.', 'lehigh-news-hub' ); ?></p>
 	</section>

@@ -34,7 +34,7 @@ class Store:
     def __init__(self, state_dir: str | Path):
         self.dir = Path(state_dir)
         self.dir.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(self.dir / "agents.sqlite3")
+        self.db = sqlite3.connect(self.dir / "agents.sqlite3", check_same_thread=False)
         self.db.execute(
             "CREATE TABLE IF NOT EXISTS seen (url TEXT PRIMARY KEY, title TEXT, status TEXT, ts REAL)"
         )

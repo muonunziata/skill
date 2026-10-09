@@ -1,5 +1,5 @@
 <?php
-/** @var array $welcome @var array $pages @var array $counts @var array $health @var array $stats @var array $waiting @var array $runs @var int $published7 @var int $avg @var string $rest_url @var string $profile */
+/** @var array $control @var array $welcome @var array $pages @var array $counts @var array $health @var array $stats @var array $waiting @var array $runs @var int $published7 @var int $avg @var string $rest_url @var string $profile */
 defined( 'ABSPATH' ) || exit;
 $agents = LNH_Admin::agents();
 $state  = $health['state'];
@@ -23,6 +23,8 @@ $state  = $health['state'];
 	</form>
 </section>
 <?php endif; ?>
+
+<?php LNH_Admin::view( 'control', array( 'control' => $control, 'back' => admin_url( 'admin.php?page=lnh' ) ) ); ?>
 
 <div class="lnh-banner lnh-banner--<?php echo esc_attr( $state ); ?>">
 	<span class="lnh-dot lnh-dot--<?php echo esc_attr( $state ); ?>"></span>
@@ -118,7 +120,7 @@ $state  = $health['state'];
 				<li><?php esc_html_e( 'Put these two lines in the agents’ .env file:', 'lehigh-news-hub' ); ?>
 					<div class="lnh-copy"><pre>WP_REST_URL=<?php echo esc_html( $rest_url ); ?>
 WP_AUTH_TOKEN=<?php echo esc_html( wp_get_current_user()->user_login ); ?>:xxxx xxxx xxxx xxxx xxxx xxxx</pre><button type="button" class="button" data-lnh-copy><?php esc_html_e( 'Copy', 'lehigh-news-hub' ); ?></button></div></li>
-				<li><?php esc_html_e( 'Run python main.py setup (it configures the rest for you), then python main.py run.', 'lehigh-news-hub' ); ?></li>
+				<li><?php esc_html_e( 'Run python main.py setup (it configures the rest for you), then start them with ./start.sh and press “Start working” above.', 'lehigh-news-hub' ); ?></li>
 			</ol>
 		</section>
 	</div>

@@ -40,8 +40,10 @@ class Pipeline:
         self._social = social
 
     # ───────────────────────── one run ─────────────────────────
-    def run_once(self) -> dict[str, Any]:
+    def run_once(self, should_stop=None, on_event=None) -> dict[str, Any]:
+        """One cycle. `should_stop()` is checked between stories (Pause); `on_event(event)` receives live progress."""
         runlog = RunLog()
+        runlog.listener = on_event
         s = self.s
         self.llm.usage = {}  # token usage is reported per run; the LLM client lives for the whole `watch` session
         report: dict[str, Any] = {
@@ -63,6 +65,10 @@ class Pipeline:
         runlog("pipeline", "step", f"{len(hallazgos)} hallazgo(s) para redactar")
 
         for h in hallazgos:
+            if should_stop is not None and should_stop():
+                runlog("pipeline", "step", "Pausa solicitada: se detiene tras la última noticia terminada")
+                report["stopped_early"] = True
+                break
             report["items"].append(self._process(h, runlog))
 
         report["finished_at"] = int(time.time())

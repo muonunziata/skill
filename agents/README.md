@@ -5,7 +5,7 @@ Rastreador → Redactor → Auditor → WordPress, y después el Diseñador Soci
 ```bash
 ./install.sh                 # (install.bat en Windows) entorno + dependencias + asistente
 python main.py setup         # asistente guiado: crea/actualiza el .env automáticamente
-python main.py check | run [--dry-run] [--no-images] [--no-social] | watch
+python main.py check | run [--dry-run] [--no-images] [--no-social] | watch [--no-control]
 python main.py social --post 123 [--no-video] [--formats instagram,tiktok] [--dry-run] [--out DIR]
 ```
 
@@ -25,6 +25,7 @@ python main.py social --post 123 [--no-video] [--formats instagram,tiktok] [--dr
 | `imagegen.py` | Replicate/Flux, Gemini (Nano Banana) y APIs compatibles con OpenAI. |
 | `wordpress.py` | Cliente REST (entradas, medios, etiquetas, informe de ejecución). |
 | `checks.py` | Comprobaciones deterministas: enlaces, HTML, cifras, copia literal. |
+| `control.py` · `worker.py` | Botón **Iniciar / Pausar** del plugin: `watch` es un trabajador que cada ~15 s hace `POST /lnh/v1/control/sync` (reporta su estado y progreso en vivo, recibe *running/paused*, «ejecutar ahora» e intervalo). Pausar detiene entre noticias, nunca a mitad de un artículo. Sin plugin o con `--no-control` funciona como planificador simple. |
 | `pipeline.py` | Orquesta una ejecución, el bucle de corrección y la limpieza. |
 | `net.py` | Descargas con protección SSRF. |
 | `store.py` | Memoria SQLite anti-duplicados. |

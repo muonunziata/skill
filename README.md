@@ -63,13 +63,27 @@ Crea el entorno de Python, instala las dependencias y arranca **`python main.py 
 Después:
 ```bash
 python main.py run --dry-run   # prueba completa sin escribir en WordPress
-./start.sh                      # funcionamiento continuo (start.bat en Windows)
+./start.sh                      # funcionamiento continuo, controlado desde WordPress (start.bat en Windows)
 ```
-Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`, o `agents/deploy/lehigh-agents.service` (systemd).
+Para dejarlo corriendo como servicio (siempre conectado al botón de WordPress): `agents/Dockerfile` + `docker-compose.yml`, o `agents/deploy/lehigh-agents.service` (systemd).
 
 > ¿Prefieres hacerlo a mano? `cp .env.example .env`, rellénalo y usa `python main.py check`. Todo el asistente también funciona sin preguntas con `python main.py setup --non-interactive --gemini-key … --site …`.
 
-### 4 · Usa el plugin
+### 4 · Enciéndelos y pulsa «Iniciar a trabajar»
+```bash
+./start.sh        # Windows: start.bat
+```
+Los agentes **se conectan solos a tu WordPress** (con las credenciales del `.env`) y quedan esperando tus órdenes. En **News Hub → Panel** (y en *Actividad de los agentes*) verás una tarjeta de control:
+
+| Botón | Qué hace |
+|---|---|
+| **▶ Iniciar a trabajar** | Los agentes empiezan de inmediato y repiten el ciclo cada *N* minutos (*Ajustes → Ejecutar cada*). |
+| **⏸ Pausar** | Terminan el artículo que tienen en curso (nunca lo cortan a la mitad) y se detienen hasta que vuelvas a iniciar. |
+| **⚡ Ejecutar ahora** | Lanza un ciclo ya, sin esperar el intervalo. |
+
+La tarjeta muestra en vivo si los agentes están conectados, qué están haciendo en este momento («redactor: Escribiendo…») y cuándo es el próximo ciclo. **Hasta que pulses Iniciar, no se hace ninguna llamada de pago**: es el estado por defecto. Los agentes son quienes llaman a WordPress (nunca al revés), así que funcionan detrás de un router o en un computador sin IP pública. WordPress no puede ejecutar Python por sí mismo: el programa `start.sh` / Docker / systemd tiene que estar encendido en algún computador o servidor. Sin el plugin, o con `python main.py watch --no-control`, los agentes trabajan solos cada `LOOP_INTERVAL_MINUTES`.
+
+### 5 · Usa el plugin
 * **News Hub → Cola de revisión**: ve las noticias que esperan tu decisión, con su nota de auditoría.
 * **Revisar**: vista previa, notas del auditor, fuente, imagen (con el prompt que escribió el Redactor) y la línea de tiempo de lo que hizo cada agente. Botones: *Publicar ahora*, *Programar*, *Rechazar*.
 * **Actividad de los agentes**: tarjetas por agente, embudo de 7 días, feed en vivo y detalle de cada ejecución.
@@ -133,9 +147,9 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       103 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       114 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      108 comprobaciones dentro de WordPress
+wordpress/tests/run.php      135 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
 plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes

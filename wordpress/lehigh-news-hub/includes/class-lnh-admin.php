@@ -69,6 +69,7 @@ final class LNH_Admin {
 				'nonce'     => wp_create_nonce( 'lnh_preview' ),
 				'feedUrl'   => esc_url_raw( rest_url( 'lnh/v1/feed' ) ),
 				'restNonce' => wp_create_nonce( 'wp_rest' ),
+				'controlUrl' => esc_url_raw( rest_url( 'lnh/v1/control' ) ),
 				'agents'    => array_map(
 					function ( $a ) {
 						return array( 'label' => $a['label'], 'icon' => $a['icon'] );
@@ -85,6 +86,8 @@ final class LNH_Admin {
 					'live'        => __( 'Live', 'lehigh-news-hub' ),
 					'paused'      => __( 'Paused', 'lehigh-news-hub' ),
 					'previewFail' => __( 'Could not render the preview.', 'lehigh-news-hub' ),
+					'nextIn'      => __( 'next cycle in %s', 'lehigh-news-hub' ),
+					'connectedAgo' => __( 'Agents connected · last seen %s', 'lehigh-news-hub' ),
 				),
 			)
 		);
@@ -155,6 +158,10 @@ final class LNH_Admin {
 
 	/** Agent system health from the last run. */
 	public static function health(): array {
+		if ( ! LNH_Control::is_running() ) { // A paused system is not "late": somebody asked it to stop.
+			$last = LNH_Runs::last();
+			return array( 'state' => 'paused', 'label' => __( 'The agents are paused', 'lehigh-news-hub' ), 'last' => $last ? (int) ( $last['finished_at'] ?: $last['started_at'] ) : 0 );
+		}
 		$last     = LNH_Runs::last();
 		$interval = max( 5, (int) LNH_Settings::get( 'expected_interval' ) );
 		if ( ! $last ) {
@@ -193,6 +200,9 @@ final class LNH_Admin {
 			/* translators: %d: number of pages */
 			'pages'     => sprintf( _n( '%d page created.', '%d pages created.', $n, 'lehigh-news-hub' ), $n ),
 			'preset_deleted' => __( 'Preset deleted.', 'lehigh-news-hub' ),
+			'agents_started' => __( 'The agents will start working as soon as they connect.', 'lehigh-news-hub' ),
+			'agents_paused'  => __( 'The agents are paused. They finish the article in progress and then stop.', 'lehigh-news-hub' ),
+			'agents_run_now' => __( 'A run was requested: the agents will start within seconds.', 'lehigh-news-hub' ),
 			'error'     => __( 'Something went wrong. Nothing was changed.', 'lehigh-news-hub' ),
 			'none'      => __( 'Select at least one article first.', 'lehigh-news-hub' ),
 		);
@@ -228,6 +238,7 @@ final class LNH_Admin {
 			'date_query' => array( array( 'after' => '7 days ago' ) ) ) );
 		$scores = self::avg_score( 30 );
 		self::view( 'dashboard', array(
+			'control'   => LNH_Control::status(),
 			'counts'    => LNH_Queue::counts(),
 			'health'    => self::health(),
 			'stats'     => LNH_Runs::agent_stats( 7 ),
@@ -289,6 +300,7 @@ final class LNH_Admin {
 			self::view( 'run', array( 'run' => LNH_Runs::get( $run_id ) ) );
 		} else {
 			self::view( 'activity', array(
+				'control' => LNH_Control::status(),
 				'health' => self::health(),
 				'stats'  => LNH_Runs::agent_stats( 7 ),
 				'runs'   => LNH_Runs::recent( 20 ),

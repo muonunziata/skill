@@ -157,6 +157,9 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--dry-run", action="store_true", help="no escribe en WordPress; guarda el resultado en ./state")
         p.add_argument("--no-images", action="store_true", help="no genera imágenes con IA")
         p.add_argument("--no-social", action="store_true", help="no diseña el kit de Instagram/TikTok (Agente 4)")
+        if name == "watch":
+            p.add_argument("--no-control", action="store_true",
+                           help="ignora el botón Iniciar/Pausar de WordPress y trabaja siempre según LOOP_INTERVAL_MINUTES")
     so = sub.add_parser("social", help="Agente 4: diseña carruseles y video para Instagram/TikTok de un artículo ya creado")
     so.add_argument("--post", type=int, help="ID del borrador/entrada de WordPress")
     so.add_argument("--latest", type=int, metavar="N", help="los N artículos más recientes de los agentes (por defecto 1)")
@@ -195,15 +198,18 @@ def main(argv: list[str] | None = None) -> int:
                   + (f" → {it['post']['edit_link']}" if it.get("post") else ""))
         return 0 if report["status"] == "ok" else 1
 
+    from .control import Control
+    from .worker import Worker
+
     stop = threading.Event()
     for sig in (signal.SIGINT, signal.SIGTERM):
         signal.signal(sig, lambda *_: stop.set())
-    while not stop.is_set():
-        try:
-            pipe.run_once()
-        except Exception:  # noqa: BLE001 - a bad cycle must not kill the daemon
-            logging.exception("run failed")
-        stop.wait(s.interval_minutes * 60)
+    control = None
+    if not args.dry_run and not args.no_control and pipe.wp is not None:
+        control = Control(WordPressClient(s.wp_rest_url, s.wp_auth_token))   # its own HTTP session: it runs in a heartbeat thread
+        print("Agentes en marcha. Conectados a WordPress: usa «Iniciar a trabajar» / «Pausar» en el panel de News Hub "
+              "(si no tienes el plugin, trabajan solos cada %d min). Ctrl+C para salir." % s.interval_minutes)
+    Worker(pipe, control, s.interval_minutes, stop).run()
     return 0
 
 
