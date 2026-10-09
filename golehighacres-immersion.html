@@ -84,7 +84,7 @@
 
   /* Scatter */
   .now { padding-block: clamp(64px, 9vw, 128px) clamp(40px, 6vw, 80px); }
-  .carousel { --w: clamp(170px, 24vw, 300px); position: relative; height: calc(var(--w) * 1.33 + 60px); margin-top: 40px; perspective: 1700px; cursor: grab; touch-action: pan-y; user-select: none; overflow: hidden; }
+  .carousel { --w: clamp(200px, 36vw, 560px); position: relative; width: 100vw; margin-left: calc(50% - 50vw); height: calc(var(--w) * 0.75 + 70px); margin-top: 40px; perspective: 2200px; cursor: grab; touch-action: pan-y; user-select: none; overflow: hidden; }
   .carousel.drag { cursor: grabbing; }
   .ring { position: absolute; left: 50%; top: 30px; width: var(--w); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; }
   .cd { position: absolute; left: 0; top: 0; width: var(--w); box-shadow: 0 30px 60px rgba(0,0,0,.2); will-change: transform, opacity; }
@@ -199,12 +199,12 @@
       <p class="label">Ahora en GoLehighAcres</p>
       <div class="carousel" id="carousel" aria-roledescription="carrusel" aria-label="Ahora en GoLehighAcres">
         <div class="ring" id="ring">
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-a)"><span class="no">FOTO 02</span><span class="sz">3:4</span></div></div>
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-b)"><span class="no">FOTO 03</span><span class="sz">3:4</span></div></div>
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-c)"><span class="no">FOTO 04</span><span class="sz">3:4</span></div></div>
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-d)"><span class="no">FOTO 05</span><span class="sz">3:4</span></div></div>
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-e)"><span class="no">FOTO 06</span><span class="sz">3:4</span></div></div>
-          <div class="cd"><div class="ph r-34" style="--c: var(--ph-f)"><span class="no">FOTO 07</span><span class="sz">3:4</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-a)"><span class="no">FOTO 02</span><span class="sz">4:3</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-b)"><span class="no">FOTO 03</span><span class="sz">4:3</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-c)"><span class="no">FOTO 04</span><span class="sz">4:3</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-d)"><span class="no">FOTO 05</span><span class="sz">4:3</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-e)"><span class="no">FOTO 06</span><span class="sz">4:3</span></div></div>
+          <div class="cd"><div class="ph r-43" style="--c: var(--ph-f)"><span class="no">FOTO 07</span><span class="sz">4:3</span></div></div>
         </div>
       </div>
       <div class="car-ctl">
