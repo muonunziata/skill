@@ -118,6 +118,48 @@
   .thumb { width: 96px; }
   .note { margin-top: 14px; font-size: 0.78rem; color: var(--muted); }
 
+  /* Directory search */
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .search { position: relative; display: flex; align-items: center; gap: 14px; margin-top: 32px; padding: 0 20px; height: 64px; border: 1px solid var(--ink); border-radius: 999px; background: #fff; transition: box-shadow .25s, border-color .25s; }
+  .search:focus-within { border-color: var(--coral); box-shadow: 0 0 0 4px rgba(255, 90, 95, .15); }
+  .search svg { flex: none; color: var(--muted); }
+  .search input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; font: inherit; font-size: 1.05rem; color: var(--ink); }
+  .search input::placeholder { color: var(--muted); }
+  .search input::-webkit-search-cancel-button { display: none; }
+  .clear { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); font-size: .8rem; }
+  .clear:hover { background: var(--ink); color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: .8rem; line-height: 1.2; background: #fff; transition: border-color .2s, background .2s, color .2s; }
+  .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--dot, var(--ink)); flex: none; }
+  .chip:hover { border-color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .status { min-height: 1.6em; margin-top: 18px; font-size: .82rem; letter-spacing: .06em; color: var(--muted); }
+  .browse { margin-top: 56px; }
+  .catgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 24px; }
+  .catcard { text-align: left; display: grid; gap: 8px; align-content: start; padding: 20px; border: 1px solid var(--line); border-top: 4px solid var(--dot); border-radius: 4px; background: #fff; transition: transform .25s, box-shadow .25s, border-color .25s; }
+  .catcard:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(20, 24, 26, .1); }
+  .catcard h4 { font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; line-height: 1.3; }
+  .catcard p { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+  .catcard b { font-size: .68rem; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .group { margin-top: 36px; }
+  .group h3 { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
+  .group h3 i { width: 12px; height: 12px; border-radius: 50%; background: var(--dot); flex: none; }
+  .group h3 span { margin-left: auto; font-family: var(--font); font-weight: 400; font-size: .72rem; letter-spacing: .2em; color: var(--muted); }
+  .res { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px 8px; border-bottom: 1px solid var(--line); transition: background .2s; }
+  .res:hover { background: #FFF8E8; }
+  .res strong { font-family: var(--display); font-weight: 600; }
+  .res em { font-style: normal; font-size: .85rem; color: var(--muted); }
+  .res .tagS { justify-self: end; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; font-size: .65rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .none { padding: 48px 0; text-align: center; color: var(--muted); }
+  .none b { display: block; margin-bottom: 6px; font-family: var(--display); font-size: 1.2rem; color: var(--ink); }
+  mark { background: #FFE9A8; color: inherit; padding: 0 2px; }
+  @media (max-width: 700px) {
+    .search { height: 56px; padding: 0 16px; }
+    .res { grid-template-columns: 1fr auto; }
+    .res em:nth-of-type(2) { display: none; }
+    .res .tagS { display: none; }
+  }
+
   /* Journey */
   .tabs { border-block: 1px solid var(--line); overflow-x: auto; }
   .tabs ul { list-style: none; display: flex; gap: 8px; align-items: center; padding: 14px var(--gutter); max-width: 1320px; margin-inline: auto; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; }
@@ -167,7 +209,14 @@
   .rise { transform: translateY(32px); transition: transform .9s cubic-bezier(.2,.7,.2,1); }
   .rise.in { transform: none; }
 
-  @media (max-width: 980px) {
+  @media (max-width: 1520px) {
+    header { gap: 16px; }
+    .nav { gap: 18px; }
+    .nav a { font-size: 0.68rem; letter-spacing: 0.1em; }
+    .cta { padding: 10px 16px; font-size: 0.66rem; letter-spacing: 0.1em; }
+    .logo { font-size: 1.1rem; }
+  }
+  @media (max-width: 1180px) {
     :root { --hh: calc(64px + env(safe-area-inset-top, 0px)); }
     .burger { display: grid; }
     .cta { display: none; }
@@ -277,18 +326,33 @@
     <div class="wrap">
       <p class="label">Latest additions</p>
       <h2 class="h-xl rise" style="margin-top: 20px">Recently added</h2>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Business</th><th></th><th>Category</th><th>Area</th></tr></thead>
-          <tbody>
+
+      <form class="search" id="searchForm" role="search" aria-label="Search the business directory" onsubmit="return false">
+        <label for="q" class="sr">Search businesses or categories</label>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+        <input id="q" type="search" autocomplete="off" placeholder="Search a business or category: plumber, restaurant, dentist…">
+        <button type="button" id="clear" class="clear" aria-label="Clear search" hidden>&#10005;</button>
+      </form>
+      <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+      <p class="status" id="status" aria-live="polite"></p>
+
+      <div id="recent">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Business</th><th></th><th>Category</th><th>Area</th></tr></thead>
+            <tbody>
             <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--b); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 08</span></div></td><td class="n">Sample business 1</td><td>Restaurant</td><td>Lehigh Acres</td></tr>
             <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--c); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 09</span></div></td><td class="n">Sample business 2</td><td>Services</td><td>Lehigh Acres</td></tr>
             <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--d); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 10</span></div></td><td class="n">Sample business 3</td><td>Shop</td><td>Lehigh Acres</td></tr>
             <tr data-go><td class="thumb"><div class="ph r-43" style="--k: var(--e); padding: 6px 8px"><span class="no" style="font-size: .8rem">FOTO 11</span></div></td><td class="n">Sample business 4</td><td>Health</td><td>Lehigh Acres</td></tr>
           </tbody>
-        </table>
+          </table>
+        </div>
+        <p class="note">Sample rows. They will be replaced by real directory listings.</p>
+        <h3 class="h-lg browse">Browse by category</h3>
+        <div class="catgrid" id="catGrid"></div>
       </div>
-      <p class="note">Sample rows. They will be replaced by real directory listings.</p>
+      <div id="found" hidden></div>
     </div>
   </section>
 
@@ -455,6 +519,107 @@
     setLabel(); window.addEventListener('resize', layout); layout(); requestAnimationFrame(tick);
   })();
 
+
+  /* Directory: search, category chips and sections. Listings are generated samples, one per sub-category. */
+  (function () {
+    var DOTS = ['#2E7D55', '#CC7A3A', '#2B5BA8', '#7A4A9A', '#C99A22', '#2B8ED0', '#5C6FB6', '#FF5A5F', '#0F5A3C'];
+    var CATS = [
+      ['Restaurants & Food', 'restaurant, cafe, bakery, food truck, grocery, catering, pizza, bar & grill'],
+      ['Home Services', 'plumber, electrician, HVAC, roofing, landscaping, pest control, house cleaning, pool service, handyman, fencing'],
+      ['Construction & Contractors', 'general contractor, builder, concrete, painting, flooring, remodeling, windows & doors, solar'],
+      ['Real Estate', 'realtor, property management, title company, home inspection, appraiser, mortgage broker'],
+      ['Auto & Transport', 'auto repair, car wash, car dealership, towing, tires, body shop, trucking'],
+      ['Health & Medical', 'doctor, dentist, urgent care, pharmacy, chiropractor, therapist, optometrist, home health'],
+      ['Beauty & Personal Care', 'hair salon, barber, nail salon, spa, massage, tattoo'],
+      ['Retail & Shopping', 'clothing, furniture, hardware store, gift shop, thrift store, convenience store, florist'],
+      ['Education & Childcare', 'daycare, school, tutoring, driving school, language classes, music lessons'],
+      ['Professional Services', 'attorney, accountant, insurance agent, notary, consulting, translation, tax preparation'],
+      ['Financial Services', 'bank, credit union, loans, check cashing, investment advisor'],
+      ['Technology & Marketing', 'web design, IT support, marketing agency, printing, photography, video production'],
+      ['Pets & Animals', 'veterinarian, pet grooming, pet boarding, pet store, farm & feed'],
+      ['Fitness & Recreation', 'gym, yoga, martial arts, sports league, golf, fishing, parks'],
+      ['Events & Entertainment', 'event venue, DJ, party rental, wedding services, live music'],
+      ['Hotels & Lodging', 'hotel, motel, RV park, vacation rental'],
+      ['Churches & Community', 'church, nonprofit, social club, volunteer group, food bank'],
+      ['Farm & Garden', 'plant nursery, farm, equipment rental, tree service, irrigation']
+    ].map(function (c, i) {
+      return { id: i, name: c[0], dot: DOTS[i % DOTS.length], subs: c[1].split(', ') };
+    });
+    var LIST = [];
+    CATS.forEach(function (c) { c.subs.forEach(function (sub) { LIST.push({ cat: c.id, sub: sub, name: 'Sample ' + sub.replace(/\b\w/g, function (m) { return m.toUpperCase(); }), hay: (c.name + ' ' + sub).toLowerCase() }); }); });
+
+    var q = $('#q'), chips = $('#chips'), grid = $('#catGrid'), recent = $('#recent'), found = $('#found'), status = $('#status'), clr = $('#clear');
+    var active = null;
+
+    function esc(t) { return t.replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
+    function hl(text, toks) {
+      var out = esc(text);
+      toks.forEach(function (t) { if (t) out = out.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'); });
+      return out;
+    }
+    function chip(label, id, dot) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.dataset.id = id; b.setAttribute('data-go', '');
+      b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = (dot ? '<i style="--dot:' + dot + '"></i>' : '') + esc(label);
+      chips.appendChild(b); return b;
+    }
+    chip('All categories', 'all');
+    CATS.forEach(function (c) { chip(c.name, c.id, c.dot); });
+
+    CATS.forEach(function (c) {
+      var n = LIST.filter(function (l) { return l.cat === c.id; }).length;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'catcard'; b.dataset.id = c.id; b.style.setProperty('--dot', c.dot); b.setAttribute('data-go', '');
+      b.innerHTML = '<b>' + n + ' types</b><h4>' + esc(c.name) + '</h4><p>' + esc(c.subs.slice(0, 4).join(', ')) + '…</p>';
+      grid.appendChild(b);
+    });
+
+    function setChips() {
+      $$('.chip', chips).forEach(function (b) { b.setAttribute('aria-pressed', String((active === null && b.dataset.id === 'all') || String(active) === b.dataset.id)); });
+    }
+    function render() {
+      var term = q.value.trim().toLowerCase(), toks = term.split(/\s+/).filter(Boolean);
+      clr.hidden = !term;
+      setChips();
+      if (!toks.length && active === null) { recent.hidden = false; found.hidden = true; status.textContent = ''; return; }
+      var hits = LIST.filter(function (l) {
+        return (active === null || l.cat === active) && toks.every(function (t) { return l.hay.indexOf(t) > -1; });
+      });
+      recent.hidden = true; found.hidden = false;
+      if (!hits.length) {
+        status.textContent = '0 results';
+        found.innerHTML = '<div class="none"><b>No businesses found</b>Try a broader word like “repair”, “health” or “food”, or choose All categories.</div>';
+        return;
+      }
+      var by = {}; hits.forEach(function (l) { (by[l.cat] = by[l.cat] || []).push(l); });
+      var html = '';
+      CATS.forEach(function (c) {
+        var items = by[c.id]; if (!items) return;
+        html += '<section class="group" aria-label="' + esc(c.name) + '"><h3><i style="--dot:' + c.dot + '"></i>' + hl(c.name, toks) + '<span>' + items.length + '</span></h3>';
+        items.forEach(function (l) {
+          html += '<div class="res" data-go><strong>' + hl(l.name, toks) + '</strong><em>' + hl(l.sub, toks) + '</em><em>Lehigh Acres</em><span class="tagS">Sample</span></div>';
+        });
+        html += '</section>';
+      });
+      found.innerHTML = html;
+      status.textContent = hits.length + ' result' + (hits.length === 1 ? '' : 's') + ' in ' + Object.keys(by).length + ' categor' + (Object.keys(by).length === 1 ? 'y' : 'ies') + '. Sample listings, to be replaced by real businesses.';
+    }
+    q.addEventListener('input', render);
+    clr.addEventListener('click', function () { q.value = ''; render(); q.focus(); });
+    q.addEventListener('keydown', function (e) { if (e.key === 'Escape') { q.value = ''; render(); } });
+    chips.addEventListener('click', function (e) {
+      var b = e.target.closest('.chip'); if (!b) return;
+      active = b.dataset.id === 'all' ? null : +b.dataset.id; render();
+    });
+    grid.addEventListener('click', function (e) {
+      var b = e.target.closest('.catcard'); if (!b) return;
+      active = +b.dataset.id; render();
+      document.getElementById('searchForm').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    });
+    render();
+  })();
+
   /* Cursor: ring, becomes a red GO! over links and rows */
   var cur = $('#cur'), curText = $('#curText');
   if (window.matchMedia('(pointer: fine)').matches) {
@@ -462,7 +627,7 @@
     window.addEventListener('pointermove', function (e) {
       cur.classList.add('on');
       cur.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
-      cur.classList.toggle('go', !!e.target.closest('[data-go], .cta, .nav a, .logo'));
+      cur.classList.toggle('go', !!e.target.closest('[data-go], .cta, .nav a, .logo, .chip, .catcard, .res'));
     });
     document.addEventListener('pointerleave', function () { cur.classList.remove('on'); });
   }

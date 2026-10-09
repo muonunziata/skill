@@ -103,7 +103,14 @@
     :root { --h: clamp(160px, 30vh, 260px); }
     .bar span:last-child { display: none; }
   }
-  @media (max-width: 980px) {
+  @media (max-width: 1520px) {
+    header { gap: 16px; }
+    .nav { gap: 18px; }
+    .nav a { font-size: 0.68rem; letter-spacing: 0.1em; }
+    .cta { padding: 10px 16px; font-size: 0.66rem; letter-spacing: 0.1em; }
+    .logo { font-size: 1.1rem; }
+  }
+  @media (max-width: 1180px) {
     :root { --hh: calc(64px + env(safe-area-inset-top, 0px)); }
     .burger { display: grid; }
     .cta { display: none; }
