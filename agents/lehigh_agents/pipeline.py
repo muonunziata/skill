@@ -103,9 +103,9 @@ class Pipeline:
                         posted=outcome["posted"], reason=outcome.get("reason", ""),
                         post=outcome.get("post"), article=art.to_dict(), finding=h.to_dict())
             posted = outcome["posted"]
+            self._remember(h, "published" if posted else aud.status)   # before the slow social step: a kill must not duplicate it
             if aud.status == "approved" and (posted or self.dry_run) and self.make_social:
                 item["social"] = self._design_social(h, art, outcome.get("post"), emit)
-            self._remember(h, "published" if posted else aud.status)
         except (LLMError, ImageGenError, WPError) as exc:
             emit("pipeline", "error", f"Falló «{h.titulo_fuente}»: {exc}", level="error")
             item["error"] = str(exc)

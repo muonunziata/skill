@@ -296,7 +296,8 @@ def test_designer_survives_failed_upload_and_voice(social_settings, wp_server, t
     d.wp.upload_media = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("disk full"))
     kit = d.run(make_ctx(), out_root=tmp_path, formats=["instagram"], video=False)
     assert any("No se pudo subir" in w for w in kit.warnings) and kit.files["instagram"]
-    assert wp_server.post_updates and json.loads(wp_server.post_updates[0][1]["meta"]["lnh_social"])["instagram"]["slides"] == []
+    assert not wp_server.post_updates      # nothing uploaded: an earlier good kit is never overwritten by an empty one
+    assert any("se conserva" in w for w in kit.warnings)
 
 
 def test_designer_repairs_unsupported_figures_then_gives_up(social_settings, wp_server, tmp_path):
@@ -410,3 +411,70 @@ def test_cli_social_command_designs_from_an_existing_post(settings, wp_server, t
     assert not wp_server.post_updates                      # --dry-run: nothing written back
     rc = cli.main(["social", "--latest", "1", "--no-video", "--formats", "tiktok", "--out", str(out)])
     assert rc == 0 and wp_server.post_updates and wp_server.post_updates[0][0] == 501
+
+
+# ───────────────────────── review fixes ─────────────────────────
+@needs_browser
+def test_short_headlines_keep_their_full_size(settings):
+    brand = load_brand(settings)
+    with SlideRenderer() as r:
+        sizes = {}
+        for kind, size in (("point", 70), ("cover", 100)):
+            r.png(slide_html(planmod.Slide(kind, "Plan de drenaje aprobado", "Cuerpo corto"), index=1, total=6, fmt="instagram",
+                             brand=brand), 1080, 1350)
+            sizes[kind] = r._page.evaluate("() => parseFloat(getComputedStyle(document.querySelector('.h')).fontSize)")
+        assert sizes == {"point": 70, "cover": 100}
+        r.png(slide_html(planmod.Slide("point", "muy largo " * 30, ""), index=1, total=6, fmt="instagram", brand=brand), 1080, 1350)
+        assert r._page.evaluate("() => parseFloat(getComputedStyle(document.querySelector('.h')).fontSize)") < 70   # still shrinks
+
+
+def test_every_video_scene_with_a_photo_carries_the_ai_label(settings):
+    brand = load_brand(settings)
+    for i in range(3):
+        html = scene_html("Texto", index=i, total=4, brand=brand, photo="data:image/jpeg;base64,AAA", ai_label="Ilustración generada con IA")
+        assert "Ilustración generada con IA" in html
+    assert "Ilustración" not in scene_html("Texto", index=1, total=4, brand=brand, ai_label="Ilustración generada con IA")  # no photo, no label
+
+
+def test_copy_guard_covers_alt_text_and_hashtags():
+    d = plan_json(alt_text="Foto de 850 personas en el evento", hashtags=["Lehigh33972", "Top500"])
+    problems = planmod.semantic_problems(planmod.parse_plan(d), BODY)
+    assert problems and "850" in problems
+
+
+def test_ffmpeg_dying_silently_is_a_video_error_not_a_crash(monkeypatch):
+    import subprocess
+
+    from lehigh_agents.social import video
+
+    monkeypatch.setattr(video.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(a, 137, b"", b""))
+    with pytest.raises(VideoError, match="137"):
+        video._run(["ffmpeg"])
+    def boom(*a, **k):
+        raise FileNotFoundError("nope")
+    monkeypatch.setattr(video.subprocess, "run", boom)
+    with pytest.raises(VideoError, match="ffmpeg"):
+        video._run(["ffmpeg"])
+
+
+@needs_browser
+def test_dry_run_never_fires_the_webhook(social_settings, wp_server, tmp_path):
+    calls = []
+
+    class Http:
+        def post(self, *a, **k):
+            calls.append(a)
+            return type("R", (), {"status_code": 200})()
+
+    s = replace(social_settings, social_webhook_url="https://hooks.example/x")
+    d, _ = make_designer(s, wp_server, [plan_json()], http=Http())
+    d.run(make_ctx(), out_root=tmp_path, upload=False, video=False, formats=["instagram"])
+    assert calls == []
+    assert "folder" not in json.dumps(__import__("lehigh_agents.social.designer", fromlist=["SocialKit"]).SocialKit(
+        slug="a", folder="/secret/path", plan=planmod.parse_plan(plan_json()).__dict__ | {"slides": [], "scenes": []}, files={}).to_meta())
+
+
+def test_social_model_without_its_key_is_reported(settings):
+    s = replace(settings, social_enabled=True, social_model="claude-3-5-haiku-latest", anthropic_api_key="")
+    assert any("SOCIAL_MODEL" in p for p in s.problems(need_wordpress=False))
+    assert not any("SOCIAL_MODEL" in p for p in replace(s, social_enabled=False).problems(need_wordpress=False))

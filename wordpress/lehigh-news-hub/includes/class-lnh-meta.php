@@ -22,6 +22,7 @@ final class LNH_Meta {
 		'lnh_meta_description'   => 'string',
 		'lnh_featured_image_url' => 'string',
 		'lnh_featured_image_ai'  => 'boolean',
+		'lnh_featured_image_credit' => 'string',
 		'lnh_image_prompt'       => 'string',
 		'lnh_image_provider'     => 'string',
 		'lnh_media_todo'         => 'string',

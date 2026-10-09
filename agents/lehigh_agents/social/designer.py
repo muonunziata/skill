@@ -37,7 +37,7 @@ log = logging.getLogger("lehigh.social")
 FOCUS = ["50% 40%", "35% 55%", "65% 45%", "50% 60%", "40% 35%", "60% 55%", "50% 50%", "45% 65%", "55% 35%"]
 OUTRO_SECONDS = 2.6
 MIN_SCENE = 2.4
-MAX_SCENE = 9.0
+MAX_SCENE = 14.0
 
 
 class SocialError(Exception):
@@ -84,7 +84,6 @@ class SocialKit:
             "tiktok": {"caption": p["tiktok_caption"], "slides": self.uploaded.get("tiktok", [])},
             "video": (self.uploaded.get("video") or [None])[0],
             "hashtags": p["hashtags"], "alt_text": p["alt_text"], "warnings": self.warnings,
-            "folder": self.folder,
         }
 
 
@@ -182,6 +181,8 @@ class SocialDesigner:
                                                                                warnings)
         except SocialRenderError as exc:
             raise SocialError(str(exc)) from exc
+        except Exception as exc:  # noqa: BLE001 - Playwright/OS errors while drawing: the article itself is unaffected
+            raise SocialError(f"falló el dibujo de las láminas: {str(exc)[:200]}") from exc
 
         seconds = 0.0
         if want_video and scene_pngs:
@@ -210,7 +211,8 @@ class SocialDesigner:
             self._upload(kit, ctx, folder)
         if ctx.post_id and self.wp is not None and want_upload:
             self._attach(kit, ctx)
-        self._webhook(kit, ctx)
+        if want_upload:   # a dry run must not trigger external automations
+            self._webhook(kit, ctx)
         self._ev("done", f"Kit social listo en {folder} ({round(time.time() - t0)}s)")
         return kit
 
@@ -285,6 +287,9 @@ class SocialDesigner:
                  count=sum(len(v) for v in kit.uploaded.values()))
 
     def _attach(self, kit: SocialKit, ctx: ArticleContext) -> None:
+        if not kit.uploaded:   # never replace a previous good kit with an empty one
+            kit.warnings.append("Ningún archivo se subió: el kit anterior (si lo hay) se conserva en el borrador.")
+            return
         try:
             self.wp.update_post(ctx.post_id, {"meta": {"lnh_social": json.dumps(kit.to_meta(), ensure_ascii=False)}})
             self._ev("attached", f"Kit social vinculado al borrador {ctx.post_id}", post_id=ctx.post_id)

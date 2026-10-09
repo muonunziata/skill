@@ -133,7 +133,7 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       92 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       103 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
 wordpress/tests/run.php      108 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones

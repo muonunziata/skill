@@ -219,6 +219,8 @@ class Settings:
             out.append("RASTREADOR_MODEL must be a Gemini model (it relies on Google Search grounding)")
         if provider_for(self.auditor_model) != "gemini":
             out.append("AUDITOR_MODEL must be a Gemini model")
+        if self.social_enabled and not keys.get(provider_for(self.social_model)):
+            out.append(f"SOCIAL_MODEL={self.social_model} needs {names[provider_for(self.social_model)]} (or set SOCIAL_ENABLED=false)")
         if self.image_provider:
             if self.image_provider not in ("replicate", "gemini", "openai"):
                 out.append(f"IMAGE_PROVIDER={self.image_provider} is not supported (replicate, gemini or openai)")

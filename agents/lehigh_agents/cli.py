@@ -79,8 +79,9 @@ def _social(s: Settings, args: argparse.Namespace) -> int:
     if not s.wp_rest_url or not s.wp_auth_token:
         print("Se necesita WP_REST_URL y WP_AUTH_TOKEN para leer el artículo (ejecuta `setup`).", file=sys.stderr)
         return 2
-    if not s.gemini_api_key and s.social_model.startswith("gemini"):
-        print("Falta GEMINI_API_KEY para el modelo social.", file=sys.stderr)
+    problems = [p for p in s.problems(need_wordpress=False)]
+    if problems:
+        print("Configuración incompleta:\n  - " + "\n  - ".join(problems), file=sys.stderr)
         return 2
     wp = WordPressClient(s.wp_rest_url, s.wp_auth_token)
     try:
@@ -114,15 +115,16 @@ def _social(s: Settings, args: argparse.Namespace) -> int:
             title=title, excerpt=strip_tags((p.get("excerpt") or {}).get("raw") or ""), body=body,
             fuente=meta.get("lnh_source_name") or "la fuente", url=meta.get("lnh_source_url", ""), keywords=kws,
             language=meta.get("lnh_language") or s.language, photo=photo, photo_ai=bool(meta.get("lnh_featured_image_ai")),
+            photo_credit=meta.get("lnh_featured_image_credit", ""),
             post_id=int(p["id"]), post_link=p.get("link", ""), evidence=f"{meta.get('lnh_facts', '')}\n{body}")
         designer = SocialDesigner(s, llm, fetcher, lambda a, t, m, **k: print(f"  [{a}] {m}"), wp)
         print(f"▶ {title} (ID {p['id']})")
         try:
             kit = designer.run(ctx, out_root=Path(args.out) if args.out else None, upload=not args.dry_run,
                                video=False if args.no_video else None, formats=formats)
-        except SocialError as exc:
+        except Exception as exc:  # noqa: BLE001 - one failing post must not hide the others
             failed += 1
-            print(f"  ✗ {exc}", file=sys.stderr)
+            print(f"  ✗ {type(exc).__name__}: {exc}", file=sys.stderr)
             continue
         print(f"  ✓ {kit.folder}\n    " + " · ".join(f"{k}: {len(v)}" for k, v in kit.files.items()))
         for w in kit.warnings:

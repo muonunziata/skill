@@ -9,7 +9,7 @@ from ..checks import unsupported_numbers
 from ..htmlutil import strip_tags
 
 SLIDE_KINDS = ("cover", "point", "stat", "quote", "source", "cta")
-LIMITS = {"headline": 70, "body": 180, "stat": 14, "stat_label": 50, "narration": 200, "text": 60, "hook": 90,
+LIMITS = {"headline": 70, "body": 180, "stat": 14, "stat_label": 50, "narration": 160, "text": 60, "hook": 90,
           "instagram_caption": 900, "tiktok_caption": 300, "alt_text": 125}
 
 
@@ -39,7 +39,7 @@ class SocialPlan:
     alt_text: str = ""
 
     def all_text(self) -> str:
-        parts = [self.hook, self.instagram_caption, self.tiktok_caption]
+        parts = [self.hook, self.instagram_caption, self.tiktok_caption, self.alt_text, " ".join(self.hashtags)]
         for s in self.slides:
             parts += [s.headline, s.body, s.stat, s.stat_label]
         for sc in self.scenes:

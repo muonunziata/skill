@@ -63,7 +63,8 @@ FIT_JS = """
     let fs = parseFloat(getComputedStyle(el).fontSize);
     const min = parseFloat(el.dataset.min || '30');
     let guard = 80;
-    while ((el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && fs > min && guard-- > 0) {
+    // tolerance: Poppins' content area is taller than the line box, a real overflow is at least one extra line
+    while ((el.scrollHeight > el.clientHeight + fs * 0.3 || el.scrollWidth > el.clientWidth + 1) && fs > min && guard-- > 0) {
       fs -= 2; el.style.fontSize = fs + 'px';
     }
   });
@@ -262,5 +263,5 @@ def scene_html(text: str, *, index: int, total: int, brand: Brand, theme: str = 
     label = f'<div class="tag">{_e(tag)}</div>' if index == 0 and tag else ""
     main = f'<div class="main main--end">{label}<div class="h" data-fit data-min="50">{_e(text)}</div></div>'
     foot = f'<div class="bottom"><div class="progress"><i style="width:{pct}%"></i></div></div>'
-    inner = f'<div class="safe">{head}{main}{foot}</div>{_credit_html(credit, ai_label) if index == 0 else ""}'
+    inner = f'<div class="safe">{head}{main}{foot}</div>{_credit_html(credit, ai_label) if photo else ""}'
     return _wrap(brand, css_vars, "scene", theme, inner, photo, False, False)

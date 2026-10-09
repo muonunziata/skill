@@ -174,6 +174,7 @@ class Auditor:
             "lnh_meta_description": art.meta_description,
             "lnh_featured_image_url": art.featured_image_url,
             "lnh_featured_image_ai": bool(art.featured_image_ai),
+            "lnh_featured_image_credit": art.featured_image_credit,
             "lnh_image_prompt": art.featured_image_prompt,
             "lnh_image_provider": f"{art.image_provider}/{art.image_model}" if art.image_provider else "",
             "lnh_media_todo": json.dumps(art.media_todo, ensure_ascii=False),

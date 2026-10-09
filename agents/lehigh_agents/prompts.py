@@ -176,7 +176,7 @@ ENTREGA UN OBJETO JSON con exactamente estas claves:
   completo en el enlace de la bio), la penúltima es "source" (de dónde sale la información) y entre ellas van "point", "stat"
   o "quote" (mínimo 3). Usa "stat" solo si el artículo contiene una cifra relevante; "quote" solo con una cita textual atribuida.
 - "scenes": guion de un video de unos {seconds} segundos con 4 a 7 escenas, cada una con:
-    "narration": lo que se diría en voz alta (máx. 200 caracteres, frases cortas; la primera escena es el gancho)
+    "narration": lo que se diría en voz alta (máx. 160 caracteres, frases cortas; la primera escena es el gancho)
     "text": texto en pantalla (máx. 60 caracteres)
 - "instagram_caption": pie de foto (máx. 900 caracteres). La primera línea es el gancho.
 - "tiktok_caption": pie de video (máx. 300 caracteres).

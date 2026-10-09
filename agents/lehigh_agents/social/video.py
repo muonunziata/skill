@@ -36,8 +36,12 @@ def _run(cmd: list[str], timeout: int = 300) -> None:
         p = subprocess.run(cmd, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise VideoError("ffmpeg tardó demasiado") from exc
+    except OSError as exc:
+        raise VideoError(f"no se pudo ejecutar ffmpeg: {exc}") from exc
     if p.returncode != 0:
-        raise VideoError("ffmpeg falló: " + p.stderr.decode("utf-8", "replace").strip().splitlines()[-1][:300])
+        lines = p.stderr.decode("utf-8", "replace").strip().splitlines()
+        detail = lines[-1][:300] if lines else f"código de salida {p.returncode} (¿poca memoria?)"
+        raise VideoError("ffmpeg falló: " + detail)
 
 
 def scene_starts(durations: list[float]) -> list[float]:

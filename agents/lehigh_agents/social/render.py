@@ -110,7 +110,11 @@ class SlideRenderer:
             raise SocialRenderError(
                 "no se encontró un navegador Chromium/Chrome para dibujar las láminas. Ejecuta `python -m playwright install chromium` "
                 "o define CHROMIUM_PATH con la ruta de Chrome/Chromium. Detalle: " + "; ".join(errors[-2:]))
-        self._page = self._browser.new_page(viewport={"width": 1080, "height": 1350}, device_scale_factor=1)
+        try:
+            self._page = self._browser.new_page(viewport={"width": 1080, "height": 1350}, device_scale_factor=1)
+        except Exception:
+            self.__exit__(None, None, None)
+            raise
         return self
 
     def __exit__(self, *exc) -> None:

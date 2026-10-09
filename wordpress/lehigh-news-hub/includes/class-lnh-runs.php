@@ -250,12 +250,13 @@ final class LNH_Runs {
 			foreach ( $run['usage'] as $u ) {
 				$stats['tokens'] += $u['input'] + $u['output'];
 			}
-			if ( '' === $stats['rastreador']['model'] ) {
-				$stats['rastreador']['model'] = $run['models']['rastreador'] ?? '';
-				$stats['redactor']['model']   = $run['models']['redactor'] ?? '';
-				$stats['auditor']['model']    = $run['models']['auditor'] ?? '';
-				$stats['social']['model']     = $run['models']['social'] ?? '';
-				$stats['image_model']         = $run['models']['image'] ?? '';
+			foreach ( array( 'rastreador', 'redactor', 'auditor', 'social' ) as $role ) {
+				if ( '' === $stats[ $role ]['model'] && ! empty( $run['models'][ $role ] ) ) {
+					$stats[ $role ]['model'] = $run['models'][ $role ];
+				}
+			}
+			if ( '' === $stats['image_model'] ) {
+				$stats['image_model'] = $run['models']['image'] ?? '';
 			}
 			foreach ( $run['events'] as $ev ) {
 				$a = $ev['agent'];
