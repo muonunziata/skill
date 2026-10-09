@@ -16,9 +16,9 @@ class FakeControl:
         self.calls = []
         self.lock = threading.Lock()
 
-    def sync(self, status, message="", next_run_at=0, last_run_at=0, handled_run_now=0):
+    def sync(self, status, message="", next_run_at=0, last_run_at=0, handled_run_now=0, agent=""):
         with self.lock:
-            self.calls.append({"status": status, "message": message, "handled": handled_run_now})
+            self.calls.append({"status": status, "message": message, "handled": handled_run_now, "agent": agent})
             return self.desired
 
     def statuses(self):
@@ -115,7 +115,8 @@ def test_live_progress_reaches_the_hub():
     ctl = FakeControl(Desired(True, "running", 0, 60))
     w, stop = make(FakePipeline(stories=1, per_story=0.2), ctl)
     t = start(w)
-    assert wait_for(lambda: any(c["status"] == "working" and "Escribiendo noticia 1" in c["message"] for c in ctl.calls))
+    assert wait_for(lambda: any(c["status"] == "working" and "Escribiendo noticia 1" in c["message"] and c["agent"] == "redactor"
+                                for c in ctl.calls))                      # the hub also learns WHICH agent is working
     stop.set()
     t.join(3)
 
@@ -202,10 +203,10 @@ def test_temporary_hub_outage_keeps_the_last_known_state():
 def test_control_client_talks_to_the_hub(settings, wp_server):
     wp_server.control = {"state": "paused", "run_now": 77, "interval_minutes": 30, "server_time": 5}
     c = Control(WordPressClient(settings.wp_rest_url, settings.wp_auth_token), host="laptop")
-    d = c.sync("working", "Auditor: revisando", next_run_at=99, last_run_at=11, handled_run_now=76)
+    d = c.sync("working", "Auditor: revisando", next_run_at=99, last_run_at=11, handled_run_now=76, agent="auditor")
     assert d == Desired(True, "paused", 77, 30) and d.paused
     sent = wp_server.syncs[-1]
-    assert sent["status"] == "working" and sent["host"] == "laptop" and sent["handled_run_now"] == 76 and sent["version"]
+    assert sent["status"] == "working" and sent["host"] == "laptop" and sent["handled_run_now"] == 76 and sent["version"] and sent["agent"] == "auditor"
     assert wp_server.requests[-1]["auth"].startswith("Basic ")
 
 

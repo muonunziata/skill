@@ -212,3 +212,61 @@ details summary{cursor:pointer;color:var(--c-accent);font-size:12.5px}
 .lnh-control__help,.lnh-control__note{grid-column:1/-1;margin:0;padding-top:.6rem;border-top:1px solid var(--c-line)}
 .lnh-control__help p,.lnh-control__note{margin:.2rem 0}
 @media (max-width:782px){.lnh-control{grid-template-columns:1fr}.lnh-control__buttons{justify-content:flex-start}}
+
+/* ---------- "working" animation (the four agents as a pipeline) ---------- */
+.lnh-control{--ring:conic-gradient(from 0deg,#2c6e50,#66a785,#a3cf99,#e4a927,#cb7738,#734698,#5c6fb4,#2858a2,#2f89c8,#2c6e50);position:relative;overflow:hidden}
+.lnh-control::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;opacity:0;background:linear-gradient(90deg,#2c6e50,#66a785,#a3cf99,#e4a927,#cb7738,#734698,#5c6fb4,#2858a2,#2f89c8,#2c6e50);background-size:200% 100%;transition:opacity .4s}
+.lnh-control--working::after,.lnh-control--pausing::after{opacity:1;animation:lnhFlow 2.4s linear infinite}
+.lnh-control--waiting::after{opacity:.35;animation:lnhFlow 9s linear infinite}
+.lnh-control--pausing::after{filter:grayscale(.6)}
+@keyframes lnhFlow{to{background-position:-200% 0}}
+
+.lnh-anim{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:center;gap:0;padding:.6rem 0 .2rem;border-top:1px solid var(--c-line)}
+.lnh-control--paused .lnh-anim,.lnh-control--offline .lnh-anim{display:none}
+.lnh-node{display:flex;flex-direction:column;align-items:center;gap:.4rem;width:96px;flex:none;transition:opacity .35s,filter .35s}
+.lnh-node__disc{position:relative;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.12),inset 0 0 0 1px var(--c-line);transition:transform .35s,box-shadow .35s}
+.lnh-node__ico{font-size:28px;line-height:1;position:relative;z-index:1}
+.lnh-node__ring{position:absolute;inset:-5px;border-radius:50%;background:var(--ring);opacity:0;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));transition:opacity .3s}
+.lnh-node__check{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:var(--c-good);color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.lnh-node__label{font-size:12px;font-weight:600;color:var(--c-muted);text-align:center;line-height:1.2}
+.lnh-node{opacity:.5;filter:grayscale(.7)}
+.lnh-node.is-done{opacity:.9;filter:none}
+.lnh-node.is-done .lnh-node__check{transform:scale(1)}
+.lnh-node.is-active{opacity:1;filter:none}
+.lnh-node.is-active .lnh-node__label{color:var(--c-accent);margin-top:.45rem}
+.lnh-node.is-active .lnh-node__disc{transform:scale(1.14);box-shadow:0 6px 18px rgba(27,106,85,.28),inset 0 0 0 1px #fff}
+.lnh-node.is-active .lnh-node__ring{opacity:1;animation:lnhSpin 2.2s linear infinite}
+.lnh-node.is-active .lnh-node__ico{animation:lnhBob 1.1s ease-in-out infinite}
+/* idle ("waiting for the next cycle", or working with no agent named yet): everything breathes slowly */
+.lnh-control--waiting .lnh-node,.lnh-control--working[data-active="-1"] .lnh-node{opacity:.85;filter:none}
+.lnh-control--waiting .lnh-node__disc,.lnh-control--working[data-active="-1"] .lnh-node__disc{animation:lnhBreath 3.4s ease-in-out infinite}
+.lnh-control--waiting .lnh-node:nth-of-type(2) .lnh-node__disc{animation-delay:.4s}
+.lnh-control--waiting .lnh-node:nth-of-type(3) .lnh-node__disc{animation-delay:.8s}
+.lnh-control--waiting .lnh-node:nth-of-type(4) .lnh-node__disc{animation-delay:1.2s}
+.lnh-control--pausing .lnh-node.is-active .lnh-node__ring{animation-duration:6s;filter:saturate(.5)}
+.lnh-spark{position:absolute;width:6px;height:6px;border-radius:50%;opacity:0;pointer-events:none}
+.lnh-node.is-active .lnh-spark{animation:lnhSpark 1.8s ease-in-out infinite}
+.lnh-spark--1{top:-8px;left:6px;background:#e4a927}
+.lnh-spark--2{top:4px;right:-10px;background:#ff5757;animation-delay:.6s!important}
+.lnh-spark--3{bottom:-6px;left:-6px;background:#2f89c8;animation-delay:1.2s!important}
+
+.lnh-anim__link{position:relative;flex:1 1 40px;max-width:96px;height:4px;margin-top:29px;border-radius:4px;background:var(--c-line);overflow:hidden}
+.lnh-anim__link b{position:absolute;top:0;left:-12px;width:12px;height:4px;border-radius:4px;background:var(--c-accent);opacity:0}
+.lnh-anim__link.is-flow b{opacity:1;animation:lnhPacket 1.5s ease-in-out infinite}
+.lnh-anim__link.is-flow b:nth-child(2){animation-delay:.5s;background:#e4a927}
+.lnh-anim__link.is-flow b:nth-child(3){animation-delay:1s;background:#2f89c8}
+.lnh-anim__link.is-done{background:var(--c-good);opacity:.55}
+
+.lnh-dots{display:none;margin-left:.35rem;vertical-align:middle}
+.lnh-control--working .lnh-dots,.lnh-control--pausing .lnh-dots{display:inline-block}
+.lnh-dots i{display:inline-block;width:5px;height:5px;margin:0 1.5px;border-radius:50%;background:var(--c-accent);animation:lnhDot 1.2s ease-in-out infinite}
+.lnh-dots i:nth-child(2){animation-delay:.2s}.lnh-dots i:nth-child(3){animation-delay:.4s}
+@keyframes lnhSpin{to{transform:rotate(360deg)}}
+@keyframes lnhBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+@keyframes lnhBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes lnhSpark{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes lnhPacket{0%{left:-12px}100%{left:100%}}
+@keyframes lnhDot{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-4px);opacity:1}}
+@media (max-width:600px){.lnh-node{width:64px}.lnh-node__disc{width:50px;height:50px}.lnh-node__ico{font-size:22px}.lnh-node__label{font-size:10.5px}.lnh-anim__link{margin-top:23px}}
+@media (prefers-reduced-motion:reduce){.lnh-control::after,.lnh-node__ring,.lnh-node__ico,.lnh-node__disc,.lnh-spark,.lnh-anim__link b,.lnh-dots i{animation:none!important}
+  .lnh-node.is-active .lnh-spark{opacity:0}.lnh-anim__link.is-flow b{left:40%}}

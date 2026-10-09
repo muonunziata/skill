@@ -28,13 +28,14 @@ class Worker:
         self._next_run = 0.0       # 0 = run as soon as we are allowed to
         self._last_run = 0
         self._message = ""
+        self._agent = ""           # which agent emitted the latest event (drives the dashboard animation)
 
     # ───────────────────────── plumbing ─────────────────────────
     def _sync(self, status: str, message: str = "") -> Desired:
         if self.control is None:
             return self._desired
         d = self.control.sync(status, message, next_run_at=int(self._next_run), last_run_at=self._last_run,
-                              handled_run_now=self._handled)
+                              handled_run_now=self._handled, agent=self._agent if status == "working" else "")
         with self._lock:
             if d is not None:
                 self._desired = d
@@ -50,7 +51,8 @@ class Worker:
             return self.stop.is_set() or self._desired.paused
 
     def _on_event(self, event: dict[str, Any]) -> None:
-        self._message = f"{event.get('agent', '')}: {event.get('message', '')}"[:200]
+        self._agent = str(event.get("agent", ""))
+        self._message = str(event.get("message", ""))[:200]
 
     # ───────────────────────── one cycle ─────────────────────────
     def _cycle(self) -> None:
@@ -60,7 +62,7 @@ class Worker:
             while not done.wait(self.heartbeat):
                 self._sync("working", self._message)
 
-        self._message = "Iniciando ejecución…"
+        self._agent, self._message = "rastreador", "Iniciando ejecución…"
         self._sync("working", self._message)          # tells the hub right away that the "Run now" request was taken
         t = threading.Thread(target=beat, daemon=True, name="lehigh-heartbeat")
         t.start()
@@ -73,7 +75,7 @@ class Worker:
             t.join(timeout=5)
         self._last_run = int(self.clock())
         self._next_run = self.clock() + self._interval()
-        self._message = ""
+        self._message, self._agent = "", ""
 
     # ───────────────────────── main loop ─────────────────────────
     def run(self) -> None:

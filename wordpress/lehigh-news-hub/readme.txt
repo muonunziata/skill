@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.4.1 =
+* “Working” animation on the control card: the four agents as a pipeline, the busy one wrapped in the logo's colour ring, finished ones ticked, data packets flowing between them, and a breathing idle state. Updates live and respects reduced-motion settings.
 
 = 1.4.0 =
 * Start / Pause button: control the agents from the dashboard and the activity screen. The agents (`python main.py watch`) connect to the hub by themselves, report what they are doing live and obey Start, Pause (they finish the article in progress first) and Run now. Nothing runs until you press Start.

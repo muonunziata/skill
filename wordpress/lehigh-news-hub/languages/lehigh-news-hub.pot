@@ -403,23 +403,23 @@ msgstr ""
 msgid "Lehigh agents – %s"
 msgstr ""
 
-#: includes/class-lnh-control.php:146
+#: includes/class-lnh-control.php:150
 msgid "Pausing after the current article…"
 msgstr ""
 
-#: includes/class-lnh-control.php:147
+#: includes/class-lnh-control.php:151
 msgid "Waiting for the agents to connect"
 msgstr ""
 
-#: includes/class-lnh-control.php:148
+#: includes/class-lnh-control.php:152
 msgid "Working now"
 msgstr ""
 
-#: includes/class-lnh-control.php:149
+#: includes/class-lnh-control.php:153
 msgid "Running – waiting for the next cycle"
 msgstr ""
 
-#: includes/class-lnh-control.php:166
+#: includes/class-lnh-control.php:170
 msgid "You are not allowed to do this."
 msgstr ""
 
@@ -1181,43 +1181,43 @@ msgstr ""
 msgid "Generate agent credentials"
 msgstr ""
 
-#: views/control.php:17
+#: views/control.php:21
 msgid "a run was requested"
 msgstr ""
 
-#: views/control.php:38
+#: views/control.php:42
 msgid "Agents disconnected · last seen %s"
 msgstr ""
 
-#: views/control.php:40
+#: views/control.php:44
 msgid "The agents have not connected yet."
 msgstr ""
 
-#: views/control.php:48
+#: views/control.php:52
 msgid "Run now"
 msgstr ""
 
-#: views/control.php:49
+#: views/control.php:53
 msgid "Pause"
 msgstr ""
 
-#: views/control.php:51
+#: views/control.php:55
 msgid "Start working"
 msgstr ""
 
-#: views/control.php:56
+#: views/control.php:73
 msgid "The buttons control the agents, but the agents have to be running to obey."
 msgstr ""
 
-#: views/control.php:57
+#: views/control.php:74
 msgid "On the computer or server where you installed them, start them once; they connect to this site by themselves with the credentials in their .env file:"
 msgstr ""
 
-#: views/control.php:59
+#: views/control.php:76
 msgid "Windows: start.bat. Servers: Docker or systemd keep them running (see the README)."
 msgstr ""
 
-#: views/control.php:63
+#: views/control.php:80
 msgid "Pausing never cuts an article in half: the agents finish the one in progress, then wait until you press Start."
 msgstr ""
 

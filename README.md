@@ -81,7 +81,7 @@ Los agentes **se conectan solos a tu WordPress** (con las credenciales del `.env
 | **⏸ Pausar** | Terminan el artículo que tienen en curso (nunca lo cortan a la mitad) y se detienen hasta que vuelvas a iniciar. |
 | **⚡ Ejecutar ahora** | Lanza un ciclo ya, sin esperar el intervalo. |
 
-La tarjeta muestra en vivo si los agentes están conectados, qué están haciendo en este momento («redactor: Escribiendo…») y cuándo es el próximo ciclo. **Hasta que pulses Iniciar, no se hace ninguna llamada de pago**: es el estado por defecto. Los agentes son quienes llaman a WordPress (nunca al revés), así que funcionan detrás de un router o en un computador sin IP pública. WordPress no puede ejecutar Python por sí mismo: el programa `start.sh` / Docker / systemd tiene que estar encendido en algún computador o servidor. Sin el plugin, o con `python main.py watch --no-control`, los agentes trabajan solos cada `LOOP_INTERVAL_MINUTES`.
+Mientras trabajan verás una **animación**: los cuatro agentes como estaciones de una línea de producción; el que está ocupado se rodea con el anillo de colores del logo, los terminados se marcan con ✓ y por las conexiones viajan «paquetes» de datos (respeta `prefers-reduced-motion`). La tarjeta muestra en vivo si los agentes están conectados, qué están haciendo en este momento («redactor: Escribiendo…») y cuándo es el próximo ciclo. **Hasta que pulses Iniciar, no se hace ninguna llamada de pago**: es el estado por defecto. Los agentes son quienes llaman a WordPress (nunca al revés), así que funcionan detrás de un router o en un computador sin IP pública. WordPress no puede ejecutar Python por sí mismo: el programa `start.sh` / Docker / systemd tiene que estar encendido en algún computador o servidor. Sin el plugin, o con `python main.py watch --no-control`, los agentes trabajan solos cada `LOOP_INTERVAL_MINUTES`.
 
 ### 5 · Usa el plugin
 * **News Hub → Cola de revisión**: ve las noticias que esperan tu decisión, con su nota de auditoría.
@@ -149,7 +149,7 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
   tests/                       114 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      135 comprobaciones dentro de WordPress
+wordpress/tests/run.php      139 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
 plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes

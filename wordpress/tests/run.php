@@ -337,6 +337,17 @@ t( 'a reporting worker means connected + waiting for the next cycle', true === $
 t( 'worker text is clipped and stripped of HTML', 'laptop-1' === $st['worker']['host'] && mb_strlen( $st['worker']['message'] ) <= 200 );
 LNH_Control::sync( array( 'status' => 'working', 'message' => 'Auditor: revisando enlaces' ) );
 t( 'working phase shows what the agents are doing', 'working' === LNH_Control::status()['phase'] && 'Auditor: revisando enlaces' === LNH_Control::status()['worker']['message'] );
+LNH_Control::sync( array( 'status' => 'working', 'agent' => 'redactor', 'message' => 'Escribiendo' ) );
+t( 'the busy agent is known (whitelisted)', 'redactor' === LNH_Control::worker()['agent'] );
+LNH_Control::sync( array( 'status' => 'working', 'agent' => '<script>', 'message' => 'x' ) );
+t( 'an unknown agent name is dropped', '' === LNH_Control::worker()['agent'] );
+LNH_Control::sync( array( 'status' => 'working', 'agent' => 'auditor', 'message' => 'Revisando enlaces' ) );
+ob_start();
+LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
+$anim = ob_get_clean();
+t( 'animation: the auditor is active, the earlier agents are ticked, the later one is dim',
+	1 === preg_match( '/lnh-node is-done" data-i="0"/', $anim ) && 1 === preg_match( '/lnh-node is-done" data-i="1"/', $anim ) && 1 === preg_match( '/lnh-node is-active" data-i="2"/', $anim ) && 1 === preg_match( '/lnh-node" data-i="3"/', $anim ) && 1 === preg_match( '/lnh-anim__link is-flow" data-i="2"/', $anim ) && false !== strpos( $anim, 'data-active="2"' ), $anim );
+t( 'the animation is decorative (hidden from screen readers)', false !== strpos( $anim, 'data-lnh-anim aria-hidden="true"' ) );
 LNH_Control::apply( 'pause', $admin );
 t( 'Pause while working = pausing after the current article', 'pausing' === LNH_Control::status()['phase'] && 'paused' === LNH_Control::sync( array( 'status' => 'working' ) )['state'] );
 LNH_Control::sync( array( 'status' => 'paused' ) );

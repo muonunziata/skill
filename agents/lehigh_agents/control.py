@@ -31,11 +31,11 @@ class Control:
         self.host = (host or socket.gethostname() or "agents")[:80]
 
     def sync(self, status: str, message: str = "", next_run_at: int = 0, last_run_at: int = 0,
-             handled_run_now: int = 0) -> Desired | None:
+             handled_run_now: int = 0, agent: str = "") -> Desired | None:
         """Report our status, receive the desired state. None = temporary problem (keep the last known state)."""
         payload: dict[str, Any] = {"status": status, "message": message[:200], "host": self.host, "version": __version__,
                                    "next_run_at": int(next_run_at), "last_run_at": int(last_run_at),
-                                   "handled_run_now": int(handled_run_now)}
+                                   "handled_run_now": int(handled_run_now), "agent": agent}
         try:
             data = self.wp._req("POST", "/lnh/v1/control/sync", json=payload)
         except WPError as exc:

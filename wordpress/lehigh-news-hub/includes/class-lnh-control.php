@@ -14,6 +14,8 @@ final class LNH_Control {
 	const WORKER_OPTION = 'lnh_worker';
 	/** The worker syncs every ~15 s; this long without news means it is gone. */
 	const CONNECTED_WITHIN = 75;
+	/** Agents shown in the working animation, in pipeline order. */
+	const AGENTS = array( 'rastreador', 'redactor', 'auditor', 'social' );
 
 	public static function init(): void {
 		add_action( 'admin_post_lnh_control', array( __CLASS__, 'handle' ) );
@@ -81,6 +83,7 @@ final class LNH_Control {
 			'last_seen'   => $seen,
 			'status'      => $st,
 			'message'     => (string) ( $w['message'] ?? '' ),
+			'agent'       => in_array( $w['agent'] ?? '', self::AGENTS, true ) ? $w['agent'] : '',
 			'host'        => (string) ( $w['host'] ?? '' ),
 			'version'     => (string) ( $w['version'] ?? '' ),
 			'next_run_at' => absint( $w['next_run_at'] ?? 0 ),
@@ -104,6 +107,7 @@ final class LNH_Control {
 				'last_seen'   => time(),
 				'status'      => $status,
 				'message'     => $clip( $in['message'] ?? '', 200 ),
+				'agent'       => in_array( $in['agent'] ?? '', self::AGENTS, true ) ? $in['agent'] : '',
 				'host'        => $clip( $in['host'] ?? '', 80 ),
 				'version'     => $clip( $in['version'] ?? '', 20 ),
 				'next_run_at' => absint( $in['next_run_at'] ?? 0 ),

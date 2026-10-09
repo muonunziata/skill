@@ -90,6 +90,20 @@
 					ctl.className = ctl.className.replace(/lnh-control--\w+/, 'lnh-control--' + d.phase);
 					var ph = qs('[data-lnh-control-phase]', ctl), dt = qs('[data-lnh-control-detail]', ctl), wk = qs('[data-lnh-control-worker]', ctl);
 					if (ph) { ph.textContent = d.label; }
+					// working animation: highlight the busy agent, tick the ones already done, flow packets into the busy one
+					var order = ['rastreador', 'redactor', 'auditor', 'social'];
+					var act = (d.phase === 'working' || d.phase === 'pausing') ? order.indexOf(d.worker.agent || '') : -1;
+					ctl.setAttribute('data-active', act);
+					qsa('.lnh-node', ctl).forEach(function (n) {
+						var i = +n.getAttribute('data-i');
+						n.classList.toggle('is-active', i === act);
+						n.classList.toggle('is-done', act > -1 && i < act);
+					});
+					qsa('.lnh-anim__link', ctl).forEach(function (l) {
+						var i = +l.getAttribute('data-i');
+						l.classList.toggle('is-flow', i === act);
+						l.classList.toggle('is-done', act > -1 && i < act);
+					});
 					var detail = d.phase === 'working' ? (d.worker.message || '') : (d.phase === 'waiting' && d.next_in ? L.i18n.nextIn.replace('%s', d.next_in) : '');
 					if (dt) { dt.textContent = detail ? '· ' + detail : ''; }
 					if (wk && d.worker && d.worker.connected) { wk.textContent = L.i18n.connectedAgo.replace('%s', d.worker.seen_ago) + (d.worker.host ? ' · ' + d.worker.host : ''); }

@@ -8,6 +8,10 @@ $phase  = $control['phase'];
 $w      = $control['worker'];
 $dot    = array( 'working' => 'ok', 'waiting' => 'ok', 'paused' => 'paused', 'pausing' => 'late', 'offline' => 'late' )[ $phase ] ?? 'never';
 $detail = '';
+$order  = LNH_Control::AGENTS;
+$all    = LNH_Admin::agents();
+$active = array_search( $w['agent'], $order, true );
+$active = ( false === $active || ! in_array( $phase, array( 'working', 'pausing' ), true ) ) ? -1 : $active;
 if ( 'working' === $phase && '' !== $w['message'] ) {
 	$detail = $w['message'];
 } elseif ( 'waiting' === $phase && $control['next_in'] ) {
@@ -23,12 +27,12 @@ $btn = function ( string $do, string $label, string $class ) use ( $back ) {
 	echo '<button class="button ' . esc_attr( $class ) . '" data-lnh-do="' . esc_attr( $do ) . '">' . esc_html( $label ) . '</button></form>';
 };
 ?>
-<section class="lnh-card-box lnh-control lnh-control--<?php echo esc_attr( $phase ); ?>" data-lnh-control data-state="<?php echo esc_attr( $control['state'] ); ?>" data-phase="<?php echo esc_attr( $phase ); ?>" data-connected="<?php echo $w['connected'] ? '1' : '0'; ?>">
+<section class="lnh-card-box lnh-control lnh-control--<?php echo esc_attr( $phase ); ?>" data-lnh-control data-state="<?php echo esc_attr( $control['state'] ); ?>" data-phase="<?php echo esc_attr( $phase ); ?>" data-connected="<?php echo $w['connected'] ? '1' : '0'; ?>" data-active="<?php echo (int) $active; ?>">
 	<div class="lnh-control__main">
 		<span class="lnh-dot lnh-dot--<?php echo esc_attr( $dot ); ?>" data-lnh-control-dot></span>
 		<div>
 			<strong class="lnh-control__phase" data-lnh-control-phase><?php echo esc_html( $control['label'] ); ?></strong>
-			<span class="lnh-muted" data-lnh-control-detail><?php echo $detail ? '· ' . esc_html( $detail ) : ''; ?></span>
+			<span class="lnh-muted" data-lnh-control-detail><?php echo $detail ? '· ' . esc_html( $detail ) : ''; ?></span><span class="lnh-dots" aria-hidden="true"><i></i><i></i><i></i></span>
 			<div class="lnh-small lnh-muted" data-lnh-control-worker>
 				<?php
 				if ( $w['connected'] ) {
@@ -50,6 +54,19 @@ $btn = function ( string $do, string $label, string $class ) use ( $back ) {
 		<?php else : ?>
 			<?php $btn( 'start', '▶ ' . __( 'Start working', 'lehigh-news-hub' ), 'button-primary button-hero' ); ?>
 		<?php endif; ?>
+	</div>
+	<?php
+	// The working animation: the four agents as stations of a pipeline; the one that is busy gets the logo's colour ring.
+	?>
+	<div class="lnh-anim" data-lnh-anim aria-hidden="true">
+		<?php foreach ( $order as $i => $key ) : ?>
+			<?php if ( $i > 0 ) : ?><i class="lnh-anim__link<?php echo $i === $active ? ' is-flow' : ( $i < $active ? ' is-done' : '' ); ?>" data-i="<?php echo (int) $i; ?>"><b></b><b></b><b></b></i><?php endif; ?>
+			<div class="lnh-node<?php echo $i === $active ? ' is-active' : ( $i < $active ? ' is-done' : '' ); ?>" data-i="<?php echo (int) $i; ?>" data-agent="<?php echo esc_attr( $key ); ?>">
+				<span class="lnh-node__disc"><span class="lnh-node__ring"></span><span class="lnh-node__ico"><?php echo esc_html( $all[ $key ]['icon'] ); ?></span><span class="lnh-node__check">✓</span>
+					<em class="lnh-spark lnh-spark--1"></em><em class="lnh-spark lnh-spark--2"></em><em class="lnh-spark lnh-spark--3"></em></span>
+				<span class="lnh-node__label"><?php echo esc_html( $all[ $key ]['label'] ); ?></span>
+			</div>
+		<?php endforeach; ?>
 	</div>
 	<?php if ( ! $w['connected'] ) : ?>
 		<div class="lnh-control__help">
