@@ -140,7 +140,23 @@ class ImageGenerator:
         image_cfg: dict[str, Any] = {"aspect_ratio": aspect}
         cfg = types.GenerateContentConfig(response_modalities=["IMAGE"], image_config=types.ImageConfig(**image_cfg))
         try:
-            resp = client.models.generate_content(model=self.model, contents=prompt, config=cfg)
+            try:
+                resp = client.models.generate_content(model=self.model, contents=prompt, config=cfg)
+            except errors.APIError as exc:
+                if getattr(exc, "code", 0) != 404:
+                    raise
+                # the image model name was retired: use the newest Gemini image model this key can see, then retry once
+                from .models import pick_image_model
+
+                try:
+                    replacement = pick_image_model(list(client.models.list()))
+                except Exception:  # noqa: BLE001
+                    replacement = None
+                if not replacement or replacement == self.model:
+                    raise
+                log.warning("Gemini image model '%s' is not served any more; using '%s'", self.model, replacement)
+                self.model = replacement
+                resp = client.models.generate_content(model=self.model, contents=prompt, config=cfg)
         except errors.APIError as exc:
             raise ImageGenError(f"Gemini image API error {exc.code}: {exc.message}") from exc
         for cand in resp.candidates or []:

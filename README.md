@@ -103,13 +103,13 @@ Mientras trabajan verás una **animación**: los cuatro agentes como estaciones 
 | `GEMINI_API_KEY` | Agentes 1 y 3 (y 2 si usa Gemini) |
 | `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` | Solo si `REDACCTOR_MODEL` es `claude-*` o `gpt-*` |
 | `WP_REST_URL`, `WP_AUTH_TOKEN` | Sitio (`https://tu-sitio.com` o `…/wp-json`) y `usuario:contraseña de aplicación` (o token Bearer) |
-| `RASTREADOR_MODEL`, `REDACCTOR_MODEL`, `AUDITOR_MODEL` | Modelos (por defecto `gemini-1.5-flash`) |
+| `RASTREADOR_MODEL`, `REDACCTOR_MODEL`, `AUDITOR_MODEL` | Modelos (por defecto `auto` = el Gemini Flash más nuevo disponible) |
 | `IMAGE_API_KEY`, `IMAGE_API_ENDPOINT`, `IMAGE_PROVIDER`, `IMAGE_MODEL` | Generación de imágenes (opcional) |
 | `MEDIASTACK_API_KEY` | Fuente de noticias extra opcional ([Mediastack](https://mediastack.com/signup), plan gratuito de 100 consultas/mes; el proyecto se limita solo) |
 | `SOCIAL_ENABLED`, `SOCIAL_FORMATS`, `SOCIAL_VIDEO`, `SOCIAL_THEME`, `SOCIAL_VOICE`, `SOCIAL_WEBHOOK_URL`, `BRAND_*` | Agente 4 y marca (ver `.env.example`) |
 | `AUDIT_MIN_SCORE`, `MAX_REVISIONS`, `POST_FLAGGED`, … | Comportamiento (ver `.env.example`) |
 
-> ⚠️ **Modelos:** Google retiró la familia Gemini 1.5 de la API pública. El valor por defecto sigue siendo `gemini-1.5-flash` como pediste, pero `python main.py check` te avisará si no está disponible; en ese caso pon `gemini-2.5-flash` (o el que prefieras) en las tres variables de modelo.
+> **Modelos:** Google retira nombres de modelo cada pocos meses (p. ej. `gemini-1.5-flash`, y luego `gemini-2.5-flash`). Por eso el valor por defecto es **`auto`**: los agentes eligen el Gemini Flash más nuevo que la API sirve y, si un nombre fijo deja de existir, **cambian solos** al siguiente (y avisan en el registro). Puedes fijar uno (`gemini-…`, `claude-…`, `gpt-…`) en `RASTREADOR_MODEL`, `REDACCTOR_MODEL` o `AUDITOR_MODEL`.
 
 ## Claude Code y GitHub
 
@@ -153,7 +153,7 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       124 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       131 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
 wordpress/tests/run.php      162 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones

@@ -196,7 +196,7 @@ def test_wizard_non_interactive_authorises_in_browser_and_writes_env(tmp_path, f
     rc = sw.run_wizard(wiz_args(tmp_path, fake_wp), open_url=approving_browser(), list_models=lambda k: MODELS)
     env = sw.read_env(tmp_path / ".env")
     assert rc == 0
-    assert env["GEMINI_API_KEY"] == "G-KEY" and env["REDACCTOR_MODEL"] == env["AUDITOR_MODEL"] == env["RASTREADOR_MODEL"] == "gemini-2.5-flash"
+    assert env["GEMINI_API_KEY"] == "G-KEY" and env["REDACCTOR_MODEL"] == env["AUDITOR_MODEL"] == env["RASTREADOR_MODEL"] == "auto"
     assert env["WP_AUTH_TOKEN"] == "bot:pass word 1234" and env["WP_REST_URL"].endswith("/wp-json") and env["IMAGE_PROVIDER"] == ""
     # second run: the stored credentials still work, so no browser approval is requested again
     rc = sw.run_wizard(wiz_args(tmp_path, fake_wp), open_url=lambda u: pytest.fail("browser opened again"), list_models=lambda k: MODELS)

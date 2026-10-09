@@ -40,50 +40,7 @@ def app_name() -> str:
     return f"{APP_NAME} ({platform.node() or 'pc'}, {time.strftime('%Y-%m-%d %H:%M')})"
 APP_ID = "5f6d0f0e-7c3a-4a53-9a2e-1b1c2d3e4f50"  # fixed, so WordPress recognises repeat authorisations
 
-# Names that look like text models but are not suitable for the agents.
-_EXCLUDE = ("lite", "image", "tts", "live", "audio", "embedding", "vision", "robotics", "computer", "exp", "thinking",
-            "learnlm", "gemma", "aqa", "customtools", "native")
-
-
-# ───────────────────────── model selection ─────────────────────────
-def _model_rows(models) -> list[tuple[str, tuple[str, ...]]]:
-    """Normalise SDK model objects / dicts to (bare name, supported actions)."""
-    rows = []
-    for m in models:
-        name = m.get("name") if isinstance(m, dict) else getattr(m, "name", "")
-        actions = m.get("supported_actions") if isinstance(m, dict) else getattr(m, "supported_actions", None)
-        rows.append((str(name or "").removeprefix("models/"), tuple(actions or ())))
-    return rows
-
-
-def pick_text_model(models) -> str | None:
-    """Best stable Gemini Flash model that can generate content (newest version wins; previews only as a last resort)."""
-    best: tuple | None = None
-    for name, actions in _model_rows(models):
-        if not name.startswith("gemini-") or "flash" not in name or any(x in name for x in _EXCLUDE):
-            continue
-        if actions and "generateContent" not in actions:
-            continue
-        m = re.match(r"gemini-(\d+)(?:\.(\d+))?-flash", name)
-        major, minor = (int(m.group(1)), int(m.group(2) or 0)) if m else (0, 0)  # gemini-flash-latest -> lowest
-        key = ("preview" not in name and "-0" not in name[-4:], major, minor, -len(name))
-        if best is None or key > best[0]:
-            best = (key, name)
-    return best[1] if best else None
-
-
-def pick_image_model(models) -> str | None:
-    best: tuple | None = None
-    for name, actions in _model_rows(models):
-        if not name.startswith("gemini-") or "image" not in name or "flash" not in name:
-            continue
-        if any(x in name for x in ("preview", "exp")) and best is not None:
-            continue
-        m = re.match(r"gemini-(\d+)(?:\.(\d+))?", name)
-        key = ("preview" not in name, int(m.group(1)) if m else 0, int(m.group(2) or 0) if m else 0)
-        if best is None or key > best[0]:
-            best = (key, name)
-    return best[1] if best else None
+from .models import _EXCLUDE, _model_rows, pick_image_model, pick_text_model  # noqa: E402,F401  (re-exported for callers/tests)
 
 
 # ───────────────────────── .env handling ─────────────────────────
@@ -391,7 +348,8 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
     available = {n for n, _ in _model_rows(models)}
     for var in ("RASTREADOR_MODEL", "REDACCTOR_MODEL", "AUDITOR_MODEL"):
         old_model = values.get(var, "")  # keep a previous choice that is still available
-        new[var] = old_model if old_model in available else text_model
+        # keep a pinned model that still exists, otherwise use `auto`: the agents then follow Google's model changes by themselves
+        new[var] = old_model if old_model in available else "auto"
     old_red = values.get("REDACCTOR_MODEL", "")
     prev_other = old_red if old_red and not old_red.startswith("gemini") else ""
     other = args.redactor_model or ""

@@ -75,7 +75,7 @@ class Narrator:
 
     @property
     def model(self) -> str:
-        return self.s.social_voice_model or (GEMINI_TTS_MODEL if self.provider == "gemini" else OPENAI_TTS_MODEL)
+        return getattr(self, "_tts_model", "") or self.s.social_voice_model or (GEMINI_TTS_MODEL if self.provider == "gemini" else OPENAI_TTS_MODEL)
 
     def speak(self, text: str) -> bytes:
         text = text.strip()
@@ -98,7 +98,19 @@ class Narrator:
             response_modalities=["AUDIO"],
             speech_config=types.SpeechConfig(voice_config=types.VoiceConfig(
                 prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Kore"))))
-        resp = client.models.generate_content(model=self.model, contents=text, config=cfg)
+        try:
+            resp = client.models.generate_content(model=self.model, contents=text, config=cfg)
+        except Exception as exc:  # noqa: BLE001
+            if getattr(exc, "code", 0) != 404:
+                raise
+            # the TTS model name was retired: use the newest Gemini TTS model this key can see
+            names = sorted((getattr(m, "name", "").removeprefix("models/") for m in client.models.list()), reverse=True)
+            tts = [n for n in names if n.startswith("gemini-") and "tts" in n and n != self.model]
+            if not tts:
+                raise
+            log.warning("Gemini TTS model '%s' is not served any more; using '%s'", self.model, tts[0])
+            self._tts_model = tts[0]
+            resp = client.models.generate_content(model=tts[0], contents=text, config=cfg)
         for cand in resp.candidates or []:
             for part in (cand.content.parts if cand.content else None) or []:
                 blob = getattr(part, "inline_data", None)

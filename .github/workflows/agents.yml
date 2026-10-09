@@ -4,8 +4,7 @@ name: Run the news agents
 # It does nothing until you opt in:
 #   Settings -> Secrets and variables -> Actions
 #     Secrets:   GEMINI_API_KEY, WP_REST_URL, WP_AUTH_TOKEN   (+ optional ANTHROPIC_API_KEY, OPENAI_API_KEY, IMAGE_API_KEY, MEDIASTACK_API_KEY)
-#     Variables: AGENTS_ENABLED=true  (+ RASTREADOR_MODEL, REDACCTOR_MODEL, AUDITOR_MODEL - set them to a current model such as gemini-2.5-flash, the
-#                 built-in default gemini-1.5-flash no longer exists - and optional IMAGE_PROVIDER, SEARCH_TOPIC, MAX_ITEMS_PER_RUN, SOCIAL_VOICE ...)
+#     Variables: AGENTS_ENABLED=true  (+ optional RASTREADOR_MODEL, REDACCTOR_MODEL, AUDITOR_MODEL - the default `auto` picks a current Gemini model by itself - and optional IMAGE_PROVIDER, SEARCH_TOPIC, MAX_ITEMS_PER_RUN, SOCIAL_VOICE ...)
 # You can always start it by hand from the Actions tab (it defaults to a dry run).
 on:
   schedule:

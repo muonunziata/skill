@@ -439,11 +439,11 @@ msgstr ""
 msgid "How we work"
 msgstr ""
 
-#: includes/class-lnh-package.php:116
+#: includes/class-lnh-package.php:117
 msgid "This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server."
 msgstr ""
 
-#: includes/class-lnh-package.php:131
+#: includes/class-lnh-package.php:132
 msgid "Could not create the archive."
 msgstr ""
 

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-DEFAULT_MODEL = "gemini-1.5-flash"
+DEFAULT_MODEL = "auto"   # resolved at run time to the newest Gemini Flash the API serves (see models.py)
 
 
 def _bool(value: str | None, default: bool = False) -> bool:

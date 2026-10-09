@@ -441,11 +441,11 @@ msgstr "Ilustración generada con IA"
 msgid "How we work"
 msgstr "Cómo trabajamos"
 
-#: includes/class-lnh-package.php:116
+#: includes/class-lnh-package.php:117
 msgid "This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server."
 msgstr "Esta copia del plugin no incluye los agentes, o falta la extensión zip de PHP en este servidor."
 
-#: includes/class-lnh-package.php:131
+#: includes/class-lnh-package.php:132
 msgid "Could not create the archive."
 msgstr "No se pudo crear el archivo."
 

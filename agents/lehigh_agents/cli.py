@@ -9,6 +9,7 @@ import threading
 
 from .imagegen import ImageGenerator
 from .llm import LLM, provider_for
+from .models import AUTO
 from .settings import Settings
 from .wordpress import WPError, WordPressClient
 
@@ -47,10 +48,14 @@ def _check(s: Settings) -> int:
     models = LLM(s).available_models().get("gemini")
     if models is not None:
         for role, m in (("rastreador", s.rastreador_model), ("redactor", s.redactor_model), ("auditor", s.auditor_model)):
-            if provider_for(m) == "gemini" and m not in models:
-                ok = False
-                print(f"  ✗ El modelo '{m}' ({role}) no está disponible en la API de Gemini. "
-                      "Actualiza el .env (p. ej. gemini-2.5-flash).")
+            if provider_for(m) != "gemini":
+                continue
+            if m.strip().lower() in AUTO:
+                print(f"  ✓ {role}: modo automático → {LLM(s).resolved(m)}")
+            elif m not in models:
+                # not fatal: the agents switch to a served model by themselves when the name has been retired
+                print(f"  ! El modelo '{m}' ({role}) ya no está en la API de Gemini; se usará automáticamente "
+                      f"{LLM(s).resolved('auto')}. Pon {role.upper().replace('REDACTOR','REDACCTOR')}_MODEL=auto en el .env para quitar este aviso.")
     ig = ImageGenerator(s)
     print(f"Imágenes IA: {'%s / %s' % (ig.provider, ig.model) if ig.enabled else 'desactivadas (sin IMAGE_API_KEY)'}")
     _check_social(s)

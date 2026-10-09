@@ -12,6 +12,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
+from .models import AUTO, FALLBACK_ALIAS, pick_text_model
 from .settings import Settings
 
 log = logging.getLogger("lehigh.llm")
@@ -60,6 +61,8 @@ class LLM:
         self._clients: dict[str, Any] = {}
         self._sleep = sleep
         self.usage: dict[str, dict[str, int]] = {}
+        self._swapped: dict[str, str] = {}     # requested/retired model name -> model the API really serves
+        self._catalog_cache: list | None = None
 
     # ───────────────────────── public API ─────────────────────────
     def json(self, model: str, system: str, prompt: str, validate: Callable[[Any], str | None] | None = None,
@@ -86,6 +89,40 @@ class LLM:
         if provider_for(model) != "gemini":
             raise LLMError("Google Search grounding requires a Gemini model")
         return self._retry(lambda: self._gemini_grounded(model, system, prompt))
+
+    # ───────────────────────── model names that survive Google's retirements ─────────────────────────
+    def _catalog(self) -> list:
+        """Models the API offers to this key (cached); an unreadable list is just empty."""
+        if self._catalog_cache is None:
+            try:
+                self._catalog_cache = list(self._client("gemini").models.list())
+            except Exception as exc:  # noqa: BLE001 - network/auth problems: fall back to the alias
+                log.warning("could not list Gemini models: %s", exc)
+                return []
+        return self._catalog_cache
+
+    def _pick_replacement(self, avoid: str) -> str:
+        picked = pick_text_model(self._catalog())
+        if not picked or picked == avoid:
+            picked = FALLBACK_ALIAS if avoid != FALLBACK_ALIAS else ""
+        return picked or ""
+
+    def gemini_model(self, model: str) -> str:
+        """The model name to send: `auto` becomes the newest available Flash model; retired names follow their replacement."""
+        name = (model or "").strip()
+        if name.lower() in AUTO and name not in self._swapped:
+            picked = self._pick_replacement(avoid="")
+            self._swapped[name] = picked
+            log.info("model 'auto' -> %s", picked)
+        for _ in range(4):                       # follow replacement chains (auto -> X -> Y)
+            if name not in self._swapped:
+                break
+            name = self._swapped[name]
+        return name
+
+    def resolved(self, model: str) -> str:
+        """Name to show in reports: the model actually in use."""
+        return self.gemini_model(model) if provider_for(model) == "gemini" else model
 
     def available_models(self) -> dict[str, set[str]]:
         """Best-effort listing used by the `check` command (only providers with a key)."""
@@ -148,7 +185,7 @@ class LLM:
         msg = getattr(exc, "message", None) or str(exc)
         if code == 404:
             return LLMError(f"Gemini model '{model}' was not found or is no longer served by the API. "
-                            "Set a current model in .env (e.g. gemini-2.5-flash).")
+                            "Put REDACCTOR_MODEL / RASTREADOR_MODEL / AUDITOR_MODEL=auto in .env and the agents pick a current model by themselves.")
         if code in (401, 403):
             return LLMError(f"Gemini rejected the API key / permissions ({code}): {msg}")
         return LLMError(f"Gemini API error {code}: {msg}", retryable=code == 429 or code >= 500 or code == 0)
@@ -157,8 +194,21 @@ class LLM:
         """One generate_content call with error mapping and token accounting (shared by plain and grounded requests)."""
         from google.genai import errors
 
+        model = self.gemini_model(model)
         try:
-            resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
+            try:
+                resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
+            except errors.APIError as exc:
+                if getattr(exc, "code", 0) != 404:
+                    raise
+                # Google retired this name (or the key cannot use it): switch to the newest model that is served and retry once
+                replacement = self._pick_replacement(avoid=model)
+                if not replacement:
+                    raise
+                log.warning("Gemini model '%s' is not served any more; using '%s' instead", model, replacement)
+                self._swapped[model] = replacement
+                model = replacement
+                resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
         except errors.APIError as exc:
             raise self._gemini_error(exc, model) from exc
         except Exception as exc:  # network / SDK problems
@@ -185,6 +235,7 @@ class LLM:
     def _gemini_grounded(self, model: str, system: str, prompt: str) -> Grounded:
         from google.genai import types
 
+        model = self.gemini_model(model)
         if model.lower().startswith("gemini-1."):  # legacy tool name for the 1.x family
             tool = types.Tool(google_search_retrieval=types.GoogleSearchRetrieval())
         else:

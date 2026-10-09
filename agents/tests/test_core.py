@@ -11,7 +11,7 @@ from conftest import FakeLLM
 def test_model_defaults_and_aliases(monkeypatch):
     for k in ("REDACCTOR_MODEL", "REDACTOR_MODEL"):
         monkeypatch.delenv(k, raising=False)
-    assert Settings.from_env("/x").redactor_model == "gemini-1.5-flash"
+    assert Settings.from_env("/x").redactor_model == "auto"
     monkeypatch.setenv("REDACTOR_MODEL", "gpt-4o-mini")
     assert Settings.from_env("/x").redactor_model == "gpt-4o-mini"
     monkeypatch.setenv("REDACCTOR_MODEL", "claude-3-5-haiku-latest")  # the spelling from the spec wins

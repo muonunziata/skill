@@ -9,7 +9,8 @@ defined( 'ABSPATH' ) || exit;
 final class LNH_Package {
 
 	const FOLDER = 'golehighacres-agents';
-	const MODEL  = 'gemini-2.5-flash';
+	/** `auto`: the agents pick the newest Gemini Flash the API serves and follow Google's model retirements by themselves. */
+	const MODEL  = 'auto';
 
 	/** Files and folders of the agents' source that must not ship in the package. */
 	const SKIP = array( '.env', 'state', '.venv', '__pycache__', 'tests', '.pytest_cache', 'node_modules', '.git' );
@@ -65,7 +66,7 @@ final class LNH_Package {
 			'AUDITOR_MODEL'    => self::MODEL,
 			'ARTICLE_LANGUAGE' => 0 === strpos( determine_locale(), 'es' ) ? 'es' : 'en',
 			'IMAGE_PROVIDER'   => $ai_images ? 'gemini' : '',
-			'IMAGE_MODEL'      => $ai_images ? 'gemini-2.5-flash-image' : '',
+			'IMAGE_MODEL'      => '', // empty = the agents' default, replaced automatically when Google retires it
 		);
 	}
 

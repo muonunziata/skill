@@ -8,7 +8,7 @@ allowed-tools: Bash(python main.py check:*), Bash(python main.py setup:*), Bash(
 
 1. `cd agents && python main.py check`. It validates settings, lists unavailable models, authenticates against WordPress and detects the plugin.
 2. Interpret:
-   - **Model not available** -> `python main.py setup` re-picks a working Gemini model, or edit `RASTREADOR_MODEL` / `REDACCTOR_MODEL` / `AUDITOR_MODEL` (`gemini-2.5-flash` is a safe default).
+   - **Model not available** -> since 1.5.4 the default is `auto` (newest served Flash, and a retired pinned name is replaced automatically at run time). Set `RASTREADOR_MODEL` / `REDACCTOR_MODEL` / `AUDITOR_MODEL=auto` in `.env`; `python main.py check` shows the model each one resolves to.
    - **"Application Passwords are not available"** (HTTP site or security plugin) -> not a problem since plugin 1.5.1: *Set up my agents* creates a connection key (`WP_AUTH_TOKEN=lnh_...`, sent as `Authorization: Bearer` and `X-Lehigh-Key`). Regenerating it revokes the old one.
    - **WordPress 401/403** -> regenerate credentials in WP: *News Hub -> Panel -> Generate agent credentials*, or `python main.py setup`. App passwords need HTTPS (or a local site).
    - **404 on `/lnh/v1/ping`** -> plugin inactive: drafts still work, but no agent panel.
