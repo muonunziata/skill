@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap">
 
 <style>
-  /* Layout: fixed full-screen viewport, no page scroll. A wall of 6 mirrored rows pans by drag, wheel or keys, and wanders on its own when left alone. Hovering a tile previews it for 10 s without sound; clicking opens a popup player. A custom cursor signals that the wall can be grabbed. */
+  /* Layout: fixed full-screen viewport inside a gold frame, no page scroll. An endless wall of 6 mirrored rows wraps around in every direction; it pans by drag, wheel or keys and wanders on its own when left alone. Hovering a tile previews it for 10 s without sound; clicking opens a popup player. A custom cursor signals that the wall can be grabbed. */
   :root {
     --bg: #0A1D12;
     --bg-2: #0F2A1A;
@@ -13,10 +13,10 @@
     --coral: #FF5A5F;
     --ink: #F1F4EA;
     --muted: #9DB1A1;
-    --h: clamp(160px, 28vh, 300px);
-    --gap: clamp(12px, 2vh, 24px);
+    --h: clamp(180px, 36vh, 420px);
+    --gap: clamp(10px, 1.5vh, 20px);
     --font: 'Jost', 'Futura', 'Segoe UI', system-ui, sans-serif;
-    --gutter: clamp(16px, 4vw, 56px);
+    --gutter: clamp(30px, 4vw, 60px);
     color-scheme: dark;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,21 +28,23 @@
   #stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
   .mark { position: fixed; left: 0; right: 0; top: 50%; transform: translateY(-50%); z-index: 0; text-align: center; font-size: clamp(3rem, 13vw, 11rem); font-weight: 400; letter-spacing: 0.04em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(227, 169, 43, 0.22); pointer-events: none; user-select: none; }
 
-  header { position: fixed; z-index: 20; top: env(safe-area-inset-top, 0px); left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 16px var(--gutter); background: linear-gradient(var(--bg), transparent); pointer-events: none; }
+  header { position: fixed; z-index: 20; top: env(safe-area-inset-top, 0px); left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 30px var(--gutter) 22px; background: linear-gradient(var(--bg), transparent); pointer-events: none; }
   .logo { display: flex; align-items: center; gap: 12px; font-size: 1.15rem; letter-spacing: 0.04em; font-weight: 500; }
   .logo svg { width: 44px; height: 24px; flex: none; }
   .logo em { font-style: normal; color: var(--coral); }
   .logo b { font-weight: 500; color: var(--ink); }
   .count { font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
-  .bar { position: fixed; z-index: 20; bottom: env(safe-area-inset-bottom, 0px); left: 0; right: 0; display: flex; justify-content: space-between; gap: 16px; padding: 14px var(--gutter); background: linear-gradient(transparent, var(--bg)); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); pointer-events: none; }
+  .bar { position: fixed; z-index: 20; bottom: env(safe-area-inset-bottom, 0px); left: 0; right: 0; display: flex; justify-content: space-between; gap: 16px; padding: 22px var(--gutter) 30px; background: linear-gradient(transparent, var(--bg)); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); pointer-events: none; }
 
   /* Pan viewport */
   .viewport { position: fixed; inset: 0; z-index: 1; overflow: hidden; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
   .viewport.fine, .viewport.fine .tile { cursor: none; }
-  .wall { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: var(--gap); padding: 120px; will-change: transform; }
-  .row { display: flex; align-items: center; gap: var(--gap); height: var(--h); flex: none; }
+  .wall { position: absolute; inset: 0; display: flex; flex-direction: column; gap: var(--gap); }
+  .frame { position: fixed; inset: 12px; z-index: 18; border: 1px solid rgba(227, 169, 43, .5); pointer-events: none; }
+  .frame::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(227, 169, 43, .16); }
+  .vig { position: fixed; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(90% 90% at 50% 50%, transparent 55%, rgba(4, 12, 7, .55)); }
 
-  .tile { position: relative; flex: none; display: block; overflow: hidden; border: 1px solid rgba(227, 169, 43, 0.3); border-radius: 3px; background: #0c2217; transition: border-color .3s, box-shadow .3s; -webkit-user-drag: none; }
+  .tile { position: absolute; left: 0; top: 0; display: block; overflow: hidden; border: 1px solid rgba(227, 169, 43, 0.3); border-radius: 3px; background: #0c2217; transition: border-color .3s, box-shadow .3s; -webkit-user-drag: none; }
   .tile.P { height: var(--h); aspect-ratio: 9 / 16; }
   .tile.L { height: calc(var(--h) * 0.62); aspect-ratio: 16 / 10; }
   .tile .bg { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 12px; background: var(--c); }
@@ -86,7 +88,7 @@
   @keyframes pop { from { opacity: 0; transform: scale(.94); } }
 
   @media (max-width: 700px) {
-    :root { --h: clamp(150px, 26vh, 240px); }
+    :root { --h: clamp(160px, 30vh, 260px); }
     .bar span:last-child { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -114,7 +116,10 @@
   <main class="wall" id="wall"></main>
 </div>
 
-<div class="bar"><span>Arrastra para explorar · pasa el mouse para ver 10 s · haz click para abrir</span><span>Proyecto independiente · la vivienda se marca como publicidad</span></div>
+<div class="bar"><span>Arrastra en cualquier dirección, no tiene fin · pasa el mouse para ver 10 s · click para abrir</span><span>Proyecto independiente · la vivienda se marca como publicidad</span></div>
+
+<div class="vig" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"></div>
 
 <div class="cur" id="cur" data-s="off" aria-hidden="true"><div class="c" id="curText"></div></div>
 
@@ -131,7 +136,7 @@
   var CATS = ['Comercios', 'Empleo', 'Eventos', 'Vivienda', 'Noticias', 'Futuro', 'Turismo', 'Comunidad'];
   var COLORS = ['#2E7D55', '#CC7A3A', '#2B5BA8', '#7A4A9A', '#C99A22', '#2B8ED0'];
   var TAGC = { Comercios: ['#E3A92B', '#1B1608'], Empleo: ['#2B8ED0', '#FFFFFF'], Eventos: ['#CC7A3A', '#FFFFFF'], Vivienda: ['#2E7D55', '#FFFFFF'], Noticias: ['#5C6FB6', '#FFFFFF'], Futuro: ['#7A4A9A', '#FFFFFF'], Turismo: ['#A4D19B', '#10200F'], Comunidad: ['#FF5A5F', '#FFFFFF'] };
-  var ROWS = 6, COLS = 9;   /* odd COLS keeps every row mirrored left to right */
+  var ROWS = 6, COLS = 11;   /* odd COLS keeps every row mirrored left to right */
   var PREVIEW_MS = 10000, IDLE_MS = 1800;
   var TILES = [];
   for (var k = 0; k < ROWS * COLS; k++) TILES.push({ title: '', cat: CATS[k % CATS.length], img: '', video: '' });
@@ -139,14 +144,12 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(pointer: fine)').matches;
   var vp = document.getElementById('viewport'), wall = document.getElementById('wall');
-  var tiles = [], kinds = [], colors = [];
+  var tiles = [], kinds = [], colors = [], rowOf = [];
   document.getElementById('count').textContent = ROWS + ' filas · ' + (ROWS * COLS) + ' videos';
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function label(i) { return TILES[i].title || ('Video ' + pad(i + 1)); }
 
   for (var r = 0; r < ROWS; r++) {
-    var row = document.createElement('div');
-    row.className = 'row';
     for (var c = 0; c < COLS; c++) {
       var idx = r * COLS + c, d = TILES[idx], p = ((r + c) % 2 === 1);
       kinds[idx] = p ? 'P' : 'L'; colors[idx] = COLORS[(r + c) % COLORS.length];
@@ -159,10 +162,9 @@
         '<span class="bg" style="--c:' + colors[idx] + '">' + (d.img ? '<img src="' + d.img + '" alt="">' : '') +
         '<span class="num">VIDEO ' + pad(idx + 1) + '</span></span>' +
         '<span class="tag" style="background:' + TAGC[d.cat][0] + ';color:' + TAGC[d.cat][1] + '">' + d.cat + '</span>';
-      row.appendChild(b);
-      tiles.push(b);
+      wall.appendChild(b);
+      tiles.push(b); rowOf[idx] = r;
     }
-    wall.appendChild(row);
   }
 
   /* ---------- Hover preview: 10 s, no sound ---------- */
@@ -232,42 +234,41 @@
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
 
   /* ---------- Pan, inertia and idle wandering ---------- */
-  var x = 0, y = 0, vx = 0, vy = 0, dvx = 0, dvy = 0, W = 0, H = 0, VW = 0, VH = 0, PADPAN = 60;
+  /* x, y = how far the wall has been dragged. Every row wraps around on its own period, and so do the rows themselves, so the wall never ends. */
+  var x = 0, y = 0, vx = 0, vy = 0, dvx = 0, dvy = 0, VW = 0, VH = 0, GAP = 16, PITCH = 0, HS = 0;
   var dragging = false, moved = false, sx = 0, sy = 0, lx = 0, ly = 0, lastAct = performance.now();
-  var cx = [], cy = [], tx = 0, ty = 0, tNext = 0, measured = false;
+  var cx = [], cy = [], tw = [], th = [], rowW = [], ang = Math.random() * 6.28, tNext = 0;
+
+  function wrapP(v, P) { return v - P * Math.round(v / P); }
 
   function measure() {
     VW = vp.clientWidth; VH = vp.clientHeight;
-    var keepX = x, keepY = y;
-    wall.style.transform = 'translate3d(0,0,0)';
-    W = wall.offsetWidth; H = wall.offsetHeight;
-    var wr = wall.getBoundingClientRect();
-    tiles.forEach(function (t, i) {
-      var rc = t.getBoundingClientRect();
-      cx[i] = rc.left - wr.left + rc.width / 2; cy[i] = rc.top - wr.top + rc.height / 2;
-    });
-    if (!measured) { x = (VW - W) / 2; y = (VH - H) / 2; measured = true; } else { x = keepX; y = keepY; }
-    clamp(); apply();
-  }
-  function clamp() {
-    var ox = x, oy = y;
-    x = W <= VW ? (VW - W) / 2 : Math.max(VW - W - PADPAN, Math.min(PADPAN, x));
-    y = H <= VH ? (VH - H) / 2 : Math.max(VH - H - PADPAN, Math.min(PADPAN, y));
-    return ox !== x || oy !== y;
+    GAP = parseFloat(getComputedStyle(wall).rowGap) || 16;
+    var rowH = 0, i, r, c;
+    for (i = 0; i < tiles.length; i++) { tw[i] = tiles[i].offsetWidth; th[i] = tiles[i].offsetHeight; if (th[i] > rowH) rowH = th[i]; }
+    PITCH = rowH + GAP; HS = ROWS * PITCH;
+    for (r = 0; r < ROWS; r++) {
+      var sum = 0;
+      for (c = 0; c < COLS; c++) sum += tw[r * COLS + c];
+      rowW[r] = sum + GAP * COLS;
+      var left = -(sum + GAP * (COLS - 1)) / 2;
+      for (c = 0; c < COLS; c++) {
+        i = r * COLS + c;
+        cx[i] = left + tw[i] / 2; left += tw[i] + GAP;
+        cy[i] = (r - (ROWS - 1) / 2) * PITCH;
+      }
+    }
+    apply();
   }
   function apply() {
-    wall.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
     for (var i = 0; i < tiles.length; i++) {
-      var dx = (cx[i] + x - VW / 2) / VW, dy = (cy[i] + y - VH / 2) / VH;
-      var k = Math.min(1, Math.sqrt(dx * dx + dy * dy) * 1.5);
-      tiles[i].style.scale = (1 - 0.22 * k).toFixed(3);
-      tiles[i].style.opacity = (1 - 0.55 * k).toFixed(3);
+      var px = wrapP(cx[i] + x, rowW[rowOf[i]]), py = wrapP(cy[i] + y, HS);
+      var k = Math.min(1, Math.sqrt((px / VW) * (px / VW) + (py / VH) * (py / VH)) * 1.4);
+      var t = tiles[i].style;
+      t.translate = (VW / 2 + px - tw[i] / 2).toFixed(1) + 'px ' + (VH / 2 + py - th[i] / 2).toFixed(1) + 'px';
+      t.scale = (1 - 0.2 * k).toFixed(3);
+      t.opacity = (1 - 0.5 * k).toFixed(3);
     }
-  }
-  function pickTarget(now) {
-    tx = W <= VW ? x : PADPAN + Math.random() * (VW - W - 2 * PADPAN);
-    ty = H <= VH ? y : PADPAN + Math.random() * (VH - H - 2 * PADPAN);
-    tNext = now + 5000 + Math.random() * 6000;
   }
   var last = performance.now();
   function loop(now) {
@@ -279,14 +280,13 @@
       var idle = !reduce && !modalOpen && !hoverTile && (now - lastAct > IDLE_MS);
       var wantX = 0, wantY = 0;
       if (idle) {
-        if (now > tNext || Math.hypot(tx - x, ty - y) < 24) pickTarget(now);
-        var ddx = tx - x, ddy = ty - y, dist = Math.hypot(ddx, ddy) || 1, sp = 0.55 * Math.min(1, dist / 220);
-        wantX = ddx / dist * sp; wantY = ddy / dist * sp;
+        if (now > tNext) { ang += (Math.random() - 0.5) * 2.6; tNext = now + 3500 + Math.random() * 4500; }
+        ang += (Math.random() - 0.5) * 0.03 * f;
+        wantX = Math.cos(ang) * 0.6; wantY = Math.sin(ang) * 0.6;
       }
       dvx += (wantX - dvx) * 0.03 * f; dvy += (wantY - dvy) * 0.03 * f;
       x += (vx + dvx) * f; y += (vy + dvy) * f;
       var decay = Math.pow(0.93, f); vx *= decay; vy *= decay;
-      if (clamp()) { vx = vy = dvx = dvy = 0; if (idle) pickTarget(now); }
     }
     if (x !== px || y !== py) apply();
     requestAnimationFrame(loop);
@@ -304,7 +304,7 @@
     if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) > 6) { moved = true; stopPreview(); setCursor('grab'); }
     if (!moved) return;
     var dx = e.clientX - lx, dy = e.clientY - ly; lx = e.clientX; ly = e.clientY;
-    x += dx; y += dy; vx = dx; vy = dy; clamp(); apply();
+    x += dx; y += dy; vx = dx; vy = dy; apply();
   });
   function release(e) {
     if (!dragging) return;
@@ -327,7 +327,7 @@
     });
     t.addEventListener('pointerleave', function () { hoverTile = false; stopPreview(); });
     t.addEventListener('focus', function () {
-      var i = +t.dataset.i; x = VW / 2 - cx[i]; y = VH / 2 - cy[i]; clamp(); apply(); touched();
+      var i = +t.dataset.i; x = -cx[i]; y = -cy[i]; apply(); touched();
     });
   });
 
@@ -335,7 +335,7 @@
     e.preventDefault(); touched();
     var h = e.shiftKey && !e.deltaX;
     x -= h ? e.deltaY : e.deltaX; y -= h ? 0 : e.deltaY;
-    vx = vy = 0; clamp(); apply();
+    vx = vy = 0; apply();
   }, { passive: false });
   vp.addEventListener('scroll', function () { vp.scrollTop = 0; vp.scrollLeft = 0; });
 
@@ -368,7 +368,7 @@
   setCursor('drag');
 
   window.addEventListener('resize', measure);
-  measure(); pickTarget(performance.now());
+  measure(); tNext = performance.now() + 4000;
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   requestAnimationFrame(loop);
 
