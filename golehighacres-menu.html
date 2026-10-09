@@ -65,7 +65,7 @@
   .cur { position: fixed; left: 0; top: 0; z-index: 70; pointer-events: none; opacity: 0; will-change: transform; }
   .cur.on { opacity: 1; }
   .cur .c { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 16px; border: 1px solid var(--gold); border-radius: 999px; background: rgba(255, 255, 255, .72); backdrop-filter: blur(4px); color: var(--ink); font-size: 0.64rem; letter-spacing: 0.24em; text-transform: uppercase; white-space: nowrap; transition: min-width .25s, height .25s, background .25s, color .25s, padding .25s; }
-  .cur[data-s="tile"] .c { min-width: 68px; height: 68px; padding: 0; border-radius: 50%; background: var(--gold); color: #1B1608; font-weight: 500; }
+  .cur[data-s="tile"] .c { min-width: 76px; height: 76px; padding: 0; border-radius: 50%; border: 2px solid var(--coral); background: #fff; color: var(--coral); font-size: 1.3rem; font-weight: 700; letter-spacing: 0.02em; text-transform: none; box-shadow: 0 10px 30px rgba(255, 90, 95, .3); }
   .cur[data-s="grab"] .c { min-width: 30px; height: 30px; padding: 0; background: rgba(227, 169, 43, .35); font-size: 0; }
   .cur[data-s="off"] { opacity: 0; }
 
@@ -112,20 +112,20 @@
   <span class="count" id="count"></span>
 </header>
 
-<div class="viewport" id="viewport" role="region" aria-label="Pared de videos de Lehigh Acres. Arrastra para explorar.">
+<div class="viewport" id="viewport" role="region" aria-label="Lehigh Acres video wall. Drag to explore.">
   <main class="wall" id="wall"></main>
 </div>
 
-<div class="bar"><span>Arrastra en cualquier dirección, no tiene fin · pasa el mouse para ver 10 s · click para abrir</span><span>Proyecto independiente · la vivienda se marca como publicidad</span></div>
+<div class="bar"><span>Drag in any direction, it never ends · hover for a 10 s preview · click to open</span><span>Independent project · housing projects are marked as advertising</span></div>
 
 <div class="vig" aria-hidden="true"></div>
 <div class="frame" aria-hidden="true"></div>
 
 <div class="cur" id="cur" data-s="off" aria-hidden="true"><div class="c" id="curText"></div></div>
 
-<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Reproductor de video">
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Video player">
   <div class="m-box" id="mBox">
-    <button type="button" class="m-close" id="mClose" aria-label="Cerrar">&#10005;</button>
+    <button type="button" class="m-close" id="mClose" aria-label="Close">&#10005;</button>
     <div class="m-media" id="mMedia"></div>
     <div class="m-meta"><span id="mTitle"></span><span class="t" id="mTag"></span></div>
   </div>
@@ -133,9 +133,9 @@
 
 <script>
   /* Edit this list: video = URL of the video file, img = poster image. Empty fields show the numbered colour block. */
-  var CATS = ['Comercios', 'Empleo', 'Eventos', 'Vivienda', 'Noticias', 'Futuro', 'Turismo', 'Comunidad'];
+  var CATS = ['Businesses', 'Jobs', 'Events', 'Housing', 'News', 'Future', 'Tourism', 'Community'];
   var COLORS = ['#2E7D55', '#CC7A3A', '#2B5BA8', '#7A4A9A', '#C99A22', '#2B8ED0'];
-  var TAGC = { Comercios: ['#E3A92B', '#1B1608'], Empleo: ['#2B8ED0', '#FFFFFF'], Eventos: ['#CC7A3A', '#FFFFFF'], Vivienda: ['#2E7D55', '#FFFFFF'], Noticias: ['#5C6FB6', '#FFFFFF'], Futuro: ['#7A4A9A', '#FFFFFF'], Turismo: ['#A4D19B', '#10200F'], Comunidad: ['#FF5A5F', '#FFFFFF'] };
+  var TAGC = { Businesses: ['#E3A92B', '#1B1608'], Jobs: ['#2B8ED0', '#FFFFFF'], Events: ['#CC7A3A', '#FFFFFF'], Housing: ['#2E7D55', '#FFFFFF'], News: ['#5C6FB6', '#FFFFFF'], Future: ['#7A4A9A', '#FFFFFF'], Tourism: ['#A4D19B', '#10200F'], Community: ['#FF5A5F', '#FFFFFF'] };
   var ROWS = 6, COLS = 11;   /* odd COLS keeps every row mirrored left to right */
   var PREVIEW_MS = 10000, IDLE_MS = 1800;
   var TILES = [];
@@ -145,7 +145,7 @@
   var fine = window.matchMedia('(pointer: fine)').matches;
   var vp = document.getElementById('viewport'), wall = document.getElementById('wall');
   var tiles = [], kinds = [], colors = [], rowOf = [];
-  document.getElementById('count').textContent = ROWS + ' filas · ' + (ROWS * COLS) + ' videos';
+  document.getElementById('count').textContent = ROWS + ' rows · ' + (ROWS * COLS) + ' videos';
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function label(i) { return TILES[i].title || ('Video ' + pad(i + 1)); }
 
@@ -157,7 +157,7 @@
       b.type = 'button';
       b.className = 'tile ' + kinds[idx];
       b.dataset.i = idx;
-      b.setAttribute('aria-label', 'Abrir ' + label(idx));
+      b.setAttribute('aria-label', 'Open ' + label(idx));
       b.innerHTML =
         '<span class="bg" style="--c:' + colors[idx] + '">' + (d.img ? '<img src="' + d.img + '" alt="">' : '') +
         '<span class="num">VIDEO ' + pad(idx + 1) + '</span></span>' +
@@ -191,7 +191,7 @@
     } else {
       var l = document.createElement('span');
       l.className = 'live';
-      l.innerHTML = '<span>Vista previa · sin sonido</span><i></i>';
+      l.innerHTML = '<span>Preview · no sound</span><i></i>';
       t.appendChild(l);
     }
     pvIndex = i;
@@ -213,7 +213,7 @@
       mMedia.appendChild(v);
       var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
     } else {
-      mMedia.innerHTML = '<div class="m-ph" style="--c:' + colors[i] + '"><b>VIDEO ' + pad(i + 1) + '</b><small>Aquí se reproduce el video con sonido</small></div>';
+      mMedia.innerHTML = '<div class="m-ph" style="--c:' + colors[i] + '"><b>VIDEO ' + pad(i + 1) + '</b><small>The video plays here, with sound</small></div>';
     }
     document.getElementById('mTitle').textContent = label(i);
     var tg = document.getElementById('mTag');
@@ -353,7 +353,7 @@
   var cur = document.getElementById('cur'), curText = document.getElementById('curText');
   function setCursor(s) {
     cur.dataset.s = s;
-    curText.textContent = s === 'drag' ? '‹ Arrastra ›' : (s === 'tile' ? '▶ Ver' : '');
+    curText.textContent = s === 'drag' ? '‹ Drag ›' : (s === 'tile' ? 'GO!' : '');
   }
   function zone(e) { return e.target && e.target.closest && e.target.closest('.tile') ? 'tile' : 'drag'; }
   function moveCursor(e) {
