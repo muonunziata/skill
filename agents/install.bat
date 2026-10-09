@@ -18,23 +18,27 @@ if errorlevel 1 (
   exit /b 1
 )
 
-if not exist .venv\Scripts\python.exe %PY% -m venv .venv
-echo Installing dependencies...
-.venv\Scripts\python.exe -m pip install --quiet --upgrade pip
-.venv\Scripts\python.exe -m pip install --quiet -r requirements.txt
+rem Creates .venv, installs the libraries and the browser, showing a live progress meter (log: instalacion.log)
+%PY% instalar.py
 if errorlevel 1 (
-  echo Installing the dependencies failed.
+  echo.
+  echo La instalacion fallo. Revisa instalacion.log
   pause
   exit /b 1
 )
-echo Dependencies installed in .venv
-echo Installing Chromium (used by Agent 4 to draw Instagram/TikTok slides)...
-.venv\Scripts\python.exe -m playwright install chromium >nul 2>&1
-if errorlevel 1 echo Chromium was not installed. Run: .venv\Scripts\python.exe -m playwright install chromium
 
 if /i "%~1"=="--no-setup" (
   if not defined LEHIGH_LAUNCHER echo Next: .venv\Scripts\python.exe main.py setup
   exit /b 0
+)
+if "%~1"=="" (
+  findstr /r /c:"^GEMINI_API_KEY=.." .env >nul 2>&1 && findstr /r /c:"^WP_AUTH_TOKEN=.." .env >nul 2>&1 && (
+    echo.
+    echo El archivo .env ya esta configurado. Para encender los agentes abre INICIAR.bat
+    echo Para volver a configurar: .venv\Scripts\python.exe main.py setup
+    pause
+    exit /b 0
+  )
 )
 .venv\Scripts\python.exe main.py setup %*
 pause

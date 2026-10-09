@@ -138,16 +138,30 @@ class SetupError(Exception):
     pass
 
 
+class KeyRejected(SetupError):
+    """Google answered and said the key is not valid (as opposed to a network or library problem)."""
+
+
 def list_gemini_models(api_key: str):
     from google import genai
     from google.genai import errors
 
+    # Keep a reference to the client for the whole call: if it is garbage-collected while the (lazy) model list is
+    # still being read, google-genai closes its HTTP session and fails with "client has been closed".
+    client = genai.Client(api_key=api_key)
     try:
-        return list(genai.Client(api_key=api_key).models.list())
+        return list(client.models.list())
     except errors.APIError as exc:
-        raise SetupError(f"Google rechazó la clave de Gemini ({exc.code}): {exc.message}") from exc
+        if exc.code in (400, 401, 403):
+            raise KeyRejected(f"Google rechazó la clave de Gemini ({exc.code}): {exc.message}") from exc
+        raise SetupError(f"La API de Gemini respondió con un error ({exc.code}): {exc.message}") from exc
     except Exception as exc:  # noqa: BLE001 - network problems etc.
         raise SetupError(f"No se pudo contactar con la API de Gemini: {exc}") from exc
+    finally:
+        try:
+            client.close()
+        except Exception:  # noqa: BLE001 - older SDKs have no close()
+            pass
 
 
 # ───────────────────────── WordPress discovery + authorisation ─────────────────────────
@@ -309,8 +323,10 @@ class Console:
         if not self.interactive:
             return default
         suffix = f" [{default if not secret else '••••' if default else ''}]" if default else ""
+        # Windows consoles cannot paste into a hidden prompt (getpass), which looks like the wizard froze: show the text there.
+        hide = secret and os.name != "nt"
         try:
-            value = (getpass.getpass(f"{prompt}{suffix}: ") if secret else input(f"{prompt}{suffix}: ")).strip()
+            value = (getpass.getpass(f"{prompt}{suffix}: ") if hide else input(f"{prompt}{suffix}: ")).strip()
         except EOFError:
             return default
         return value or default
@@ -344,7 +360,9 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
     key = args.gemini_key or values.get("GEMINI_API_KEY", "") or os.environ.get("GEMINI_API_KEY", "")
     models: list = []
     for attempt in range(3):
-        key = key if (attempt == 0 and key) else con.ask("Clave de API de Gemini (https://aistudio.google.com/apikey)", key, secret=True)
+        key = key if (attempt == 0 and key) else con.ask(
+            "Clave de API de Gemini (https://aistudio.google.com/apikey). Pégala y pulsa Enter",
+            key, secret=True)
         if not key:
             con.say("  ✗ Hace falta una clave de Gemini.")
             if not con.interactive:
@@ -355,9 +373,12 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
             break
         except SetupError as exc:
             con.say(f"  ✗ {exc}")
-            key = ""
+            if isinstance(exc, KeyRejected):   # a network/library problem does not mean the saved key is wrong: keep it
+                key = ""
             if not con.interactive:
                 return 2
+            if key:
+                con.say("  La clave guardada se conserva: pulsa Enter para reintentar con ella o pega otra.")
     else:
         con.say("No se pudo validar la clave de Gemini. Revísala y vuelve a ejecutar `python main.py setup`.")
         return 2

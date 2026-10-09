@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,10 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.2 =
+* The agents' installer now shows a live progress meter (overall percentage, current step, elapsed time, a moving spinner and “no news for N s” warnings) so you can tell a slow download from a stuck one. A full log is written to instalacion.log.
+* Fixes the setup wizard stopping with “client has been closed” while checking the Gemini key, keeps the saved key on network problems, and shows pasted keys on Windows (hidden prompts cannot be pasted into). The installer skips the wizard when the downloaded package is already configured.
 
 = 1.5.1 =
 * Works on sites without Application Passwords (plain HTTP, or disabled by a security plugin): the plugin now creates its own private connection key for the agents. It is stored only as a hash, works only on REST API requests and only for the agents' Author account, and generating a new one revokes the previous.

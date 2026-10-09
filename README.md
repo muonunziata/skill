@@ -48,7 +48,7 @@ Además crea la categoría **Noticias** (categoría por defecto de los artículo
 En WordPress, **News Hub → Panel → «Configurar mis agentes»**:
 
 1. **Pega tu clave de Gemini** (gratis en https://aistudio.google.com/apikey; WordPress comprueba con Google que sea válida) y pulsa **«Descargar mis agentes»**. Recibes un `.zip` que ya trae la dirección de tu sitio, una contraseña de conexión privada y tu clave: **no hay nada que escribir ni copiar**.
-2. **Descomprime y haz doble clic en `INICIAR.bat`** (Windows) o **`INICIAR.command`** (Mac; la primera vez, clic derecho → Abrir). La primera vez instala todo solo (unos minutos; necesita Python 3.11+, y en Windows lo instala con `winget` si hace falta). Deja la ventana abierta.
+2. **Descomprime y haz doble clic en `INICIAR.bat`** (Windows) o **`INICIAR.command`** (Mac; la primera vez, clic derecho → Abrir). La primera vez instala todo solo, con una **barra de progreso** (porcentaje, paso actual, tiempo transcurrido y un girito que se mueve: si el tiempo avanza y el girito gira, está trabajando; si pasa mucho rato sin novedades te avisa; el registro completo queda en `instalacion.log`) (unos minutos; necesita Python 3.11+, y en Windows lo instala con `winget` si hace falta). Deja la ventana abierta.
 3. **Vuelve a WordPress y pulsa «Iniciar a trabajar»**. Los agentes se conectan solos y verás la tarjeta ponerse en verde.
 
 **¿Tu sitio no usa HTTPS** (WordPress muestra «Application Passwords are not available»)? No importa: el plugin crea su propia **clave de conexión** (`lnh_…`) para los agentes; se guarda solo como hash, solo sirve en la API REST y solo para la cuenta de agentes (rol Autor), y generar otra revoca la anterior. Aun así conviene activar HTTPS: cifra la conexión.
@@ -153,7 +153,7 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       116 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       124 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
 wordpress/tests/run.php      162 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones

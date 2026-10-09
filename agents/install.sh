@@ -16,20 +16,18 @@ import sys
 sys.exit(0 if sys.version_info >= (3, 11) else 1)
 PYCHECK
 
-[ -d .venv ] || "$PY" -m venv .venv
+# Creates .venv, installs the libraries and the browser, showing a live progress meter (log: instalacion.log)
+"$PY" instalar.py || { echo "La instalación falló: revisa instalacion.log" >&2; exit 1; }
 # shellcheck disable=SC1091
 . .venv/bin/activate
-echo "Installing dependencies…"
-python -m pip install --quiet --upgrade pip
-python -m pip install --quiet -r requirements.txt
-echo "✓ Dependencies installed in ./.venv"
-# Agent 4 draws the slides with Chromium. Best effort: without it the other three agents keep working.
-echo "Installing the browser used to draw Instagram/TikTok slides (Chromium, ~150 MB)…"
-python -m playwright install chromium >/dev/null 2>&1 && echo "✓ Chromium ready" \
-  || echo "! Chromium was not installed; run '.venv/bin/python -m playwright install chromium' later or set CHROMIUM_PATH."
 
 if [ "${1:-}" = "--no-setup" ]; then
   [ -n "${LEHIGH_LAUNCHER:-}" ] || echo "Next: .venv/bin/python main.py setup"
+  exit 0
+fi
+if grep -Eq '^GEMINI_API_KEY=.+' .env 2>/dev/null && grep -Eq '^WP_AUTH_TOKEN=.+' .env 2>/dev/null && [ "$#" -eq 0 ]; then
+  echo "✓ .env ya está configurado (clave de Gemini y conexión a WordPress). Para encender los agentes: ./INICIAR.command  (o ./start.sh)"
+  echo "  Para volver a configurar: .venv/bin/python main.py setup"
   exit 0
 fi
 python main.py setup "$@"

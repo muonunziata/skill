@@ -9,6 +9,8 @@ python main.py check | run [--dry-run] [--no-images] [--no-social] | watch [--no
 python main.py social --post 123 [--no-video] [--formats instagram,tiktok] [--dry-run] [--out DIR]
 ```
 
+`install.sh` / `install.bat` ejecutan `instalar.py` (solo librería estándar): crea el entorno, instala las librerías y Chromium con un **medidor de progreso en vivo** (porcentaje, paso, tiempo, girito y aviso «sin novedades hace N s»; registro en `instalacion.log`).
+
 `setup` valida la clave de Gemini, elige el mejor modelo disponible, localiza el sitio y obtiene la contraseña de aplicación: reutiliza la del botón «Generar credenciales» del plugin si ya está en el `.env`, o usa la pantalla de aprobación de WordPress (automática en sitios locales; en sitios públicos WordPress muestra la contraseña y se pega en el asistente). Módulo: `setup_wizard.py`.
 
 ## Módulos

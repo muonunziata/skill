@@ -310,3 +310,82 @@ def test_wizard_checks_a_stored_connection_key():
     info = sw.SiteInfo(site="https://x.example", rest_root="https://x.example/wp-json", name="X", has_plugin=True, authorize_url="")
     assert sw.test_wordpress(info, "lnh_" + "a" * 40, "", http=Http()) == "Lehigh Agents"
     assert calls[0]["headers"]["Authorization"].startswith("Bearer lnh_") and "auth" not in calls[0]
+
+
+# ───────────────────────── regressions reported from a Windows run ─────────────────────────
+def test_model_listing_keeps_the_client_alive_and_classifies_errors(monkeypatch):
+    """google-genai closes its session when the client is collected: the wizard must hold it while the list is read."""
+    import gc
+    import sys
+    import types
+
+    closed = []
+
+    class Client:
+        def __init__(self, api_key):
+            self.key = api_key
+
+        @property
+        def models(self):
+            outer = self
+
+            class M:
+                def list(self):
+                    def gen():
+                        gc.collect()                       # a temporary client would be destroyed right here
+                        if outer.key == "bad":
+                            raise RuntimeError("Cannot send a request, as the client has been closed.")
+                        yield "m1"
+                    return gen()
+            return M()
+
+        def close(self):
+            closed.append(True)
+
+    class APIError(Exception):
+        def __init__(self, code, message):
+            self.code, self.message = code, message
+
+    errors = types.SimpleNamespace(APIError=APIError)
+    genai = types.SimpleNamespace(Client=Client, errors=errors)
+    google = types.ModuleType("google")
+    google.genai = genai
+    monkeypatch.setitem(sys.modules, "google", google)
+    monkeypatch.setitem(sys.modules, "google.genai", genai)
+    monkeypatch.setitem(sys.modules, "google.genai.errors", errors)
+    assert sw.list_gemini_models("good") == ["m1"] and closed == [True]
+    with pytest.raises(SetupError, match="No se pudo contactar"):          # any other failure is "could not reach", not "bad key"
+        sw.list_gemini_models("bad")
+
+
+def test_a_network_problem_does_not_throw_away_the_saved_key(tmp_path, fake_wp):
+    attempts = []
+
+    def flaky(key):
+        attempts.append(key)
+        if len(attempts) == 1:
+            raise SetupError("No se pudo contactar con la API de Gemini: Cannot send a request, as the client has been closed.")
+        return MODELS
+
+    env = tmp_path / ".env"
+    env.write_text("GEMINI_API_KEY=AIzaSAVEDKEY\n")
+    class EnterKeepsDefault(Scripted):
+        def ask(self, prompt, default="", secret=False):
+            return (self.answers.pop(0) if self.answers else "") or default
+
+    con = EnterKeepsDefault([])                                   # Enter = retry with the saved key
+    args = wiz_args(tmp_path, fake_wp, gemini_key=None, non_interactive=False)
+    sw.run_wizard(args, con, open_url=approving_browser(), list_models=flaky)
+    assert attempts[:2] == ["AIzaSAVEDKEY", "AIzaSAVEDKEY"]       # the second try offered (and used) the saved key
+    assert any("se conserva" in line for line in con.log)
+
+
+def test_hidden_prompts_are_not_used_on_windows(monkeypatch):
+    calls = {"getpass": 0, "input": 0}
+    monkeypatch.setattr(sw.getpass, "getpass", lambda p: calls.__setitem__("getpass", calls["getpass"] + 1) or "k")
+    monkeypatch.setattr("builtins.input", lambda p: calls.__setitem__("input", calls["input"] + 1) or "k")
+    monkeypatch.setattr(sw.os, "name", "nt")
+    assert Console(True).ask("key", secret=True) == "k" and calls == {"getpass": 0, "input": 1}   # pasting works
+    monkeypatch.setattr(sw.os, "name", "posix")
+    Console(True).ask("key", secret=True)
+    assert calls["getpass"] == 1
