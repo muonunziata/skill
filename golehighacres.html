@@ -1,0 +1,729 @@
+<title>GoLehighAcres</title>
+
+<style>
+  /* Design Plan: Modern institutional portal with Florida warmth.
+     Trusted blue (#0066CC) + growth green (#10B981) + opportunity orange (#F97316).
+     Poppins for display, Inter for body. Hero → Problem/Opportunity → 6 Revenue Streams → Embudo → CTA.
+     3D transforms on cards, smooth parallax scroll, animated reveals. */
+
+  :root {
+    --primary: #0066CC;
+    --primary-light: #0080FF;
+    --secondary: #10B981;
+    --accent: #F97316;
+    --accent-dark: #EA580C;
+    --neutral-bg: #F8FAFB;
+    --neutral-light: #E5E7EB;
+    --neutral-text: #1F2937;
+    --neutral-light-text: #6B7280;
+    --white: #FFFFFF;
+
+    --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --neutral-bg: #0F172A;
+      --neutral-light: #1E293B;
+      --neutral-text: #F1F5F9;
+      --neutral-light-text: #CBD5E1;
+      --white: #1A202C;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --neutral-bg: #0F172A;
+    --neutral-light: #1E293B;
+    --neutral-text: #F1F5F9;
+    --neutral-light-text: #CBD5E1;
+    --white: #1A202C;
+    color-scheme: dark;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--neutral-bg);
+    color: var(--neutral-text);
+    line-height: 1.6;
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    max-width: 900px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero .tagline {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero .description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 40px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--white);
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+  }
+
+  .cta-button:hover {
+    background: var(--accent-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(249, 115, 22, 0.4);
+  }
+
+  /* Floating 3D Cards */
+  .floating-cards {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    height: 150px;
+    perspective: 1000px;
+  }
+
+  .card-3d {
+    position: absolute;
+    width: 180px;
+    height: 120px;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: rotateX(5deg) rotateY(-10deg) translateZ(30px);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .card-3d:nth-child(2) {
+    left: 50%;
+    transform: translateX(-50%) rotateX(5deg) rotateY(10deg) translateZ(20px);
+    animation-delay: 0.3s;
+  }
+
+  .card-3d:nth-child(3) {
+    right: 10%;
+    transform: rotateX(5deg) rotateY(15deg) translateZ(10px);
+    animation-delay: 0.6s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotateX(5deg) rotateY(-10deg); }
+    50% { transform: translateY(-20px) rotateX(5deg) rotateY(-10deg); }
+  }
+
+  .card-3d p {
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* Problem & Opportunity Section */
+  .section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--primary);
+    margin-bottom: 50px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .two-column {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  .column-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+  }
+
+  .column-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  }
+
+  .column-card.problem {
+    border-top: 4px solid #EF4444;
+  }
+
+  .column-card.opportunity {
+    border-top: 4px solid var(--secondary);
+  }
+
+  .column-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--neutral-text);
+  }
+
+  .column-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .column-card li {
+    margin-bottom: 16px;
+    padding-left: 30px;
+    position: relative;
+    font-size: 1rem;
+    color: var(--neutral-light-text);
+    line-height: 1.7;
+  }
+
+  .column-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  /* Revenue Streams */
+  .revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+  }
+
+  .revenue-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--accent);
+    transform: perspective(1000px) rotateY(0deg);
+  }
+
+  .revenue-card:hover {
+    transform: perspective(1000px) rotateY(5deg) translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .revenue-card-number {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .revenue-card h4 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    color: var(--neutral-text);
+  }
+
+  .revenue-card p {
+    font-size: 0.95rem;
+    color: var(--neutral-light-text);
+    line-height: 1.6;
+  }
+
+  /* Funnel Section */
+  .funnel-container {
+    background: linear-gradient(135deg, var(--neutral-light), var(--neutral-bg));
+    padding: 60px 20px;
+    border-radius: 16px;
+    margin: 60px 0;
+  }
+
+  .funnel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .funnel-step {
+    background: var(--white);
+    padding: 20px 30px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: slideInLeft 0.6s ease-out;
+  }
+
+  .funnel-step:nth-child(2) { animation-delay: 0.1s; }
+  .funnel-step:nth-child(3) { animation-delay: 0.2s; }
+  .funnel-step:nth-child(4) { animation-delay: 0.3s; }
+  .funnel-step:nth-child(5) { animation-delay: 0.4s; }
+
+  .funnel-number {
+    min-width: 45px;
+    height: 45px;
+    background: var(--accent);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .funnel-text h4 {
+    margin-bottom: 4px;
+    color: var(--neutral-text);
+    font-family: var(--font-display);
+  }
+
+  .funnel-text p {
+    font-size: 0.9rem;
+    color: var(--neutral-light-text);
+  }
+
+  /* Why It Works */
+  .why-works {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    margin: 40px 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .why-works h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--primary);
+  }
+
+  .why-works ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .why-works li {
+    margin-bottom: 16px;
+    padding-left: 30px;
+    position: relative;
+    color: var(--neutral-light-text);
+    line-height: 1.7;
+  }
+
+  .why-works li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 16px;
+    margin: 60px 0;
+  }
+
+  .cta-section h2 {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .cta-section p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .reveal.active {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero {
+      min-height: 80vh;
+      padding: 30px 20px;
+    }
+
+    .section {
+      padding: 50px 20px;
+    }
+
+    .floating-cards {
+      display: none;
+    }
+
+    .revenue-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-section {
+      margin: 40px 0;
+      padding: 50px 20px;
+    }
+  }
+</style>
+
+<main>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>GoLehighAcres.org</h1>
+      <p class="tagline">La guía oficial de Lehigh Acres, Florida</p>
+      <p class="description">
+        Un portal de confianza que convierte el descubrimiento de la zona en un activo que se monetiza a sí mismo.
+      </p>
+      <button class="cta-button">Comienza tu viaje</button>
+    </div>
+    <div class="floating-cards">
+      <div class="card-3d"><p>📱 Directorio</p></div>
+      <div class="card-3d"><p>💼 Marketplace</p></div>
+      <div class="card-3d"><p>🏠 Real Estate</p></div>
+    </div>
+  </section>
+
+  <!-- PROBLEM & OPPORTUNITY -->
+  <section class="section">
+    <h2 class="section-title">El Mercado Hoy</h2>
+    <div class="two-column">
+      <div class="column-card problem reveal">
+        <h3>El Problema</h3>
+        <ul>
+          <li>Mercado saturado de publicidad inmobiliaria</li>
+          <li>Cada lead pagado cuesta más cada trimestre</li>
+          <li>Competencia invasiva genera desconfianza</li>
+          <li>El comprador decide "dónde" antes de "a quién"</li>
+          <li>Nadie captura ese momento de descubrimiento</li>
+        </ul>
+      </div>
+
+      <div class="column-card opportunity reveal">
+        <h3>La Oportunidad</h3>
+        <ul>
+          <li>Adueñarse del momento de descubrimiento</li>
+          <li>Antes de que exista intención de compra explícita</li>
+          <li>Convertir tráfico en activo que se auto-monetiza</li>
+          <li>No solo un canal de leads, sino un negocio</li>
+          <li>Escalar a favor de todo el portafolio corporativo</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVENUE STREAMS -->
+  <section class="section">
+    <h2 class="section-title">6 Fuentes de Monetización</h2>
+    <div class="revenue-grid">
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">1</div>
+        <h4>Directorio Premium</h4>
+        <p>Comercios locales migrando de fundadores a membresías estándar y premium.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">2</div>
+        <h4>Marketplace</h4>
+        <p>Registro B2B abierto con comercios y servicios locales monetizados.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">3</div>
+        <h4>Publicidad Contextual</h4>
+        <p>Anuncios no-intrusivos de desarrollos futuros y aliados sponsor.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">4</div>
+        <h4>Empleo Local</h4>
+        <p>Bolsa de trabajo integrada para empleadores locales.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">5</div>
+        <h4>Co-Marketing</h4>
+        <p>Marketing colaborativo entre marcas aliadas y desarrolladores.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">6</div>
+        <h4>Referidos Inmobiliarios</h4>
+        <p>Leads calificados derivados a proyectos del grupo corporativo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE FUNNEL -->
+  <section class="section">
+    <h2 class="section-title">El Embudo Económico</h2>
+    <div class="funnel-container">
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-number">1</div>
+          <div class="funnel-text">
+            <h4>🚀 Tráfico</h4>
+            <p>SEO, turismo, aliados, redes, eventos</p>
+          </div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-number">2</div>
+          <div class="funnel-text">
+            <h4>🤝 Confianza</h4>
+            <p>Contenido local, directorio, guías, noticias</p>
+          </div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-number">3</div>
+          <div class="funnel-text">
+            <h4>📊 Datos</h4>
+            <p>Registro B2B/B2C, análisis de comportamiento</p>
+          </div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-number">4</div>
+          <div class="funnel-text">
+            <h4>💰 Monetización</h4>
+            <p>Membresías, anuncios, empleo, marketplace</p>
+          </div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-number">5</div>
+          <div class="funnel-text">
+            <h4>🏡 Real Estate</h4>
+            <p>Referidos, proyectos, calificación, cierre</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT WORKS -->
+  <section class="section">
+    <h2 class="section-title">Por Qué Funciona</h2>
+    <div class="why-works">
+      <h3>Clave: Diversificación & Efecto Multiplicador</h3>
+      <ul>
+        <li><strong>Programa de Fundadores</strong> — 20-30 comercios construyen el hábito de pertenecer al directorio. Migrar de gratis a pago es un upsell natural.</li>
+        <li><strong>Sin dependencia única</strong> — 3 mecanismos de ingresos reducen el riesgo frente a la estacionalidad del sector inmobiliario.</li>
+        <li><strong>Un activo, todo el portafolio</strong> — El mismo tráfico se reutiliza para todos los proyectos del grupo, no solo el que lo financió.</li>
+        <li><strong>Autoridad SEO compartida</strong> — Los enlaces internos desde "Urbanismo/Futuro" impulsan cualquier desarrollo corporativo.</li>
+        <li><strong>WhatsApp Business API</strong> — Canal con ~98% de apertura. Chatbot califica visitantes 24/7 sin costo de adquisición.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="section">
+    <h2 class="section-title">Hoja de Ruta</h2>
+    <div class="revenue-grid" style="margin-top: 40px;">
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">Fase 1</div>
+        <h4>Construcción & Pilar 0</h4>
+        <p>Se invierte en la base de confianza. Sin ingreso inicial.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">Fase 2</div>
+        <h4>Directorio & Contenido</h4>
+        <p>Primeros comercios migran a estándar/premium.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">Fase 3</div>
+        <h4>Registro B2B Abierto</h4>
+        <p>Se activan marketplace y publicidad.</p>
+      </div>
+
+      <div class="revenue-card reveal">
+        <div class="revenue-card-number">Fase 4</div>
+        <h4>Lanzamiento Público</h4>
+        <p>Las 3 fuentes operan en simultáneo. Año 1 financiero.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-section">
+    <h2>Estamos listos para capturar el momento</h2>
+    <p>Un portal que genera confianza, monetiza a escala y posiciona a tu marca como el referente número uno.</p>
+    <button class="cta-button">Únete a GoLehighAcres.org</button>
+  </section>
+</main>
+
+<script>
+  // Smooth scroll reveal animations
+  const revealElements = document.querySelectorAll('.reveal');
+
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  revealElements.forEach(el => {
+    observer.observe(el);
+  });
+
+  // Parallax effect on scroll
+  window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero');
+    const scrolled = window.pageYOffset;
+    hero.style.backgroundPosition = `0% ${scrolled * 0.5}px`;
+  });
+
+  // Button interactions
+  const buttons = document.querySelectorAll('.cta-button');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      alert('¡Gracias por tu interés! Pronto tendremos más información disponible.');
+    });
+  });
+
+  // Reduced motion support
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('*').forEach(el => {
+      el.style.animation = 'none';
+      el.style.transition = 'none';
+    });
+  }
+</script>
