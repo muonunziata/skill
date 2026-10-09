@@ -138,12 +138,14 @@
   /* Founding businesses (deep green) */
   .contrib { background: var(--deep); color: var(--deep-ink); padding-block: clamp(64px, 9vw, 128px); overflow: hidden; }
   .contrib .label, .contrib .lead { color: var(--deep-muted); }
-  .contrib-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
-  .contrib .copy { display: grid; gap: 28px; position: sticky; top: calc(var(--hh) + 24px); }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .contrib-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); align-items: start; }
+  .contrib .copy { display: grid; gap: 28px; justify-items: center; text-align: center; position: sticky; top: calc(var(--hh) + 24px); padding-block: 40px; }
+  .contrib .label { justify-content: center; }
+  .contrib .label::after { content: ''; width: 44px; height: 1px; background: currentColor; }
+  .contrib .lead { margin-inline: auto; }
+  .btn-l { justify-self: center; }
   .col { display: grid; gap: 16px; will-change: transform; }
-  .col:nth-child(2) { margin-top: 64px; }
-  .btn-l { display: inline-block; padding: 16px 28px; border: 1px solid var(--deep-ink); font-family: var(--display); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; justify-self: start; transition: background .25s, color .25s; }
+  .btn-l { display: inline-block; padding: 16px 28px; border: 1px solid var(--deep-ink); font-family: var(--display); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; transition: background .25s, color .25s; }
   .btn-l:hover { background: var(--deep-ink); color: var(--deep); }
 
   /* Quote + marquee */
@@ -176,9 +178,10 @@
   }
   @media (max-width: 860px) {
     .rail { display: none; }
-    .world-grid, .proc-grid, .contrib-grid, .foot { grid-template-columns: 1fr; }
+    .world-grid, .proc-grid, .foot { grid-template-columns: 1fr; }
     .sticky-card, .contrib .copy { position: static; }
-    .col:nth-child(2) { margin-top: 32px; }
+    .contrib-grid { grid-template-columns: 1fr 1fr; }
+    .contrib .copy { grid-column: 1 / -1; order: -1; }
     .start { width: 80px; height: 80px; bottom: 28px; }
   }
   @media (pointer: coarse) { .cur { display: none; } }
@@ -307,25 +310,23 @@
 
   <section id="business" class="contrib" data-num="06" data-name="Join">
     <div class="wrap contrib-grid">
+      <div class="col" data-par="0.05">
+        <div class="ph r-43" style="--k: var(--a)"><span class="no">FOTO 17</span><span class="sz">4:3</span></div>
+        <div class="ph r-34" style="--k: var(--b)"><span class="no">FOTO 18</span><span class="sz">3:4</span></div>
+        <div class="ph r-43" style="--k: var(--c)"><span class="no">FOTO 19</span><span class="sz">4:3</span></div>
+        <div class="ph r-11" style="--k: var(--d)"><span class="no">FOTO 20</span><span class="sz">1:1</span></div>
+      </div>
       <div class="copy">
         <p class="label">Founding businesses</p>
         <h2 class="h-xl">Own a business in Lehigh Acres?</h2>
         <p class="lead">The first businesses to join form the foundation of the directory and keep their benefits from day one.</p>
         <a class="btn-l" href="#whatsapp" data-go>Join as a founding business</a>
       </div>
-      <div class="cols">
-        <div class="col" data-par="0.06">
-          <div class="ph r-43" style="--k: var(--a)"><span class="no">FOTO 17</span><span class="sz">4:3</span></div>
-          <div class="ph r-34" style="--k: var(--b)"><span class="no">FOTO 18</span><span class="sz">3:4</span></div>
-          <div class="ph r-43" style="--k: var(--c)"><span class="no">FOTO 19</span><span class="sz">4:3</span></div>
-          <div class="ph r-11" style="--k: var(--d)"><span class="no">FOTO 20</span><span class="sz">1:1</span></div>
-        </div>
-        <div class="col" data-par="-0.06">
-          <div class="ph r-34" style="--k: var(--e)"><span class="no">FOTO 21</span><span class="sz">3:4</span></div>
-          <div class="ph r-43" style="--k: var(--f)"><span class="no">FOTO 22</span><span class="sz">4:3</span></div>
-          <div class="ph r-11" style="--k: var(--a)"><span class="no">FOTO 23</span><span class="sz">1:1</span></div>
-          <div class="ph r-34" style="--k: var(--b)"><span class="no">FOTO 24</span><span class="sz">3:4</span></div>
-        </div>
+      <div class="col" data-par="0.05">
+        <div class="ph r-43" style="--k: var(--e)"><span class="no">FOTO 21</span><span class="sz">4:3</span></div>
+        <div class="ph r-34" style="--k: var(--f)"><span class="no">FOTO 22</span><span class="sz">3:4</span></div>
+        <div class="ph r-43" style="--k: var(--a)"><span class="no">FOTO 23</span><span class="sz">4:3</span></div>
+        <div class="ph r-11" style="--k: var(--b)"><span class="no">FOTO 24</span><span class="sz">1:1</span></div>
       </div>
     </div>
   </section>
