@@ -460,7 +460,7 @@ if ( ! $had_bundle ) {
 	mkdir( $bundle . '/tests', 0777, true );
 	mkdir( $bundle . '/state', 0777, true );
 	file_put_contents( $bundle . '/main.py', "print('hi')\n" );
-	file_put_contents( $bundle . '/lehigh_agents/__init__.py', "" );
+	file_put_contents( $bundle . '/lehigh_agents/__init__.py', "__version__ = \"9.9.9\"\n" );
 	file_put_contents( $bundle . '/tests/test_x.py', "x" );
 	file_put_contents( $bundle . '/state/db', "x" );
 	file_put_contents( $bundle . '/.env', "GEMINI_API_KEY=LEAKED-SECRET\n" );
@@ -527,6 +527,49 @@ ob_start();
 LNH_Admin::view( 'connect', array( 'package' => false, 'result' => null, 'https' => true, 'existing' => null ) );
 t( 'connect screen without the bundle: no download form, manual steps remain', false === strpos( ob_get_clean(), 'name="gemini_key"' ) );
 t( 'the package handler is registered and its notices exist', false !== has_action( 'admin_post_lnh_agents_package' ) );
+// ---- agents self-update (button in the control card)
+t( 'the bundled agents\' version is read from the bundle', ! LNH_Package::available() || '9.9.9' === LNH_Package::bundle_version() );
+if ( class_exists( 'ZipArchive' ) && LNH_Package::available() ) {
+	$cz = LNH_Package::code_zip();
+	$zz = new ZipArchive();
+	$zz->open( $cz );
+	$cn = array();
+	for ( $i = 0; $i < $zz->numFiles; $i++ ) {
+		$cn[] = $zz->getNameIndex( $i );
+	}
+	$zz->close();
+	wp_delete_file( $cz );
+	t( 'code archive: the agents only - no .env, no credentials, no readme', in_array( 'golehighacres-agents/main.py', $cn, true ) && ! in_array( 'golehighacres-agents/.env', $cn, true ) && ! in_array( 'golehighacres-agents/LEEME.txt', $cn, true ) && ! preg_grep( '#/(tests|state)/#', $cn ), $cn );
+	$sync_reg = rest_get_server()->get_routes()['/lnh/v1/agents/package'] ?? null;
+	t( 'the code archive is served only to the agents\' account', $sync_reg && 'can_post' === $sync_reg[0]['permission_callback'][1] );
+	delete_option( LNH_Control::STATE_OPTION );
+	delete_option( LNH_Control::WORKER_OPTION );
+	$r = LNH_Control::sync( array( 'status' => 'idle', 'version' => '1.0.0', 'can_update' => true ) );
+	t( 'sync tells the agents the latest version', '9.9.9' === $r['agents_latest'] && 0 === $r['update'], $r );
+	$stt = LNH_Control::status();
+	t( 'outdated agents that can update are flagged', true === $stt['agents']['outdated'] && true === $stt['agents']['can_update'] && false === $stt['agents']['pending'], $stt['agents'] );
+	LNH_Control::sync( array( 'status' => 'idle', 'version' => '9.9.9', 'can_update' => true ) );
+	t( 'agents on the latest version are not flagged', false === LNH_Control::status()['agents']['outdated'] );
+	LNH_Control::sync( array( 'status' => 'idle', 'version' => '1.0.0', 'can_update' => false ) );
+	ob_start();
+	LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
+	$old_html = ob_get_clean();
+	t( 'old agents that cannot update: asks for one fresh download', 'old' === ( LNH_Control::status()['agents']['can_update'] ? '' : 'old' ) && false !== strpos( $old_html, 'cannot update themselves' ) && false !== strpos( $old_html, 'data-update="old"' ) && false === strpos( $old_html, 'data-lnh-do="update_agents"' ) );
+	LNH_Control::sync( array( 'status' => 'idle', 'version' => '1.0.0', 'can_update' => true ) );
+	ob_start();
+	LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
+	$av_html = ob_get_clean();
+	t( 'agents that can update get the Update button', false !== strpos( $av_html, 'data-lnh-do="update_agents"' ) && false !== strpos( $av_html, 'data-update="available"' ) && false !== strpos( $av_html, '9.9.9' ) );
+	LNH_Control::apply( 'update_agents', $admin );
+	$req = LNH_Control::desired()['update'];
+	t( 'pressing Update queues exactly one request for the worker', $req > 0 && $req === LNH_Control::sync( array( 'status' => 'idle', 'version' => '1.0.0', 'can_update' => true ) )['update'] && true === LNH_Control::status()['agents']['pending'] );
+	ob_start();
+	LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
+	t( 'while pending the card says it is updating', false !== strpos( ob_get_clean(), 'Updating the agents' ) );
+	t( 'an older confirmation does not clear it, the right one does', $req === LNH_Control::sync( array( 'status' => 'idle', 'handled_update' => $req - 3 ) )['update'] && 0 === LNH_Control::sync( array( 'status' => 'stopped', 'handled_update' => $req, 'update_note' => 'Actualizado a 9.9.9' ) )['update'] && false === LNH_Control::status()['agents']['pending'] );
+	delete_option( LNH_Control::STATE_OPTION );
+	delete_option( LNH_Control::WORKER_OPTION );
+}
 if ( ! $had_bundle ) {
 	$rm = function ( $d ) use ( &$rm ) {
 		foreach ( array_diff( scandir( $d ), array( '.', '..' ) ) as $f ) {

@@ -472,4 +472,12 @@ T = {
     'Manual setup for technical users': 'Configuración manual para usuarios técnicos',
     'This site does not use HTTPS, so WordPress Application Passwords are off. No problem: the plugin creates its own private connection key for the agents instead. (Enabling HTTPS is still recommended: it encrypts the connection.)': 'Este sitio no usa HTTPS, por eso WordPress tiene desactivadas las contraseñas de aplicación. No hay problema: el plugin crea su propia clave de conexión privada para los agentes. (Activar HTTPS sigue siendo lo recomendable: cifra la conexión.)',
     'We create a dedicated “Lehigh Agents” account with the Author role and a private connection password, and give you the two lines your agents need. Nothing is stored in plain text.': 'Creamos una cuenta «Lehigh Agents» con rol de Autor y una contraseña de conexión privada, y te damos las dos líneas que necesitan tus agentes. No se guarda nada en texto plano.',
+    'Update requested: the agents will download the new version and restart in a few seconds.': 'Actualización pedida: los agentes descargarán la versión nueva y se reiniciarán en unos segundos.',
+    'Updating the agents…': 'Actualizando los agentes…',
+    'They download the new version from this site and restart by themselves in a few seconds.': 'Descargan la versión nueva desde este sitio y se reinician solos en unos segundos.',
+    'New version of the agents: you have %1$s, the latest is %2$s.': 'Hay una versión nueva de los agentes: tienes la %1$s y la última es la %2$s.',
+    'Updates fix problems such as retired Gemini models. Your settings and keys are kept.': 'Las actualizaciones corrigen problemas como los modelos de Gemini retirados. Tu configuración y tus claves se conservan.',
+    'Update the agents': 'Actualizar los agentes',
+    'Your agents are version %1$s and the plugin includes %2$s.': 'Tus agentes son la versión %1$s y el plugin incluye la %2$s.',
+    'These older agents cannot update themselves: download them once more (they keep nothing important in the folder) and open INICIAR. From then on they update with one button.': 'Estos agentes antiguos no pueden actualizarse solos: descárgalos una vez más (no guardan nada importante en la carpeta) y abre INICIAR. Desde entonces se actualizan con un botón.',
 }

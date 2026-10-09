@@ -16,7 +16,7 @@ class FakeControl:
         self.calls = []
         self.lock = threading.Lock()
 
-    def sync(self, status, message="", next_run_at=0, last_run_at=0, handled_run_now=0, agent=""):
+    def sync(self, status, message="", next_run_at=0, last_run_at=0, handled_run_now=0, agent="", handled_update=0, update_note=""):
         with self.lock:
             self.calls.append({"status": status, "message": message, "handled": handled_run_now, "agent": agent})
             return self.desired

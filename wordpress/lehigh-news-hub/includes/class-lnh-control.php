@@ -31,6 +31,7 @@ final class LNH_Control {
 			// Safe default: nothing runs (and no API money is spent) until someone presses Start.
 			'state'   => ( 'running' === ( $o['state'] ?? '' ) ) ? 'running' : 'paused',
 			'run_now' => absint( $o['run_now'] ?? 0 ),
+			'update'  => absint( $o['update'] ?? 0 ), // timestamp of a pending "update the agents" request
 			'by'      => absint( $o['by'] ?? 0 ),
 			'at'      => absint( $o['at'] ?? 0 ),
 		);
@@ -54,6 +55,9 @@ final class LNH_Control {
 			case 'run_now':
 				$d['state']   = 'running'; // "run now" implies the agents should be working.
 				$d['run_now'] = time();
+				break;
+			case 'update_agents':
+				$d['update'] = time(); // the worker fetches the new code from this site when it next syncs
 				break;
 			default:
 				return false;
@@ -86,6 +90,8 @@ final class LNH_Control {
 			'agent'       => in_array( $w['agent'] ?? '', self::AGENTS, true ) ? $w['agent'] : '',
 			'host'        => (string) ( $w['host'] ?? '' ),
 			'version'     => (string) ( $w['version'] ?? '' ),
+			'can_update'  => ! empty( $w['can_update'] ),
+			'update_note' => (string) ( $w['update_note'] ?? '' ),
 			'next_run_at' => absint( $w['next_run_at'] ?? 0 ),
 			'last_run_at' => absint( $w['last_run_at'] ?? 0 ),
 		);
@@ -110,6 +116,8 @@ final class LNH_Control {
 				'agent'       => in_array( $in['agent'] ?? '', self::AGENTS, true ) ? $in['agent'] : '',
 				'host'        => $clip( $in['host'] ?? '', 80 ),
 				'version'     => $clip( $in['version'] ?? '', 20 ),
+				'can_update'  => LNH_Util::to_bool( $in['can_update'] ?? false ),
+				'update_note' => $clip( $in['update_note'] ?? '', 200 ),
 				'next_run_at' => absint( $in['next_run_at'] ?? 0 ),
 				'last_run_at' => absint( $in['last_run_at'] ?? 0 ),
 			),
@@ -122,9 +130,16 @@ final class LNH_Control {
 			$d['run_now'] = 0;
 			update_option( self::STATE_OPTION, $d, false );
 		}
+		$done = absint( $in['handled_update'] ?? 0 );
+		if ( $done && $done === $d['update'] ) {
+			$d['update'] = 0;
+			update_option( self::STATE_OPTION, $d, false );
+		}
 		return array(
 			'state'            => $d['state'],
 			'run_now'          => $d['run_now'],
+			'update'           => $d['update'],
+			'agents_latest'    => LNH_Package::bundle_version(),
 			'interval_minutes' => self::interval_minutes(),
 			'server_time'      => time(),
 		);
@@ -152,7 +167,17 @@ final class LNH_Control {
 			'working' => __( 'Working now', 'lehigh-news-hub' ),
 			'waiting' => __( 'Running – waiting for the next cycle', 'lehigh-news-hub' ),
 		);
+		$latest   = LNH_Package::bundle_version();
+		$outdated = $w['connected'] && '' !== $latest && '' !== $w['version'] && version_compare( $w['version'], $latest, '<' );
 		return array(
+			'agents'     => array(
+				'version'  => $w['version'],
+				'latest'   => $latest,
+				'outdated' => $outdated,
+				'can_update' => $w['can_update'],
+				'pending'  => $d['update'] > 0,
+				'note'     => $w['update_note'],
+			),
 			'state'      => $d['state'],
 			'phase'      => $phase,
 			'label'      => $labels[ $phase ],
@@ -172,7 +197,7 @@ final class LNH_Control {
 		check_admin_referer( 'lnh_control' );
 		$action = isset( $_POST['lnh_do'] ) ? sanitize_key( wp_unslash( $_POST['lnh_do'] ) ) : '';
 		$ok     = self::apply( $action );
-		$codes  = array( 'start' => 'agents_started', 'pause' => 'agents_paused', 'run_now' => 'agents_run_now' );
+		$codes  = array( 'start' => 'agents_started', 'pause' => 'agents_paused', 'run_now' => 'agents_run_now', 'update_agents' => 'agents_updating' );
 		$back   = isset( $_POST['_back'] ) ? esc_url_raw( wp_unslash( $_POST['_back'] ) ) : '';
 		$back   = wp_validate_redirect( $back, admin_url( 'admin.php?page=lnh' ) );
 		wp_safe_redirect( add_query_arg( 'lnh_notice', $ok ? $codes[ $action ] : 'error', remove_query_arg( array( 'lnh_notice', 'lnh_n' ), $back ) ) );

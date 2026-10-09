@@ -214,7 +214,11 @@ def main(argv: list[str] | None = None) -> int:
         control = Control(WordPressClient(s.wp_rest_url, s.wp_auth_token))   # its own HTTP session: it runs in a heartbeat thread
         print("Agentes en marcha. Conectados a WordPress: usa «Iniciar a trabajar» / «Pausar» en el panel de News Hub "
               "(si no tienes el plugin, trabajan solos cada %d min). Ctrl+C para salir." % s.interval_minutes)
-    Worker(pipe, control, s.interval_minutes, stop).run()
+    from . import updater
+
+    wp_ctl = control.wp if control is not None else None
+    Worker(pipe, control, s.interval_minutes, stop,
+           updater=(lambda: updater.update_from_hub(wp_ctl)) if wp_ctl is not None else None, restart=updater.restart).run()
     return 0
 
 

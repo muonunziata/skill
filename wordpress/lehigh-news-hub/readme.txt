@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.5 =
+* One-button agent updates: when the agents on your computer are older than the plugin, the dashboard shows “Update the agents”. The agents download the new code from this site, keep their .env/keys and logs, reinstall libraries if needed and restart by themselves. (Agents older than 1.5.5 must be downloaded once more; from then on they update with the button.)
 
 = 1.5.4 =
 * Fixes “Gemini model gemini-2.5-flash was not found”: Google retires model names every few months, so the agents now default to `auto` (the newest Gemini Flash the API serves) and, if a pinned name disappears, switch by themselves to a served model (text, image and voice models) and say so in the log. The downloaded package is configured with `auto`.

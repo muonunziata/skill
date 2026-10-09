@@ -28,6 +28,15 @@ final class LNH_Package {
 		return is_file( self::bundle_dir() . '/main.py' ) && is_dir( self::bundle_dir() . '/lehigh_agents' ) && class_exists( 'ZipArchive' );
 	}
 
+	/** Version of the bundled agents ('' when this copy of the plugin does not include them). */
+	public static function bundle_version(): string {
+		$f = self::bundle_dir() . '/lehigh_agents/__init__.py';
+		if ( is_readable( $f ) && preg_match( '/__version__\s*=\s*"([0-9][0-9A-Za-z.\-]*)"/', (string) file_get_contents( $f ), $m ) ) {
+			return $m[1];
+		}
+		return '';
+	}
+
 	// ---------------------------------------------------------------- .env
 
 	/** One .env line, quoted only when needed. */
@@ -137,6 +146,20 @@ final class LNH_Package {
 				$zip->setExternalAttributesName( self::FOLDER . '/' . $name, ZipArchive::OPSYS_UNIX, $mode << 16 );
 			}
 		};
+		self::add_bundle( $zip, $add );
+		$zip->addFromString( self::FOLDER . '/.env', $env );
+		$add( '.env', 0100600 );
+		$zip->addFromString( self::FOLDER . '/LEEME.txt', self::readme( true ) . "\n----\n\n" . self::readme( false ) );
+		$add( 'LEEME.txt', 0100644 );
+		if ( ! $zip->close() ) {
+			return new WP_Error( 'lnh_pkg_zip', __( 'Could not create the archive.', 'lehigh-news-hub' ) );
+		}
+		return array( 'path' => $tmp, 'filename' => self::FOLDER . '.zip', 'user' => $creds['user'] );
+	}
+
+	/** Add every shipped file of the agents (not .env, state, tests...) to the archive, keeping executable bits. */
+	private static function add_bundle( ZipArchive $zip, callable $add ): void {
+		$base = self::bundle_dir();
 		$it = new RecursiveIteratorIterator(
 			new RecursiveCallbackFilterIterator(
 				new RecursiveDirectoryIterator( $base, FilesystemIterator::SKIP_DOTS ),
@@ -153,14 +176,51 @@ final class LNH_Package {
 			$zip->addFile( $file->getPathname(), self::FOLDER . '/' . $rel );
 			$add( $rel, preg_match( '/\.(sh|command)$/', $rel ) ? 0100755 : 0100644 );
 		}
-		$zip->addFromString( self::FOLDER . '/.env', $env );
-		$add( '.env', 0100600 );
-		$zip->addFromString( self::FOLDER . '/LEEME.txt', self::readme( true ) . "\n----\n\n" . self::readme( false ) );
-		$add( 'LEEME.txt', 0100644 );
-		if ( ! $zip->close() ) {
+	}
+
+	/**
+	 * The agents' code only (no .env, no credentials): what a connected worker downloads when an editor presses "Update agents".
+	 *
+	 * @return string|WP_Error Path of a temporary ZIP file.
+	 */
+	public static function code_zip() {
+		if ( ! self::available() ) {
+			return new WP_Error( 'lnh_pkg_unavailable', __( 'This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server.', 'lehigh-news-hub' ) );
+		}
+		if ( ! function_exists( 'wp_tempnam' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		$tmp = wp_tempnam( 'lnh-agents-code' );
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $tmp, ZipArchive::CREATE | ZipArchive::OVERWRITE ) ) {
 			return new WP_Error( 'lnh_pkg_zip', __( 'Could not create the archive.', 'lehigh-news-hub' ) );
 		}
-		return array( 'path' => $tmp, 'filename' => self::FOLDER . '.zip', 'user' => $creds['user'] );
+		$unix = defined( 'ZipArchive::OPSYS_UNIX' );
+		self::add_bundle(
+			$zip,
+			function ( string $name, int $mode ) use ( $zip, $unix ) {
+				if ( $unix ) {
+					$zip->setExternalAttributesName( self::FOLDER . '/' . $name, ZipArchive::OPSYS_UNIX, $mode << 16 );
+				}
+			}
+		);
+		return $zip->close() ? $tmp : new WP_Error( 'lnh_pkg_zip', __( 'Could not create the archive.', 'lehigh-news-hub' ) );
+	}
+
+	/** REST callback body: stream the code archive to an authenticated agent. */
+	public static function serve_code(): void {
+		$tmp = self::code_zip();
+		if ( is_wp_error( $tmp ) ) {
+			status_header( 404 );
+			wp_send_json( array( 'code' => $tmp->get_error_code(), 'message' => $tmp->get_error_message() ) );
+		}
+		nocache_headers();
+		header( 'Content-Type: application/zip' );
+		header( 'Content-Length: ' . filesize( $tmp ) );
+		header( 'X-Lehigh-Agents-Version: ' . self::bundle_version() );
+		readfile( $tmp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		wp_delete_file( $tmp );
+		exit;
 	}
 
 	// ---------------------------------------------------------------- admin-post

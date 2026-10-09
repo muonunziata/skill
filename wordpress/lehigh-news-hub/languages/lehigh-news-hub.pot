@@ -276,94 +276,98 @@ msgid "The agents are paused. They finish the article in progress and then stop.
 msgstr ""
 
 #: includes/class-lnh-admin.php:205
-msgid "A run was requested: the agents will start within seconds."
+msgid "Update requested: the agents will download the new version and restart in a few seconds."
 msgstr ""
 
 #: includes/class-lnh-admin.php:206
-msgid "Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey)."
+msgid "A run was requested: the agents will start within seconds."
 msgstr ""
 
 #: includes/class-lnh-admin.php:207
-msgid "Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey."
+msgid "Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey)."
 msgstr ""
 
 #: includes/class-lnh-admin.php:208
-msgid "This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead."
+msgid "Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey."
 msgstr ""
 
 #: includes/class-lnh-admin.php:209
-msgid "The agents package could not be created. Check that Application Passwords are available on this site."
+msgid "This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead."
 msgstr ""
 
 #: includes/class-lnh-admin.php:210
-msgid "Something went wrong. Nothing was changed."
+msgid "The agents package could not be created. Check that Application Passwords are available on this site."
 msgstr ""
 
 #: includes/class-lnh-admin.php:211
+msgid "Something went wrong. Nothing was changed."
+msgstr ""
+
+#: includes/class-lnh-admin.php:212
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:239
+#: includes/class-lnh-admin.php:240
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:274
+#: includes/class-lnh-admin.php:275
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:291
+#: includes/class-lnh-admin.php:292
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:291
+#: includes/class-lnh-admin.php:292
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:302
+#: includes/class-lnh-admin.php:303
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:347
+#: includes/class-lnh-admin.php:348
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:373
+#: includes/class-lnh-admin.php:374
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:390
+#: includes/class-lnh-admin.php:391
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:516
+#: includes/class-lnh-admin.php:517
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:525
+#: includes/class-lnh-admin.php:526
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:538
+#: includes/class-lnh-admin.php:539
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:546
+#: includes/class-lnh-admin.php:547
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:546
+#: includes/class-lnh-admin.php:547
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:563
+#: includes/class-lnh-admin.php:564
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:568
+#: includes/class-lnh-admin.php:569
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:569
+#: includes/class-lnh-admin.php:570
 msgid "Flagged"
 msgstr ""
 
@@ -411,23 +415,23 @@ msgstr ""
 msgid "Lehigh agents – %s"
 msgstr ""
 
-#: includes/class-lnh-control.php:150
+#: includes/class-lnh-control.php:165
 msgid "Pausing after the current article…"
 msgstr ""
 
-#: includes/class-lnh-control.php:151
+#: includes/class-lnh-control.php:166
 msgid "Waiting for the agents to connect"
 msgstr ""
 
-#: includes/class-lnh-control.php:152
+#: includes/class-lnh-control.php:167
 msgid "Working now"
 msgstr ""
 
-#: includes/class-lnh-control.php:153
+#: includes/class-lnh-control.php:168
 msgid "Running – waiting for the next cycle"
 msgstr ""
 
-#: includes/class-lnh-control.php:170
+#: includes/class-lnh-control.php:195
 msgid "You are not allowed to do this."
 msgstr ""
 
@@ -439,11 +443,11 @@ msgstr ""
 msgid "How we work"
 msgstr ""
 
-#: includes/class-lnh-package.php:117
+#: includes/class-lnh-package.php:126
 msgid "This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server."
 msgstr ""
 
-#: includes/class-lnh-package.php:132
+#: includes/class-lnh-package.php:141
 msgid "Could not create the archive."
 msgstr ""
 
@@ -499,11 +503,11 @@ msgstr ""
 msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
 msgstr ""
 
-#: includes/class-lnh-rest.php:104
+#: includes/class-lnh-rest.php:113
 msgid "The run report is missing run_id."
 msgstr ""
 
-#: includes/class-lnh-rest.php:141
+#: includes/class-lnh-rest.php:150
 msgid "Unknown action. Use start, pause or run_now."
 msgstr ""
 
@@ -1249,47 +1253,75 @@ msgstr ""
 msgid "Generate agent credentials"
 msgstr ""
 
-#: views/control.php:21
+#: views/control.php:23
 msgid "a run was requested"
 msgstr ""
 
-#: views/control.php:42
+#: views/control.php:44
 msgid "Agents disconnected · last seen %s"
 msgstr ""
 
-#: views/control.php:44
+#: views/control.php:46
 msgid "The agents have not connected yet."
 msgstr ""
 
-#: views/control.php:52
+#: views/control.php:54
 msgid "Run now"
 msgstr ""
 
-#: views/control.php:53
+#: views/control.php:55
 msgid "Pause"
 msgstr ""
 
-#: views/control.php:55
+#: views/control.php:57
 msgid "Start working"
 msgstr ""
 
-#: views/control.php:73
-msgid "The agents are not connected yet."
-msgstr ""
-
-#: views/control.php:74
-msgid "The buttons control the agents, but the agents run on a computer: download them already configured for this site and double-click INICIAR."
-msgstr ""
-
-#: views/control.php:75
-msgid "Set up my agents (2 minutes)"
+#: views/control.php:76
+msgid "Updating the agents…"
 msgstr ""
 
 #: views/control.php:76
-msgid "Already downloaded them? Open INICIAR.bat (Windows) or INICIAR.command (Mac) and leave the window open."
+msgid "They download the new version from this site and restart by themselves in a few seconds."
 msgstr ""
 
 #: views/control.php:79
+msgid "New version of the agents: you have %1$s, the latest is %2$s."
+msgstr ""
+
+#: views/control.php:80
+msgid "Updates fix problems such as retired Gemini models. Your settings and keys are kept."
+msgstr ""
+
+#: views/control.php:82
+msgid "Update the agents"
+msgstr ""
+
+#: views/control.php:84
+msgid "Your agents are version %1$s and the plugin includes %2$s."
+msgstr ""
+
+#: views/control.php:85
+msgid "These older agents cannot update themselves: download them once more (they keep nothing important in the folder) and open INICIAR. From then on they update with one button."
+msgstr ""
+
+#: views/control.php:86
+msgid "Set up my agents (2 minutes)"
+msgstr ""
+
+#: views/control.php:92
+msgid "The agents are not connected yet."
+msgstr ""
+
+#: views/control.php:93
+msgid "The buttons control the agents, but the agents run on a computer: download them already configured for this site and double-click INICIAR."
+msgstr ""
+
+#: views/control.php:95
+msgid "Already downloaded them? Open INICIAR.bat (Windows) or INICIAR.command (Mac) and leave the window open."
+msgstr ""
+
+#: views/control.php:98
 msgid "Pausing never cuts an article in half: the agents finish the one in progress, then wait until you press Start."
 msgstr ""
 

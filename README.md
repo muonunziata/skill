@@ -75,6 +75,8 @@ Crea el entorno de Python, instala las dependencias y arranca **`python main.py 
 Después `python main.py run --dry-run` hace una prueba completa sin escribir en WordPress, y `./start.sh` (`start.bat`) deja los agentes trabajando. Para dejarlos como servicio (siempre conectados al botón de WordPress): `agents/Dockerfile` + `docker-compose.yml`, o `agents/deploy/lehigh-agents.service` (systemd). El asistente también funciona sin preguntas: `python main.py setup --non-interactive --gemini-key … --site …`.
 </details>
 
+**Actualizar los agentes:** cuando subas una versión nueva del plugin, el panel avisa «Hay una versión nueva de los agentes» y muestra el botón **⬆ Actualizar los agentes**. Los agentes descargan el código nuevo desde tu sitio, conservan su `.env`/claves/registros, reinstalan librerías si hace falta y **se reinician solos** (solo un administrador puede pulsarlo). Los agentes anteriores a la 1.5.5 no pueden actualizarse solos: se descargan una vez más.
+
 ### 3 · ¿Sin computador encendido? Agentes en GitHub (opcional)
 Si no quieres dejar un computador encendido, `.github/workflows/agents.yml` ejecuta los agentes en los servidores de GitHub (ver «Claude Code y GitHub» más abajo).
 
@@ -153,9 +155,9 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       131 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       145 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      162 comprobaciones dentro de WordPress
+wordpress/tests/run.php      173 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
 plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes

@@ -71,6 +71,16 @@ class WordPressClient:
         except ValueError:
             return {}
 
+    def get_bytes(self, path: str, timeout: float = 120) -> bytes:
+        """GET a binary resource (the agents' code archive)."""
+        try:
+            r = self.http.get(self.root + path, headers=self.headers, timeout=timeout)
+        except requests.RequestException as exc:
+            raise WPError(f"GET {path} failed: {exc}") from exc
+        if r.status_code >= 400:
+            raise WPError(f"GET {path} -> HTTP {r.status_code}", r.status_code)
+        return r.content
+
     # ───────────────────────── diagnostics ─────────────────────────
     def whoami(self) -> dict[str, Any]:
         return self._req("GET", "/wp/v2/users/me?context=edit")

@@ -202,6 +202,7 @@ final class LNH_Admin {
 			'preset_deleted' => __( 'Preset deleted.', 'lehigh-news-hub' ),
 			'agents_started' => __( 'The agents will start working as soon as they connect.', 'lehigh-news-hub' ),
 			'agents_paused'  => __( 'The agents are paused. They finish the article in progress and then stop.', 'lehigh-news-hub' ),
+			'agents_updating' => __( 'Update requested: the agents will download the new version and restart in a few seconds.', 'lehigh-news-hub' ),
 			'agents_run_now' => __( 'A run was requested: the agents will start within seconds.', 'lehigh-news-hub' ),
 			'pkg_key'         => __( 'Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey).', 'lehigh-news-hub' ),
 			'pkg_rejected'    => __( 'Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey.', 'lehigh-news-hub' ),

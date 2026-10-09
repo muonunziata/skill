@@ -85,7 +85,8 @@
 					if (!d) { return; }
 					var connected = d.worker && d.worker.connected ? '1' : '0';
 					// Buttons and the help block depend on these: re-render the page instead of patching them.
-					if (d.state !== ctl.getAttribute('data-state') || connected !== ctl.getAttribute('data-connected')) { window.location.reload(); return; }
+					var upd = d.agents ? (d.agents.pending ? 'pending' : (connected === '1' && d.agents.outdated ? (d.agents.can_update ? 'available' : 'old') : 'none')) : 'none';
+					if (d.state !== ctl.getAttribute('data-state') || connected !== ctl.getAttribute('data-connected') || upd !== ctl.getAttribute('data-update')) { window.location.reload(); return; }
 					ctl.setAttribute('data-phase', d.phase);
 					ctl.className = ctl.className.replace(/lnh-control--\w+/, 'lnh-control--' + d.phase);
 					var ph = qs('[data-lnh-control-phase]', ctl), dt = qs('[data-lnh-control-detail]', ctl), wk = qs('[data-lnh-control-worker]', ctl);

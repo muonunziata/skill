@@ -16,7 +16,8 @@ log = logging.getLogger("lehigh.worker")
 
 class Worker:
     def __init__(self, pipeline, control: Control | None, interval_minutes: int, stop: threading.Event | None = None,
-                 tick: float = 15, heartbeat: float = 10, clock: Callable[[], float] = time.time):
+                 tick: float = 15, heartbeat: float = 10, clock: Callable[[], float] = time.time,
+                 updater: Callable[[], object] | None = None, restart: Callable[[], None] | None = None):
         self.pipeline = pipeline
         self.control = control
         self.interval_minutes = interval_minutes
@@ -27,6 +28,9 @@ class Worker:
         self._handled = 0
         self._next_run = 0.0       # 0 = run as soon as we are allowed to
         self._last_run = 0
+        self._updater, self._restart = updater, restart    # injectable: tests must not replace the process
+        self._handled_update = 0
+        self._update_note = ""
         self._message = ""
         self._agent = ""           # which agent emitted the latest event (drives the dashboard animation)
 
@@ -35,7 +39,8 @@ class Worker:
         if self.control is None:
             return self._desired
         d = self.control.sync(status, message, next_run_at=int(self._next_run), last_run_at=self._last_run,
-                              handled_run_now=self._handled, agent=self._agent if status == "working" else "")
+                              handled_run_now=self._handled, agent=self._agent if status == "working" else "",
+                              handled_update=self._handled_update, update_note=self._update_note)
         with self._lock:
             if d is not None:
                 self._desired = d
@@ -77,11 +82,35 @@ class Worker:
         self._next_run = self.clock() + self._interval()
         self._message, self._agent = "", ""
 
+    # ───────────────────────── self-update ─────────────────────────
+    def _maybe_update(self, d: Desired) -> None:
+        """The editor pressed "Update the agents": fetch the new code, install it and restart. Runs between cycles only."""
+        if not d.available or not d.update or d.update == self._handled_update or self._updater is None:
+            return
+        self._handled_update = d.update
+        self._update_note = "Descargando la nueva versión…"
+        self._sync("idle", "Actualizando los agentes…")
+        try:
+            result = self._updater()
+        except Exception as exc:  # noqa: BLE001 - a failed update must leave the old, working agents running
+            log.exception("update failed")
+            self._update_note = f"La actualización falló: {exc}"[:200]
+            self._sync("idle", "")
+            return
+        self._update_note = f"Actualizado a {getattr(result, 'version', '') or 'la última versión'}; reiniciando…"
+        self._sync("stopped", self._update_note)           # the hub confirms the request and shows "reconnecting"
+        if self._restart is not None:
+            self._restart()
+        self.stop.set()
+
     # ───────────────────────── main loop ─────────────────────────
     def run(self) -> None:
         try:
             while not self.stop.is_set():
                 d = self._sync("idle", self._message)
+                self._maybe_update(d)
+                if self.stop.is_set():
+                    break
                 if d.paused:
                     self._next_run = 0                  # "Start working" must begin a run right away
                 else:

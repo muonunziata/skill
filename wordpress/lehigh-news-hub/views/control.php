@@ -8,6 +8,8 @@ $phase  = $control['phase'];
 $w      = $control['worker'];
 $dot    = array( 'working' => 'ok', 'waiting' => 'ok', 'paused' => 'paused', 'pausing' => 'late', 'offline' => 'late' )[ $phase ] ?? 'never';
 $detail = '';
+$ag     = $control['agents'];
+$upd    = $ag['pending'] ? 'pending' : ( $w['connected'] && $ag['outdated'] ? ( $ag['can_update'] ? 'available' : 'old' ) : 'none' );
 $order  = LNH_Control::AGENTS;
 $all    = LNH_Admin::agents();
 $active = array_search( $w['agent'], $order, true );
@@ -27,7 +29,7 @@ $btn = function ( string $do, string $label, string $class ) use ( $back ) {
 	echo '<button class="button ' . esc_attr( $class ) . '" data-lnh-do="' . esc_attr( $do ) . '">' . esc_html( $label ) . '</button></form>';
 };
 ?>
-<section class="lnh-card-box lnh-control lnh-control--<?php echo esc_attr( $phase ); ?>" data-lnh-control data-state="<?php echo esc_attr( $control['state'] ); ?>" data-phase="<?php echo esc_attr( $phase ); ?>" data-connected="<?php echo $w['connected'] ? '1' : '0'; ?>" data-active="<?php echo (int) $active; ?>">
+<section class="lnh-card-box lnh-control lnh-control--<?php echo esc_attr( $phase ); ?>" data-lnh-control data-state="<?php echo esc_attr( $control['state'] ); ?>" data-phase="<?php echo esc_attr( $phase ); ?>" data-connected="<?php echo $w['connected'] ? '1' : '0'; ?>" data-active="<?php echo (int) $active; ?>" data-update="<?php echo esc_attr( $upd ); ?>">
 	<div class="lnh-control__main">
 		<span class="lnh-dot lnh-dot--<?php echo esc_attr( $dot ); ?>" data-lnh-control-dot></span>
 		<div>
@@ -68,6 +70,23 @@ $btn = function ( string $do, string $label, string $class ) use ( $back ) {
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<?php if ( 'none' !== $upd ) : ?>
+		<div class="lnh-control__update">
+			<?php if ( $ag['pending'] ) : ?>
+				<p><strong>⬆ <?php esc_html_e( 'Updating the agents…', 'lehigh-news-hub' ); ?></strong> <?php esc_html_e( 'They download the new version from this site and restart by themselves in a few seconds.', 'lehigh-news-hub' ); ?>
+					<?php echo $ag['note'] ? '<span class="lnh-muted">' . esc_html( $ag['note'] ) . '</span>' : ''; ?></p>
+			<?php elseif ( $ag['can_update'] ) : ?>
+				<p><strong>⬆ <?php echo esc_html( sprintf( /* translators: 1: installed version, 2: new version */ __( 'New version of the agents: you have %1$s, the latest is %2$s.', 'lehigh-news-hub' ), $ag['version'], $ag['latest'] ) ); ?></strong>
+					<?php esc_html_e( 'Updates fix problems such as retired Gemini models. Your settings and keys are kept.', 'lehigh-news-hub' ); ?>
+					<?php echo $ag['note'] ? '<span class="lnh-muted">' . esc_html( $ag['note'] ) . '</span>' : ''; ?></p>
+				<?php $btn( 'update_agents', '⬆ ' . __( 'Update the agents', 'lehigh-news-hub' ), 'button-primary' ); ?>
+			<?php else : ?>
+				<p><strong>⚠ <?php echo esc_html( sprintf( /* translators: 1: installed version, 2: new version */ __( 'Your agents are version %1$s and the plugin includes %2$s.', 'lehigh-news-hub' ), $ag['version'], $ag['latest'] ) ); ?></strong>
+					<?php esc_html_e( 'These older agents cannot update themselves: download them once more (they keep nothing important in the folder) and open INICIAR. From then on they update with one button.', 'lehigh-news-hub' ); ?>
+					<?php if ( current_user_can( 'manage_options' ) ) : ?><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Set up my agents (2 minutes)', 'lehigh-news-hub' ); ?></a><?php endif; ?></p>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 	<?php if ( ! $w['connected'] ) : ?>
 		<div class="lnh-control__help">
 			<p><strong><?php esc_html_e( 'The agents are not connected yet.', 'lehigh-news-hub' ); ?></strong>

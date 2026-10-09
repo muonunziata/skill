@@ -28,6 +28,7 @@ python main.py social --post 123 [--no-video] [--formats instagram,tiktok] [--dr
 | `wordpress.py` | Cliente REST (entradas, medios, etiquetas, informe de ejecución). |
 | `checks.py` | Comprobaciones deterministas: enlaces, HTML, cifras, copia literal. |
 | `control.py` · `worker.py` | Botón **Iniciar / Pausar** del plugin: `watch` es un trabajador que cada ~15 s hace `POST /lnh/v1/control/sync` (reporta su estado y progreso en vivo, recibe *running/paused*, «ejecutar ahora» e intervalo). Pausar detiene entre noticias, nunca a mitad de un artículo. Sin plugin o con `--no-control` funciona como planificador simple. |
+| `updater.py` | Botón «Actualizar los agentes» del plugin: `worker` descarga el código (`GET /lnh/v1/agents/package`), valida el zip (sin rutas peligrosas, estructura esperada), lo copia sin tocar `.env`, `.venv`, `state` ni logs, reinstala librerías si cambió `requirements.txt` y se reinicia. |
 | `pipeline.py` | Orquesta una ejecución, el bucle de corrección y la limpieza. |
 | `net.py` | Descargas con protección SSRF. |
 | `store.py` | Memoria SQLite anti-duplicados. |

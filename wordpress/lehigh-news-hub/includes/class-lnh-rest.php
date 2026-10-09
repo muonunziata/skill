@@ -48,6 +48,15 @@ final class LNH_Rest {
 		);
 		register_rest_route(
 			'lnh/v1',
+			'/agents/package',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( 'LNH_Package', 'serve_code' ),
+				'permission_callback' => array( __CLASS__, 'can_post' ),
+			)
+		);
+		register_rest_route(
+			'lnh/v1',
 			'/control',
 			array(
 				array(

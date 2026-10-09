@@ -19,6 +19,8 @@ class Desired:
     state: str = "running"      # running | paused
     run_now: int = 0            # timestamp of a pending "Run now" click, 0 = none
     interval_minutes: int = 0   # 0 = use LOOP_INTERVAL_MINUTES
+    update: int = 0             # timestamp of a pending "Update the agents" click, 0 = none
+    agents_latest: str = ""     # version of the agents bundled in the plugin
 
     @property
     def paused(self) -> bool:
@@ -31,11 +33,13 @@ class Control:
         self.host = (host or socket.gethostname() or "agents")[:80]
 
     def sync(self, status: str, message: str = "", next_run_at: int = 0, last_run_at: int = 0,
-             handled_run_now: int = 0, agent: str = "") -> Desired | None:
+             handled_run_now: int = 0, agent: str = "",
+             handled_update: int = 0, update_note: str = "") -> Desired | None:
         """Report our status, receive the desired state. None = temporary problem (keep the last known state)."""
         payload: dict[str, Any] = {"status": status, "message": message[:200], "host": self.host, "version": __version__,
                                    "next_run_at": int(next_run_at), "last_run_at": int(last_run_at),
-                                   "handled_run_now": int(handled_run_now), "agent": agent}
+                                   "handled_run_now": int(handled_run_now), "agent": agent,
+                                   "can_update": True, "handled_update": int(handled_update), "update_note": update_note[:200]}
         try:
             data = self.wp._req("POST", "/lnh/v1/control/sync", json=payload)
         except WPError as exc:
@@ -46,4 +50,5 @@ class Control:
         if not isinstance(data, dict) or data.get("state") not in ("running", "paused"):
             return Desired(available=False)
         return Desired(available=True, state=data["state"], run_now=int(data.get("run_now") or 0),
-                       interval_minutes=int(data.get("interval_minutes") or 0))
+                       interval_minutes=int(data.get("interval_minutes") or 0), update=int(data.get("update") or 0),
+                       agents_latest=str(data.get("agents_latest") or ""))
