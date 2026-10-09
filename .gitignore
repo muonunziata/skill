@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+agents/state/
+agents/config.toml
+.env
+.DS_Store
+node_modules/
+wordpress/lehigh-news-hub/languages/*.po~

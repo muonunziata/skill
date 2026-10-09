@@ -1,0 +1,139 @@
+/* Lehigh News Hub – admin behaviour. No dependencies. */
+(function () {
+	'use strict';
+	var L = window.LNH || { i18n: {} };
+
+	function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
+	function qsa(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+	function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+
+	/* ---------- copy buttons ---------- */
+	function copy(text, btn) {
+		var done = function () {
+			if (!btn) { return; }
+			var old = btn.textContent;
+			btn.textContent = L.i18n.copied || 'Copied!';
+			setTimeout(function () { btn.textContent = old; }, 1500);
+		};
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(text).then(done, done);
+		} else {
+			var ta = document.createElement('textarea');
+			ta.value = text; document.body.appendChild(ta); ta.select();
+			try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+			document.body.removeChild(ta); done();
+		}
+	}
+	document.addEventListener('click', function (e) {
+		var b = e.target.closest('[data-lnh-copy],[data-lnh-copy-target],[data-lnh-copy-text]');
+		if (!b) { return; }
+		var text = b.getAttribute('data-lnh-copy-text');
+		if (text == null) {
+			var target = b.getAttribute('data-lnh-copy-target');
+			var el = target ? qs(target) : b.parentNode.querySelector('pre');
+			text = el ? el.textContent : '';
+		}
+		copy(text, b);
+	});
+
+	/* ---------- confirmations ---------- */
+	document.addEventListener('click', function (e) {
+		var b = e.target.closest('[data-confirm]');
+		if (!b) { return; }
+		var msg = b.getAttribute('data-confirm') === 'delete' ? L.i18n.confirmDelete : L.i18n.confirmReject;
+		if (msg && !window.confirm(msg)) { e.preventDefault(); }
+	});
+	qsa('[data-lnh-bulk]').forEach(function (btn) {
+		btn.addEventListener('click', function (e) {
+			var sel = btn.form.querySelector('[name=bulk_action]');
+			var opt = sel.options[sel.selectedIndex];
+			if (!sel.value) { e.preventDefault(); return; }
+			var c = opt.getAttribute('data-confirm');
+			if (c && !window.confirm(c === 'delete' ? L.i18n.confirmDelete : L.i18n.confirmReject)) { e.preventDefault(); }
+		});
+	});
+
+	/* ---------- select all ---------- */
+	var all = qs('[data-lnh-all]');
+	if (all) {
+		all.addEventListener('change', function () {
+			qsa('input[name="post[]"]', all.form).forEach(function (c) { c.checked = all.checked; });
+		});
+	}
+
+	/* ---------- live feed ---------- */
+	var feed = qs('[data-lnh-feed]');
+	if (feed) {
+		var agentSel = qs('[data-lnh-feed-agent]');
+		var liveBox = qs('[data-lnh-live]');
+		var icons = { rastreador: '🔎', redactor: '✍️', auditor: '🛡️', pipeline: '⚙️' };
+		var labels = { rastreador: 'Researcher', redactor: 'Writer', auditor: 'Auditor', pipeline: 'Coordinator' };
+		var ago = function (ts) {
+			var s = Math.max(0, Math.round(Date.now() / 1000 - ts));
+			if (s < 60) { return s + 's'; } if (s < 3600) { return Math.round(s / 60) + 'm'; }
+			if (s < 86400) { return Math.round(s / 3600) + 'h'; } return Math.round(s / 86400) + 'd';
+		};
+		var render = function (events) {
+			if (!events.length) { feed.innerHTML = '<li class="lnh-empty">' + esc(L.i18n.noEvents) + '</li>'; return; }
+			feed.innerHTML = events.map(function (ev) {
+				return '<li class="lnh-tl lnh-tl--' + esc(ev.level) + '" data-agent="' + esc(ev.agent) + '" data-ts="' + esc(ev.ts) + '">' +
+					'<span class="lnh-tl__ico" title="' + esc(labels[ev.agent] || ev.agent) + '">' + (icons[ev.agent] || '') + '</span>' +
+					'<div><span class="lnh-tl__type">' + esc(String(ev.type).replace(/_/g, ' ')) + '</span> <span class="lnh-tl__msg">' + esc(ev.message) + '</span>' +
+					' <span class="lnh-muted lnh-tl__time">' + esc(ago(ev.ts)) + ' ago</span></div></li>';
+			}).join('');
+		};
+		var poll = function () {
+			if (liveBox && !liveBox.checked) { return; }
+			var url = L.feedUrl + (L.feedUrl.indexOf('?') > -1 ? '&' : '?') + 'limit=60&agent=' + encodeURIComponent(agentSel ? agentSel.value : '');
+			fetch(url, { headers: { 'X-WP-Nonce': L.restNonce }, credentials: 'same-origin' })
+				.then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+				.then(render).catch(function () { /* keep the last render */ });
+		};
+		if (agentSel) { agentSel.addEventListener('change', poll); }
+		setInterval(poll, 15000);
+	}
+
+	/* ---------- shortcode builder ---------- */
+	var form = qs('#lnh-builder-form');
+	if (form) {
+		var out = qs('[data-lnh-shortcode]');
+		var preview = qs('[data-lnh-preview]');
+		var state = qs('[data-lnh-preview-state]');
+		var timer = null, seq = 0;
+		var refresh = function () {
+			var data = new FormData(form);
+			data.set('action', 'lnh_preview');
+			data.set('nonce', L.nonce);
+			data.delete('name'); data.delete('op'); data.delete('_wpnonce');
+			// multi-select categories arrive as repeated a_category[] values
+			var cats = data.getAll('a_category[]');
+			data.delete('a_category[]');
+			if (cats.length) { data.set('a_category', cats.join(',')); }
+			var my = ++seq;
+			if (state) { state.textContent = '…'; }
+			fetch(L.ajax, { method: 'POST', body: data, credentials: 'same-origin' })
+				.then(function (r) { return r.json(); })
+				.then(function (res) {
+					if (my !== seq) { return; }
+					if (!res || !res.success) { throw new Error('fail'); }
+					preview.innerHTML = res.data.html;
+					out.textContent = res.data.shortcode;
+					if (state) { state.textContent = ''; }
+				})
+				.catch(function () { if (state) { state.textContent = L.i18n.previewFail; } });
+		};
+		var schedule = function () { clearTimeout(timer); timer = setTimeout(refresh, 250); };
+		form.addEventListener('input', schedule);
+		form.addEventListener('change', schedule);
+		// preset save: send the multi-select as a CSV too
+		form.addEventListener('submit', function () {
+			var sel = form.querySelector('select[name="a_category[]"]');
+			if (sel) {
+				var vals = Array.prototype.filter.call(sel.options, function (o) { return o.selected; }).map(function (o) { return o.value; });
+				var h = document.createElement('input'); h.type = 'hidden'; h.name = 'a_category'; h.value = vals.join(',');
+				form.appendChild(h);
+			}
+		});
+		refresh();
+	}
+})();

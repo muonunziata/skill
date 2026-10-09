@@ -1,0 +1,53 @@
+=== Lehigh News Hub ===
+Contributors: lehighnewshub
+Tags: ai, news, editorial workflow, shortcode, latest posts
+Requires at least: 6.0
+Tested up to: 6.5
+Requires PHP: 7.4
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Editorial hub for AI news agents: review queue with audit scores, a live view of what each agent did, one-click publishing and a fully configurable latest-news shortcode.
+
+== Description ==
+
+Lehigh News Hub receives the articles written by an external team of AI agents (Researcher, Writer, Auditor) as ordinary WordPress drafts, together with the audit that was performed on them, and gives editors a professional place to decide what gets published.
+
+* **Review queue** – every agent article with its audit score, flags, source and featured image. Publish, schedule, reject or restore, one by one or in bulk.
+* **Article review screen** – preview, search-result preview, auditor notes, automatic checks (broken links, unsafe HTML, unsupported figures, copied text), source facts, the image prompt, and the agents' step-by-step timeline.
+* **Agent activity** – cards per agent, a seven-day pipeline funnel, a live feed, run history with token usage, and a detail page per run.
+* **Optional auto-publish** for approved articles above a score you choose; email notifications for new drafts.
+* **Transparency** – source line and AI disclosure on agent articles; AI-generated featured images are always labelled.
+* **Shortcode `[lehigh_news]`** with five layouts, 40+ options, presets, caching, pagination, light/dark/auto themes and a live **shortcode builder**.
+* English and Spanish interface.
+
+= Shortcode examples =
+
+`[lehigh_news]`
+`[lehigh_news layout="featured" count="5" heading="Latest news" more_link="/news"]`
+`[lehigh_news layout="compact" category="community" since="7 days" min_score="85" show_source="1"]`
+`[lehigh_news preset="homepage"]`
+
+== Installation ==
+
+1. Upload the plugin and activate it.
+2. Create an Application Password for the account the agents use (Users → Profile). An Author or Editor account is recommended.
+3. Put `WP_REST_URL` and `WP_AUTH_TOKEN` (`user:application password`) in the agents' `.env`.
+4. Open **News Hub** in the admin menu.
+
+== Frequently Asked Questions ==
+
+= Does it publish anything by itself? =
+No, unless you enable auto-publish in Settings. Agents create drafts; flagged articles are never auto-published.
+
+= Where do the audit data live? =
+In post meta keys starting with `lnh_` (visible through the REST API). They survive uninstalling the plugin.
+
+= Is the HTML sent by the agents trusted? =
+No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
+
+== Changelog ==
+
+= 1.0.0 =
+* First release.

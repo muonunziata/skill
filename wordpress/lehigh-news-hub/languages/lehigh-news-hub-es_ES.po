@@ -1,0 +1,1410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lehigh News Hub 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/muonunziata/skill/issues\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+""
+
+#: includes/class-lnh-admin.php:32
+msgid "News Hub"
+msgstr "News Hub"
+
+#: includes/class-lnh-admin.php:33
+msgid "Dashboard"
+msgstr "Panel"
+
+#: includes/class-lnh-admin.php:34
+msgid "Review queue"
+msgstr "Cola de revisión"
+
+#: includes/class-lnh-admin.php:35
+msgid "Agent activity"
+msgstr "Actividad de los agentes"
+
+#: includes/class-lnh-admin.php:36
+msgid "Shortcode builder"
+msgstr "Constructor de shortcode"
+
+#: includes/class-lnh-admin.php:37
+msgid "Settings"
+msgstr "Ajustes"
+
+#: includes/class-lnh-admin.php:39
+msgid "Review article"
+msgstr "Revisar artículo"
+
+#: includes/class-lnh-admin.php:72
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+#: includes/class-lnh-admin.php:73
+msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
+msgstr "¿Rechazar los artículos seleccionados? Pasan a la pestaña Rechazados y se pueden restaurar."
+
+#: includes/class-lnh-admin.php:74
+msgid "Delete permanently? This cannot be undone."
+msgstr "¿Eliminar definitivamente? Esta acción no se puede deshacer."
+
+#: includes/class-lnh-admin.php:75
+msgid "No activity yet."
+msgstr "Aún no hay actividad."
+
+#: includes/class-lnh-admin.php:76
+msgid "Live"
+msgstr "En vivo"
+
+#: includes/class-lnh-admin.php:77
+msgid "Paused"
+msgstr "En pausa"
+
+#: includes/class-lnh-admin.php:78
+msgid "Could not render the preview."
+msgstr "No se pudo generar la vista previa."
+
+#: includes/class-lnh-admin.php:100
+msgid "Researcher"
+msgstr "Investigador"
+
+#: includes/class-lnh-admin.php:100
+msgid "Searches the web and reads the sources"
+msgstr "Busca en la web y lee las fuentes"
+
+#: includes/class-lnh-admin.php:101
+msgid "Writer"
+msgstr "Redactor"
+
+#: includes/class-lnh-admin.php:101
+msgid "Writes the article and its featured image"
+msgstr "Escribe el artículo y su imagen destacada"
+
+#: includes/class-lnh-admin.php:102
+msgid "Auditor"
+msgstr "Auditor"
+
+#: includes/class-lnh-admin.php:102
+msgid "Fact-checks, then decides if it can be sent"
+msgstr "Verifica los hechos y decide si se puede enviar"
+
+#: includes/class-lnh-admin.php:103
+msgid "Coordinator"
+msgstr "Coordinador"
+
+#: includes/class-lnh-admin.php:103
+msgid "Runs the three agents in order"
+msgstr "Ejecuta los tres agentes en orden"
+
+#: includes/class-lnh-admin.php:109
+msgid "Run started"
+msgstr "Ejecución iniciada"
+
+#: includes/class-lnh-admin.php:110
+msgid "Run finished"
+msgstr "Ejecución terminada"
+
+#: includes/class-lnh-admin.php:111
+msgid "Working"
+msgstr "Trabajando"
+
+#: includes/class-lnh-admin.php:112
+msgid "Web search"
+msgstr "Búsqueda web"
+
+#: includes/class-lnh-admin.php:113
+msgid "Read a page"
+msgstr "Página leída"
+
+#: includes/class-lnh-admin.php:114
+msgid "Story found"
+msgstr "Noticia encontrada"
+
+#: includes/class-lnh-admin.php:115
+msgid "Skipped"
+msgstr "Omitida"
+
+#: includes/class-lnh-admin.php:116
+msgid "Draft written"
+msgstr "Borrador redactado"
+
+#: includes/class-lnh-admin.php:117
+msgid "Media"
+msgstr "Multimedia"
+
+#: includes/class-lnh-admin.php:118
+msgid "Image prompt"
+msgstr "Prompt de imagen"
+
+#: includes/class-lnh-admin.php:119
+msgid "Image generated"
+msgstr "Imagen generada"
+
+#: includes/class-lnh-admin.php:120
+msgid "Image attached"
+msgstr "Imagen adjuntada"
+
+#: includes/class-lnh-admin.php:121
+msgid "Automatic check"
+msgstr "Comprobación automática"
+
+#: includes/class-lnh-admin.php:122
+msgid "Audit result"
+msgstr "Resultado de la auditoría"
+
+#: includes/class-lnh-admin.php:123
+msgid "Sent to WordPress"
+msgstr "Enviado a WordPress"
+
+#: includes/class-lnh-admin.php:124
+msgid "Held back"
+msgstr "Retenido"
+
+#: includes/class-lnh-admin.php:125
+msgid "Cleanup"
+msgstr "Limpieza"
+
+#: includes/class-lnh-admin.php:126
+msgid "Test mode"
+msgstr "Modo de prueba"
+
+#: includes/class-lnh-admin.php:127
+msgid "Warning"
+msgstr "Aviso"
+
+#: includes/class-lnh-admin.php:128
+msgid "Error"
+msgstr "Error"
+
+#: includes/class-lnh-admin.php:129
+msgid "Page unavailable"
+msgstr "Página no disponible"
+
+#: includes/class-lnh-admin.php:130
+msgid "Retry"
+msgstr "Reintento"
+
+#: includes/class-lnh-admin.php:140
+msgid "Waiting for the first run"
+msgstr "Esperando la primera ejecución"
+
+#: includes/class-lnh-admin.php:145
+msgid "The last run reported an error"
+msgstr "La última ejecución informó de un error"
+
+#: includes/class-lnh-admin.php:148
+msgid "Agents have not reported for a while"
+msgstr "Los agentes llevan un tiempo sin reportar"
+
+#: includes/class-lnh-admin.php:150
+msgid "Agents are running normally"
+msgstr "Los agentes funcionan con normalidad"
+
+#: includes/class-lnh-admin.php:170
+msgid "Settings saved."
+msgstr "Ajustes guardados."
+
+#: includes/class-lnh-admin.php:171
+msgid "Preset saved."
+msgstr "Preajuste guardado."
+
+#: includes/class-lnh-admin.php:172
+msgid "Preset deleted."
+msgstr "Preajuste eliminado."
+
+#: includes/class-lnh-admin.php:173
+msgid "Something went wrong. Nothing was changed."
+msgstr "Algo salió mal. No se cambió nada."
+
+#: includes/class-lnh-admin.php:174
+msgid "Select at least one article first."
+msgstr "Selecciona primero al menos un artículo."
+
+#: includes/class-lnh-admin.php:201
+msgid "Your AI newsroom at a glance."
+msgstr "Tu redacción con IA de un vistazo."
+
+#: includes/class-lnh-admin.php:232
+msgid "Articles written and audited by the agents. You decide what gets published."
+msgstr "Artículos redactados y auditados por los agentes. Tú decides qué se publica."
+
+#: includes/class-lnh-admin.php:249
+msgid "Article not found."
+msgstr "Artículo no encontrado."
+
+#: includes/class-lnh-admin.php:249
+msgid "Back to the queue"
+msgstr "Volver a la cola"
+
+#: includes/class-lnh-admin.php:260
+msgid "Everything the Researcher, Writer and Auditor did, step by step."
+msgstr "Todo lo que hicieron el Investigador, el Redactor y el Auditor, paso a paso."
+
+#: includes/class-lnh-admin.php:304
+msgid "Design a list of the latest articles, preview it live and copy the shortcode."
+msgstr "Diseña una lista de los últimos artículos, mira la vista previa en vivo y copia el shortcode."
+
+#: includes/class-lnh-admin.php:318
+msgid "News Hub settings"
+msgstr "Ajustes de News Hub"
+
+#: includes/class-lnh-admin.php:335
+msgid "You are not allowed to do that."
+msgstr "No tienes permiso para hacer eso."
+
+#: includes/class-lnh-admin.php:461
+msgid "AI agents – audit"
+msgstr "Agentes de IA – auditoría"
+
+#: includes/class-lnh-admin.php:470
+msgid "AI audit"
+msgstr "Auditoría IA"
+
+#: includes/class-lnh-admin.php:483
+msgid "Review"
+msgstr "Revisar"
+
+#: includes/class-lnh-admin.php:491
+msgid "All origins"
+msgstr "Todos los orígenes"
+
+#: includes/class-lnh-admin.php:491
+msgid "Created by AI agents"
+msgstr "Creados por agentes de IA"
+
+#: includes/class-lnh-admin.php:508
+msgid "Audit score %d/100"
+msgstr "Puntuación de auditoría %d/100"
+
+#: includes/class-lnh-admin.php:513
+msgid "Approved"
+msgstr "Aprobado"
+
+#: includes/class-lnh-admin.php:514
+msgid "Flagged"
+msgstr "Marcado"
+
+#: includes/class-lnh-admin.php:161
+msgid "%d article published."
+msgid_plural "%d articles published."
+msgstr[0] "%d artículo publicado."
+msgstr[1] "%d artículos publicados."
+
+#: includes/class-lnh-admin.php:163
+msgid "%d article scheduled."
+msgid_plural "%d articles scheduled."
+msgstr[0] "%d artículo programado."
+msgstr[1] "%d artículos programados."
+
+#: includes/class-lnh-admin.php:165
+msgid "%d article rejected."
+msgid_plural "%d articles rejected."
+msgstr[0] "%d artículo rechazado."
+msgstr[1] "%d artículos rechazados."
+
+#: includes/class-lnh-admin.php:167
+msgid "%d article moved back to review."
+msgid_plural "%d articles moved back to review."
+msgstr[0] "%d artículo devuelto a revisión."
+msgstr[1] "%d artículos devueltos a revisión."
+
+#: includes/class-lnh-admin.php:169
+msgid "%d article deleted."
+msgid_plural "%d articles deleted."
+msgstr[0] "%d artículo eliminado."
+msgstr[1] "%d artículos eliminados."
+
+#: includes/class-lnh-front.php:25
+msgid "AI-generated illustration"
+msgstr "Ilustración generada con IA"
+
+#: includes/class-lnh-queue.php:52
+msgid "To review"
+msgstr "Por revisar"
+
+#: includes/class-lnh-queue.php:54
+msgid "Scheduled"
+msgstr "Programados"
+
+#: includes/class-lnh-queue.php:55
+msgid "Published"
+msgstr "Publicados"
+
+#: includes/class-lnh-queue.php:56
+msgid "Rejected"
+msgstr "Rechazados"
+
+#: includes/class-lnh-queue.php:124
+msgid "You are not allowed to publish this article."
+msgstr "No tienes permiso para publicar este artículo."
+
+#: includes/class-lnh-queue.php:128
+msgid "This is not an agent article."
+msgstr "Este no es un artículo de los agentes."
+
+#: includes/class-lnh-queue.php:160
+msgid "You are not allowed to reject this article."
+msgstr "No tienes permiso para rechazar este artículo."
+
+#: includes/class-lnh-queue.php:176
+msgid "You are not allowed to restore this article."
+msgstr "No tienes permiso para restaurar este artículo."
+
+#: includes/class-lnh-queue.php:189
+msgid "You are not allowed to delete this article."
+msgstr "No tienes permiso para eliminar este artículo."
+
+#: includes/class-lnh-queue.php:240
+msgid "[%1$s] New AI draft to review: %2$s (score %3$d)"
+msgstr "[%1$s] Nuevo borrador de IA por revisar: %2$s (puntuación %3$d)"
+
+#: includes/class-lnh-queue.php:243
+msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
+msgstr "Los agentes tienen un artículo nuevo esperando tu decisión.\n\nAuditoría: %1$s (%2$d/100)\n\nRevísalo aquí: %3$s\n"
+
+#: includes/class-lnh-rest.php:78
+msgid "The run report is missing run_id."
+msgstr "Al informe de ejecución le falta run_id."
+
+#: includes/class-lnh-runs.php:21
+msgid "Agent runs"
+msgstr "Ejecuciones de agentes"
+
+#: includes/class-lnh-settings.php:74
+msgid "Grid of cards"
+msgstr "Cuadrícula de tarjetas"
+
+#: includes/class-lnh-settings.php:75
+msgid "List with thumbnails"
+msgstr "Lista con miniaturas"
+
+#: includes/class-lnh-settings.php:76
+msgid "Featured first + grid"
+msgstr "Destacada primero + cuadrícula"
+
+#: includes/class-lnh-settings.php:77
+msgid "Compact list"
+msgstr "Lista compacta"
+
+#: includes/class-lnh-settings.php:78
+msgid "Headlines only"
+msgstr "Solo titulares"
+
+#: includes/class-lnh-settings.php:82
+msgid "General"
+msgstr "General"
+
+#: includes/class-lnh-settings.php:84
+msgid "Auto-publish approved drafts"
+msgstr "Publicar automáticamente los borradores aprobados"
+
+#: includes/class-lnh-settings.php:84
+msgid "Publish agent drafts immediately when the Auditor approves them with a high score. Off by default: you decide what goes live."
+msgstr "Publica los borradores de los agentes al instante cuando el Auditor los aprueba con una puntuación alta. Desactivado por defecto: tú decides qué sale en vivo."
+
+#: includes/class-lnh-settings.php:85
+msgid "Minimum score for auto-publish"
+msgstr "Puntuación mínima para publicar automáticamente"
+
+#: includes/class-lnh-settings.php:85
+msgid "Only used when auto-publish is on."
+msgstr "Solo se usa si la publicación automática está activada."
+
+#: includes/class-lnh-settings.php:86
+msgid "Email me when a new draft arrives"
+msgstr "Avisarme por correo cuando llegue un borrador nuevo"
+
+#: includes/class-lnh-settings.php:87
+msgid "Notification address"
+msgstr "Dirección de notificación"
+
+#: includes/class-lnh-settings.php:87
+msgid "Leave empty to use the site admin email."
+msgstr "Déjala vacía para usar el correo del administrador del sitio."
+
+#: includes/class-lnh-settings.php:88
+msgid "Author for published articles"
+msgstr "Autor de los artículos publicados"
+
+#: includes/class-lnh-settings.php:88
+msgid "Leave on “keep as is” to keep the account the agents post with."
+msgstr "Déjalo en «mantener» para conservar la cuenta con la que publican los agentes."
+
+#: includes/class-lnh-settings.php:89
+msgid "Default category"
+msgstr "Categoría predeterminada"
+
+#: includes/class-lnh-settings.php:89
+msgid "Assigned to agent articles that have no category yet."
+msgstr "Se asigna a los artículos de los agentes que aún no tienen categoría."
+
+#: includes/class-lnh-settings.php:90
+msgid "Rows per page in the queue"
+msgstr "Filas por página en la cola"
+
+#: includes/class-lnh-settings.php:94
+msgid "Transparency"
+msgstr "Transparencia"
+
+#: includes/class-lnh-settings.php:96
+msgid "Show the source under agent articles"
+msgstr "Mostrar la fuente bajo los artículos de los agentes"
+
+#: includes/class-lnh-settings.php:97
+msgid "Source line"
+msgstr "Línea de fuente"
+
+#: includes/class-lnh-settings.php:97
+msgid "Variables: {source} (linked publisher), {date}."
+msgstr "Variables: {source} (medio con enlace), {date}."
+
+#: includes/class-lnh-settings.php:98
+msgid "Source line position"
+msgstr "Posición de la línea de fuente"
+
+#: includes/class-lnh-settings.php:98
+msgid "After the article"
+msgstr "Después del artículo"
+
+#: includes/class-lnh-settings.php:98
+msgid "Before the article"
+msgstr "Antes del artículo"
+
+#: includes/class-lnh-settings.php:99
+msgid "Show an AI disclosure on agent articles"
+msgstr "Mostrar un aviso de IA en los artículos de los agentes"
+
+#: includes/class-lnh-settings.php:99
+msgid "Recommended. AI-generated featured images are always labelled in their caption."
+msgstr "Recomendado. Las imágenes destacadas generadas con IA siempre se etiquetan en su pie de foto."
+
+#: includes/class-lnh-settings.php:100
+msgid "Disclosure text"
+msgstr "Texto del aviso"
+
+#: includes/class-lnh-settings.php:100
+msgid "Variables: {score} (audit score), {source}."
+msgstr "Variables: {score} (puntuación de auditoría), {source}."
+
+#: includes/class-lnh-settings.php:104
+msgid "Shortcode defaults"
+msgstr "Valores del shortcode"
+
+#: includes/class-lnh-settings.php:106
+msgid "Layout"
+msgstr "Diseño"
+
+#: includes/class-lnh-settings.php:107
+msgid "Number of articles"
+msgstr "Número de artículos"
+
+#: includes/class-lnh-settings.php:108
+msgid "Columns (grid)"
+msgstr "Columnas (cuadrícula)"
+
+#: includes/class-lnh-settings.php:109
+msgid "Which articles"
+msgstr "Qué artículos"
+
+#: includes/class-lnh-settings.php:109
+msgid "Only articles created by the agents"
+msgstr "Solo artículos creados por los agentes"
+
+#: includes/class-lnh-settings.php:109
+msgid "All posts"
+msgstr "Todas las entradas"
+
+#: includes/class-lnh-settings.php:110
+msgid "Image shape"
+msgstr "Forma de la imagen"
+
+#: includes/class-lnh-settings.php:110
+msgid "Original"
+msgstr "Original"
+
+#: includes/class-lnh-settings.php:111
+msgid "Excerpt length (words)"
+msgstr "Longitud del extracto (palabras)"
+
+#: includes/class-lnh-settings.php:112
+msgid "Date style"
+msgstr "Estilo de fecha"
+
+#: includes/class-lnh-settings.php:112
+msgid "3 hours ago"
+msgstr "hace 3 horas"
+
+#: includes/class-lnh-settings.php:112
+msgid "Site date format"
+msgstr "Formato de fecha del sitio"
+
+#: includes/class-lnh-settings.php:113
+msgid "“Read more” text"
+msgstr "Texto de «Leer más»"
+
+#: includes/class-lnh-settings.php:114
+msgid "Show image"
+msgstr "Mostrar imagen"
+
+#: includes/class-lnh-settings.php:115
+msgid "Show category"
+msgstr "Mostrar categoría"
+
+#: includes/class-lnh-settings.php:116
+msgid "Show date"
+msgstr "Mostrar fecha"
+
+#: includes/class-lnh-settings.php:117
+msgid "Show excerpt"
+msgstr "Mostrar extracto"
+
+#: includes/class-lnh-settings.php:118
+msgid "Show source name"
+msgstr "Mostrar nombre de la fuente"
+
+#: includes/class-lnh-settings.php:119
+msgid "Show author"
+msgstr "Mostrar autor"
+
+#: includes/class-lnh-settings.php:120
+msgid "Show “read more” link"
+msgstr "Mostrar enlace «Leer más»"
+
+#: includes/class-lnh-settings.php:121
+msgid "Show “AI image” badge on AI-generated images"
+msgstr "Mostrar la insignia «Imagen IA» en imágenes generadas con IA"
+
+#: includes/class-lnh-settings.php:122
+msgid "Cache (minutes)"
+msgstr "Caché (minutos)"
+
+#: includes/class-lnh-settings.php:122
+msgid "0 disables caching. The cache is cleared automatically when posts change."
+msgstr "0 desactiva la caché. La caché se limpia sola cuando cambian las entradas."
+
+#: includes/class-lnh-settings.php:126
+msgid "Design"
+msgstr "Diseño visual"
+
+#: includes/class-lnh-settings.php:128
+msgid "Accent colour"
+msgstr "Color de acento"
+
+#: includes/class-lnh-settings.php:129
+msgid "Corner radius (px)"
+msgstr "Radio de las esquinas (px)"
+
+#: includes/class-lnh-settings.php:130
+msgid "Gap between cards (px)"
+msgstr "Espacio entre tarjetas (px)"
+
+#: includes/class-lnh-settings.php:131
+msgid "Title size (%)"
+msgstr "Tamaño del título (%)"
+
+#: includes/class-lnh-settings.php:132
+msgid "Card shadow"
+msgstr "Sombra de las tarjetas"
+
+#: includes/class-lnh-settings.php:133
+msgid "Colour scheme"
+msgstr "Esquema de color"
+
+#: includes/class-lnh-settings.php:133
+msgid "Match the site theme"
+msgstr "Igual que el tema del sitio"
+
+#: includes/class-lnh-settings.php:133
+msgid "Always light"
+msgstr "Siempre claro"
+
+#: includes/class-lnh-settings.php:133
+msgid "Always dark"
+msgstr "Siempre oscuro"
+
+#: includes/class-lnh-settings.php:137
+msgid "Agents"
+msgstr "Agentes"
+
+#: includes/class-lnh-settings.php:139
+msgid "Expected run interval (minutes)"
+msgstr "Intervalo esperado entre ejecuciones (minutos)"
+
+#: includes/class-lnh-settings.php:139
+msgid "The dashboard warns you when the agents have not reported for twice this time."
+msgstr "El panel te avisa cuando los agentes llevan el doble de este tiempo sin reportar."
+
+#: includes/class-lnh-settings.php:140
+msgid "Keep activity logs (days)"
+msgstr "Conservar los registros de actividad (días)"
+
+#: includes/class-lnh-settings.php:144
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: includes/class-lnh-settings.php:146
+msgid "Delete all plugin data when uninstalling"
+msgstr "Eliminar todos los datos del plugin al desinstalar"
+
+#: includes/class-lnh-settings.php:146
+msgid "Removes settings, presets and activity logs. Articles and their audit metadata are never deleted."
+msgstr "Elimina ajustes, preajustes y registros de actividad. Los artículos y sus metadatos de auditoría nunca se borran."
+
+#: includes/class-lnh-shortcode.php:64
+msgid "View all"
+msgstr "Ver todo"
+
+#: includes/class-lnh-shortcode.php:70
+msgid "No articles yet."
+msgstr "Aún no hay artículos."
+
+#: includes/class-lnh-shortcode.php:204
+msgid "%s ago"
+msgstr "hace %s"
+
+#: includes/class-lnh-shortcode.php:245
+msgid "AI image"
+msgstr "Imagen IA"
+
+#: includes/class-lnh-shortcode.php:322
+msgid "Articles pagination"
+msgstr "Paginación de artículos"
+
+#: views/activity.php:10
+msgid "last report %s"
+msgstr "último reporte %s"
+
+#: views/activity.php:18
+msgid "web searches"
+msgstr "búsquedas web"
+
+#: views/activity.php:19
+msgid "pages read"
+msgstr "páginas leídas"
+
+#: views/activity.php:20
+msgid "stories found"
+msgstr "noticias encontradas"
+
+#: views/activity.php:21
+msgid "skipped"
+msgstr "omitidas"
+
+#: views/activity.php:24
+msgid "drafts written"
+msgstr "borradores redactados"
+
+#: views/activity.php:25
+msgid "image prompts"
+msgstr "prompts de imagen"
+
+#: views/activity.php:26
+msgid "images generated"
+msgstr "imágenes generadas"
+
+#: views/activity.php:29
+msgid "audits"
+msgstr "auditorías"
+
+#: views/activity.php:30
+msgid "approved"
+msgstr "aprobados"
+
+#: views/activity.php:31
+msgid "flagged"
+msgstr "marcados"
+
+#: views/activity.php:32
+msgid "sent to WordPress"
+msgstr "enviados a WordPress"
+
+#: views/activity.php:40
+msgid "idle"
+msgstr "inactivo"
+
+#: views/activity.php:49
+msgid "Pipeline – last 7 days"
+msgstr "Flujo de trabajo – últimos 7 días"
+
+#: views/activity.php:52
+msgid "Stories found"
+msgstr "Noticias encontradas"
+
+#: views/activity.php:53
+msgid "Articles written"
+msgstr "Artículos redactados"
+
+#: views/activity.php:54
+msgid "Approved by auditor"
+msgstr "Aprobados por el auditor"
+
+#: views/activity.php:56
+msgid "Published by you"
+msgstr "Publicados por ti"
+
+#: views/activity.php:70
+msgid "Live feed"
+msgstr "Actividad en vivo"
+
+#: views/activity.php:73
+msgid "All agents"
+msgstr "Todos los agentes"
+
+#: views/activity.php:95
+msgid "Runs"
+msgstr "Ejecuciones"
+
+#: views/activity.php:96
+msgid "No runs yet."
+msgstr "Aún no hay ejecuciones."
+
+#: views/activity.php:11
+msgid "%d run in the last 7 days"
+msgid_plural "%d runs in the last 7 days"
+msgstr[0] "%d ejecución en los últimos 7 días"
+msgstr[1] "%d ejecuciones en los últimos 7 días"
+
+#: views/builder.php:7
+msgid "Yes"
+msgstr "Sí"
+
+#: views/builder.php:7
+msgid "No"
+msgstr "No"
+
+#: views/builder.php:35
+msgid "Columns"
+msgstr "Columnas"
+
+#: views/builder.php:37
+msgid "Light"
+msgstr "Claro"
+
+#: views/builder.php:37
+msgid "Dark"
+msgstr "Oscuro"
+
+#: views/builder.php:44
+msgid "Source"
+msgstr "Fuente"
+
+#: views/builder.php:44
+msgid "Created by the agents"
+msgstr "Creados por los agentes"
+
+#: views/builder.php:45
+msgid "Order by"
+msgstr "Ordenar por"
+
+#: views/builder.php:45
+msgid "Date"
+msgstr "Fecha"
+
+#: views/builder.php:45
+msgid "Last modified"
+msgstr "Última modificación"
+
+#: views/builder.php:45
+msgid "Audit score"
+msgstr "Puntuación de auditoría"
+
+#: views/builder.php:45
+msgid "Title"
+msgstr "Título"
+
+#: views/builder.php:45
+msgid "Comments"
+msgstr "Comentarios"
+
+#: views/builder.php:45
+msgid "Random"
+msgstr "Aleatorio"
+
+#: views/builder.php:46
+msgid "Direction"
+msgstr "Dirección"
+
+#: views/builder.php:46
+msgid "Newest / highest first"
+msgstr "Más recientes / mayor primero"
+
+#: views/builder.php:46
+msgid "Oldest / lowest first"
+msgstr "Más antiguos / menor primero"
+
+#: views/builder.php:48
+msgid "Categories"
+msgstr "Categorías"
+
+#: views/builder.php:53
+msgid "Exclude categories (slugs)"
+msgstr "Excluir categorías (slugs)"
+
+#: views/builder.php:54
+msgid "Tags (slugs)"
+msgstr "Etiquetas (slugs)"
+
+#: views/builder.php:55
+msgid "Only newer than"
+msgstr "Solo más recientes que"
+
+#: views/builder.php:56
+msgid "Minimum audit score"
+msgstr "Puntuación mínima de auditoría"
+
+#: views/builder.php:57
+msgid "Skip the first N"
+msgstr "Omitir los primeros N"
+
+#: views/builder.php:58
+msgid "Only these post IDs"
+msgstr "Solo estos IDs de entrada"
+
+#: views/builder.php:59
+msgid "Exclude post IDs"
+msgstr "Excluir IDs de entrada"
+
+#: views/builder.php:60
+msgid "Language code"
+msgstr "Código de idioma"
+
+#: views/builder.php:64
+msgid "What to show"
+msgstr "Qué mostrar"
+
+#: views/builder.php:66
+msgid "Image"
+msgstr "Imagen"
+
+#: views/builder.php:67
+msgid "Category"
+msgstr "Categoría"
+
+#: views/builder.php:69
+msgid "Excerpt"
+msgstr "Extracto"
+
+#: views/builder.php:70
+msgid "Source name"
+msgstr "Nombre de la fuente"
+
+#: views/builder.php:71
+msgid "Author"
+msgstr "Autor"
+
+#: views/builder.php:72
+msgid "“Read more” link"
+msgstr "Enlace «Leer más»"
+
+#: views/builder.php:73
+msgid "“AI image” badge"
+msgstr "Insignia «Imagen IA»"
+
+#: views/builder.php:74
+msgid "Excerpt words"
+msgstr "Palabras del extracto"
+
+#: views/builder.php:77
+msgid "Title tag"
+msgstr "Etiqueta del título"
+
+#: views/builder.php:78
+msgid "Open links"
+msgstr "Abrir enlaces"
+
+#: views/builder.php:78
+msgid "In the same tab"
+msgstr "En la misma pestaña"
+
+#: views/builder.php:78
+msgid "In a new tab"
+msgstr "En una pestaña nueva"
+
+#: views/builder.php:82
+msgid "Extras"
+msgstr "Extras"
+
+#: views/builder.php:84
+msgid "Section heading"
+msgstr "Encabezado de la sección"
+
+#: views/builder.php:84
+msgid "Latest news"
+msgstr "Últimas noticias"
+
+#: views/builder.php:85
+msgid "“View all” link (URL)"
+msgstr "Enlace de «Ver todo» (URL)"
+
+#: views/builder.php:86
+msgid "“View all” text"
+msgstr "Texto de «Ver todo»"
+
+#: views/builder.php:87
+msgid "Pagination"
+msgstr "Paginación"
+
+#: views/builder.php:89
+msgid "Extra CSS class"
+msgstr "Clase CSS adicional"
+
+#: views/builder.php:90
+msgid "Message when empty"
+msgstr "Mensaje cuando no hay artículos"
+
+#: views/builder.php:95
+msgid "Preset name, e.g. homepage"
+msgstr "Nombre del preajuste, p. ej. portada"
+
+#: views/builder.php:96
+msgid "Save as preset"
+msgstr "Guardar como preajuste"
+
+#: views/builder.php:102
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: views/builder.php:103
+msgid "Copy"
+msgstr "Copiar"
+
+#: views/builder.php:104
+msgid "Only options that differ from your defaults are included. Change the defaults in Settings → Shortcode defaults."
+msgstr "Solo se incluyen las opciones que difieren de tus valores predeterminados. Cámbialos en Ajustes → Valores del shortcode."
+
+#: views/builder.php:108
+msgid "Live preview"
+msgstr "Vista previa en vivo"
+
+#: views/builder.php:113
+msgid "Saved presets"
+msgstr "Preajustes guardados"
+
+#: views/builder.php:115
+msgid "No presets yet. Save one to reuse it with [lehigh_news preset=\"name\"]."
+msgstr "Aún no hay preajustes. Guarda uno para reutilizarlo con [lehigh_news preset=\"nombre\"]."
+
+#: views/builder.php:126
+msgid "Delete"
+msgstr "Eliminar"
+
+#: views/dashboard.php:15
+msgid "See what the agents did"
+msgstr "Ver qué hicieron los agentes"
+
+#: views/dashboard.php:19
+msgid "Waiting for review"
+msgstr "Esperando revisión"
+
+#: views/dashboard.php:20
+msgid "Flagged by the auditor"
+msgstr "Marcados por el auditor"
+
+#: views/dashboard.php:21
+msgid "Published this week"
+msgstr "Publicados esta semana"
+
+#: views/dashboard.php:22
+msgid "Average audit score (30 days)"
+msgstr "Puntuación media de auditoría (30 días)"
+
+#: views/dashboard.php:23
+msgid "AI images this week"
+msgstr "Imágenes IA esta semana"
+
+#: views/dashboard.php:24
+msgid "Tokens used this week"
+msgstr "Tokens usados esta semana"
+
+#: views/dashboard.php:30
+msgid "Waiting for your decision"
+msgstr "Esperando tu decisión"
+
+#: views/dashboard.php:30
+msgid "Open the queue"
+msgstr "Abrir la cola"
+
+#: views/dashboard.php:32
+msgid "Nothing to review right now. New articles appear here as soon as the agents finish them."
+msgstr "No hay nada por revisar ahora. Los artículos nuevos aparecen aquí en cuanto los agentes los terminan."
+
+#: views/dashboard.php:53
+msgid "Recent agent runs"
+msgstr "Ejecuciones recientes de los agentes"
+
+#: views/dashboard.php:53
+msgid "All activity"
+msgstr "Toda la actividad"
+
+#: views/dashboard.php:64
+msgid "Your agents"
+msgstr "Tus agentes"
+
+#: views/dashboard.php:76
+msgid "active %s"
+msgstr "activo %s"
+
+#: views/dashboard.php:76
+msgid "no activity yet"
+msgstr "sin actividad aún"
+
+#: views/dashboard.php:84
+msgid "Connect your agents"
+msgstr "Conecta tus agentes"
+
+#: views/dashboard.php:89
+msgid "Create an %s for the account the agents will post with."
+msgstr "Crea una %s para la cuenta con la que publicarán los agentes."
+
+#: views/dashboard.php:90
+msgid "Application Password"
+msgstr "contraseña de aplicación"
+
+#: views/dashboard.php:93
+msgid "Put these two lines in the agents’ .env file:"
+msgstr "Pon estas dos líneas en el archivo .env de los agentes:"
+
+#: views/dashboard.php:96
+msgid "Run python main.py check, then python main.py run."
+msgstr "Ejecuta python main.py check y después python main.py run."
+
+#: views/metabox.php:14
+msgid "Open full review"
+msgstr "Abrir la revisión completa"
+
+#: views/queue.php:15
+msgid "Search articles…"
+msgstr "Buscar artículos…"
+
+#: views/queue.php:16
+msgid "Min. score"
+msgstr "Puntuación mín."
+
+#: views/queue.php:18
+msgid "Newest first"
+msgstr "Más recientes primero"
+
+#: views/queue.php:19
+msgid "Highest score first"
+msgstr "Mayor puntuación primero"
+
+#: views/queue.php:21
+msgid "Filter"
+msgstr "Filtrar"
+
+#: views/queue.php:25
+msgid "No articles here."
+msgstr "No hay artículos aquí."
+
+#: views/queue.php:30
+msgid "Bulk actions"
+msgstr "Acciones en lote"
+
+#: views/queue.php:31
+msgid "Publish"
+msgstr "Publicar"
+
+#: views/queue.php:32
+msgid "Reject"
+msgstr "Rechazar"
+
+#: views/queue.php:33
+msgid "Move back to review"
+msgstr "Devolver a revisión"
+
+#: views/queue.php:33
+msgid "Delete permanently"
+msgstr "Eliminar definitivamente"
+
+#: views/queue.php:35
+msgid "Apply"
+msgstr "Aplicar"
+
+#: views/queue.php:41
+msgid "Article"
+msgstr "Artículo"
+
+#: views/queue.php:41
+msgid "Audit"
+msgstr "Auditoría"
+
+#: views/queue.php:41
+msgid "Received"
+msgstr "Recibido"
+
+#: views/queue.php:79
+msgid "Restore"
+msgstr "Restaurar"
+
+#: views/queue.php:81
+msgid "View"
+msgstr "Ver"
+
+#: views/queue.php:36
+msgid "%d article"
+msgid_plural "%d articles"
+msgstr[0] "%d artículo"
+msgstr[1] "%d artículos"
+
+#: views/queue.php:65
+msgid "%d revision"
+msgid_plural "%d revisions"
+msgstr[0] "%d revisión"
+msgstr[1] "%d revisiones"
+
+#: views/queue.php:66
+msgid "%d media item pending"
+msgid_plural "%d media items pending"
+msgstr[0] "%d elemento multimedia pendiente"
+msgstr[1] "%d elementos multimedia pendientes"
+
+#: views/review.php:19
+msgid "Draft – waiting for review"
+msgstr "Borrador – esperando revisión"
+
+#: views/review.php:19
+msgid "Flagged – pending review"
+msgstr "Marcado – pendiente de revisión"
+
+#: views/review.php:31
+msgid "AI-generated image"
+msgstr "Imagen generada con IA"
+
+#: views/review.php:37
+msgid "No featured image"
+msgstr "Sin imagen destacada"
+
+#: views/review.php:41
+msgid "Search result preview"
+msgstr "Vista previa en buscadores"
+
+#: views/review.php:52
+msgid "Your decision"
+msgstr "Tu decisión"
+
+#: views/review.php:54
+msgid "This article is live."
+msgstr "Este artículo está publicado."
+
+#: views/review.php:55
+msgid "View article"
+msgstr "Ver artículo"
+
+#: views/review.php:57
+msgid "Rejected: %s"
+msgstr "Rechazado: %s"
+
+#: views/review.php:60
+msgid "Publish now"
+msgstr "Publicar ahora"
+
+#: views/review.php:64
+msgid "Or schedule it"
+msgstr "O prográmalo"
+
+#: views/review.php:65
+msgid "Schedule"
+msgstr "Programar"
+
+#: views/review.php:75
+msgid "Reject (optional reason)"
+msgstr "Rechazar (motivo opcional)"
+
+#: views/review.php:77
+msgid "Reject article"
+msgstr "Rechazar artículo"
+
+#: views/review.php:81
+msgid "Edit in the WordPress editor"
+msgstr "Editar en el editor de WordPress"
+
+#: views/review.php:87
+msgid "Score given by the Auditor agent after comparing the article with the facts reported by the Researcher."
+msgstr "Puntuación del agente Auditor tras comparar el artículo con los hechos que reportó el Investigador."
+
+#: views/review.php:96
+msgid "%d links checked, none broken"
+msgstr "%d enlaces comprobados, ninguno roto"
+
+#: views/review.php:99
+msgid "Unsafe HTML found"
+msgstr "Se encontró HTML inseguro"
+
+#: views/review.php:99
+msgid "HTML is clean"
+msgstr "El HTML está limpio"
+
+#: views/review.php:103
+msgid "Figures not found in the source: %s"
+msgstr "Cifras que no aparecen en la fuente: %s"
+
+#: views/review.php:104
+msgid "All figures appear in the source"
+msgstr "Todas las cifras aparecen en la fuente"
+
+#: views/review.php:108
+msgid "Copied from source: %d%%"
+msgstr "Copiado de la fuente: %d%%"
+
+#: views/review.php:111
+msgid "%d words"
+msgstr "%d palabras"
+
+#: views/review.php:119
+msgid "Auditor notes"
+msgstr "Notas del auditor"
+
+#: views/review.php:121
+msgid "No issues reported."
+msgstr "No se reportaron problemas."
+
+#: views/review.php:128
+msgid "Auto"
+msgstr "Auto"
+
+#: views/review.php:128
+msgid "AI"
+msgstr "IA"
+
+#: views/review.php:140
+msgid "Facts the Researcher extracted"
+msgstr "Hechos que extrajo el Investigador"
+
+#: views/review.php:145
+msgid "Featured image"
+msgstr "Imagen destacada"
+
+#: views/review.php:147
+msgid "AI-generated"
+msgstr "Generada con IA"
+
+#: views/review.php:148
+msgid "It is labelled as an illustration in its caption. Check that it does not suggest something the story does not say."
+msgstr "Está etiquetada como ilustración en su pie de foto. Comprueba que no sugiera algo que la noticia no dice."
+
+#: views/review.php:149
+msgid "Prompt the Writer wrote"
+msgstr "Prompt que escribió el Redactor"
+
+#: views/review.php:151
+msgid "Openly licensed photo – credit is in the caption."
+msgstr "Foto con licencia abierta: el crédito está en el pie de foto."
+
+#: views/review.php:153
+msgid "No image yet. Set one in the editor."
+msgstr "Aún no hay imagen. Asigna una en el editor."
+
+#: views/review.php:156
+msgid "Media still to add"
+msgstr "Multimedia pendiente de añadir"
+
+#: views/review.php:162
+msgid "How the agents got here"
+msgstr "Cómo llegaron los agentes a este artículo"
+
+#: views/review.php:162
+msgid "Full run"
+msgstr "Ejecución completa"
+
+#: views/review.php:167
+msgid "No trace stored for this article."
+msgstr "No hay traza guardada para este artículo."
+
+#: views/review.php:95
+msgid "%d broken link"
+msgid_plural "%d broken links"
+msgstr[0] "%d enlace roto"
+msgstr[1] "%d enlaces rotos"
+
+#: views/run.php:5
+msgid "Run not found."
+msgstr "Ejecución no encontrada."
+
+#: views/run.php:5
+msgid "Back to activity"
+msgstr "Volver a la actividad"
+
+#: views/run.php:22
+msgid "OK"
+msgstr "OK"
+
+#: views/run.php:24
+msgid "Started"
+msgstr "Inicio"
+
+#: views/run.php:25
+msgid "Duration"
+msgstr "Duración"
+
+#: views/run.php:26
+msgid "Topic"
+msgstr "Tema"
+
+#: views/run.php:27
+msgid "Mode"
+msgstr "Modo"
+
+#: views/run.php:27
+msgid "Test (nothing sent)"
+msgstr "Prueba (no se envió nada)"
+
+#: views/run.php:31
+msgid "Model"
+msgstr "Modelo"
+
+#: views/run.php:31
+msgid "Calls"
+msgstr "Llamadas"
+
+#: views/run.php:31
+msgid "Input tokens"
+msgstr "Tokens de entrada"
+
+#: views/run.php:31
+msgid "Output tokens"
+msgstr "Tokens de salida"
+
+#: views/run.php:42
+msgid "Run-level steps"
+msgstr "Pasos generales de la ejecución"
+
+#: views/run.php:45
+msgid "Open article"
+msgstr "Abrir artículo"
+
+#: views/run.php:57
+msgid "Show the image prompt"
+msgstr "Mostrar el prompt de la imagen"
+
+#: views/runs-table.php:7
+msgid "Run"
+msgstr "Ejecución"
+
+#: views/runs-table.php:8
+msgid "Found"
+msgstr "Encontradas"
+
+#: views/runs-table.php:8
+msgid "Failed"
+msgstr "Fallidas"
+
+#: views/runs-table.php:8
+msgid "Status"
+msgstr "Estado"
+
+#: views/runs-table.php:15
+msgid "test"
+msgstr "prueba"
+
+#: views/settings.php:44
+msgid "— keep as is —"
+msgstr "— mantener —"
+
+#: views/settings.php:47
+msgid "— none —"
+msgstr "— ninguna —"
+
+#: views/settings.php:63
+msgid "Save changes"
+msgstr "Guardar cambios"

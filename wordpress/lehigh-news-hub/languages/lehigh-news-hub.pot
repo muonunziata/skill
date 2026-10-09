@@ -1,0 +1,1408 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lehigh News Hub 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/muonunziata/skill/issues\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+""
+
+#: includes/class-lnh-admin.php:32
+msgid "News Hub"
+msgstr ""
+
+#: includes/class-lnh-admin.php:33
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-lnh-admin.php:34
+msgid "Review queue"
+msgstr ""
+
+#: includes/class-lnh-admin.php:35
+msgid "Agent activity"
+msgstr ""
+
+#: includes/class-lnh-admin.php:36
+msgid "Shortcode builder"
+msgstr ""
+
+#: includes/class-lnh-admin.php:37
+msgid "Settings"
+msgstr ""
+
+#: includes/class-lnh-admin.php:39
+msgid "Review article"
+msgstr ""
+
+#: includes/class-lnh-admin.php:72
+msgid "Copied!"
+msgstr ""
+
+#: includes/class-lnh-admin.php:73
+msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
+msgstr ""
+
+#: includes/class-lnh-admin.php:74
+msgid "Delete permanently? This cannot be undone."
+msgstr ""
+
+#: includes/class-lnh-admin.php:75
+msgid "No activity yet."
+msgstr ""
+
+#: includes/class-lnh-admin.php:76
+msgid "Live"
+msgstr ""
+
+#: includes/class-lnh-admin.php:77
+msgid "Paused"
+msgstr ""
+
+#: includes/class-lnh-admin.php:78
+msgid "Could not render the preview."
+msgstr ""
+
+#: includes/class-lnh-admin.php:100
+msgid "Researcher"
+msgstr ""
+
+#: includes/class-lnh-admin.php:100
+msgid "Searches the web and reads the sources"
+msgstr ""
+
+#: includes/class-lnh-admin.php:101
+msgid "Writer"
+msgstr ""
+
+#: includes/class-lnh-admin.php:101
+msgid "Writes the article and its featured image"
+msgstr ""
+
+#: includes/class-lnh-admin.php:102
+msgid "Auditor"
+msgstr ""
+
+#: includes/class-lnh-admin.php:102
+msgid "Fact-checks, then decides if it can be sent"
+msgstr ""
+
+#: includes/class-lnh-admin.php:103
+msgid "Coordinator"
+msgstr ""
+
+#: includes/class-lnh-admin.php:103
+msgid "Runs the three agents in order"
+msgstr ""
+
+#: includes/class-lnh-admin.php:109
+msgid "Run started"
+msgstr ""
+
+#: includes/class-lnh-admin.php:110
+msgid "Run finished"
+msgstr ""
+
+#: includes/class-lnh-admin.php:111
+msgid "Working"
+msgstr ""
+
+#: includes/class-lnh-admin.php:112
+msgid "Web search"
+msgstr ""
+
+#: includes/class-lnh-admin.php:113
+msgid "Read a page"
+msgstr ""
+
+#: includes/class-lnh-admin.php:114
+msgid "Story found"
+msgstr ""
+
+#: includes/class-lnh-admin.php:115
+msgid "Skipped"
+msgstr ""
+
+#: includes/class-lnh-admin.php:116
+msgid "Draft written"
+msgstr ""
+
+#: includes/class-lnh-admin.php:117
+msgid "Media"
+msgstr ""
+
+#: includes/class-lnh-admin.php:118
+msgid "Image prompt"
+msgstr ""
+
+#: includes/class-lnh-admin.php:119
+msgid "Image generated"
+msgstr ""
+
+#: includes/class-lnh-admin.php:120
+msgid "Image attached"
+msgstr ""
+
+#: includes/class-lnh-admin.php:121
+msgid "Automatic check"
+msgstr ""
+
+#: includes/class-lnh-admin.php:122
+msgid "Audit result"
+msgstr ""
+
+#: includes/class-lnh-admin.php:123
+msgid "Sent to WordPress"
+msgstr ""
+
+#: includes/class-lnh-admin.php:124
+msgid "Held back"
+msgstr ""
+
+#: includes/class-lnh-admin.php:125
+msgid "Cleanup"
+msgstr ""
+
+#: includes/class-lnh-admin.php:126
+msgid "Test mode"
+msgstr ""
+
+#: includes/class-lnh-admin.php:127
+msgid "Warning"
+msgstr ""
+
+#: includes/class-lnh-admin.php:128
+msgid "Error"
+msgstr ""
+
+#: includes/class-lnh-admin.php:129
+msgid "Page unavailable"
+msgstr ""
+
+#: includes/class-lnh-admin.php:130
+msgid "Retry"
+msgstr ""
+
+#: includes/class-lnh-admin.php:140
+msgid "Waiting for the first run"
+msgstr ""
+
+#: includes/class-lnh-admin.php:145
+msgid "The last run reported an error"
+msgstr ""
+
+#: includes/class-lnh-admin.php:148
+msgid "Agents have not reported for a while"
+msgstr ""
+
+#: includes/class-lnh-admin.php:150
+msgid "Agents are running normally"
+msgstr ""
+
+#: includes/class-lnh-admin.php:170
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class-lnh-admin.php:171
+msgid "Preset saved."
+msgstr ""
+
+#: includes/class-lnh-admin.php:172
+msgid "Preset deleted."
+msgstr ""
+
+#: includes/class-lnh-admin.php:173
+msgid "Something went wrong. Nothing was changed."
+msgstr ""
+
+#: includes/class-lnh-admin.php:174
+msgid "Select at least one article first."
+msgstr ""
+
+#: includes/class-lnh-admin.php:201
+msgid "Your AI newsroom at a glance."
+msgstr ""
+
+#: includes/class-lnh-admin.php:232
+msgid "Articles written and audited by the agents. You decide what gets published."
+msgstr ""
+
+#: includes/class-lnh-admin.php:249
+msgid "Article not found."
+msgstr ""
+
+#: includes/class-lnh-admin.php:249
+msgid "Back to the queue"
+msgstr ""
+
+#: includes/class-lnh-admin.php:260
+msgid "Everything the Researcher, Writer and Auditor did, step by step."
+msgstr ""
+
+#: includes/class-lnh-admin.php:304
+msgid "Design a list of the latest articles, preview it live and copy the shortcode."
+msgstr ""
+
+#: includes/class-lnh-admin.php:318
+msgid "News Hub settings"
+msgstr ""
+
+#: includes/class-lnh-admin.php:335
+msgid "You are not allowed to do that."
+msgstr ""
+
+#: includes/class-lnh-admin.php:461
+msgid "AI agents – audit"
+msgstr ""
+
+#: includes/class-lnh-admin.php:470
+msgid "AI audit"
+msgstr ""
+
+#: includes/class-lnh-admin.php:483
+msgid "Review"
+msgstr ""
+
+#: includes/class-lnh-admin.php:491
+msgid "All origins"
+msgstr ""
+
+#: includes/class-lnh-admin.php:491
+msgid "Created by AI agents"
+msgstr ""
+
+#: includes/class-lnh-admin.php:508
+msgid "Audit score %d/100"
+msgstr ""
+
+#: includes/class-lnh-admin.php:513
+msgid "Approved"
+msgstr ""
+
+#: includes/class-lnh-admin.php:514
+msgid "Flagged"
+msgstr ""
+
+#: includes/class-lnh-admin.php:161
+msgid "%d article published."
+msgid_plural "%d articles published."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-lnh-admin.php:163
+msgid "%d article scheduled."
+msgid_plural "%d articles scheduled."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-lnh-admin.php:165
+msgid "%d article rejected."
+msgid_plural "%d articles rejected."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-lnh-admin.php:167
+msgid "%d article moved back to review."
+msgid_plural "%d articles moved back to review."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-lnh-admin.php:169
+msgid "%d article deleted."
+msgid_plural "%d articles deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-lnh-front.php:25
+msgid "AI-generated illustration"
+msgstr ""
+
+#: includes/class-lnh-queue.php:52
+msgid "To review"
+msgstr ""
+
+#: includes/class-lnh-queue.php:54
+msgid "Scheduled"
+msgstr ""
+
+#: includes/class-lnh-queue.php:55
+msgid "Published"
+msgstr ""
+
+#: includes/class-lnh-queue.php:56
+msgid "Rejected"
+msgstr ""
+
+#: includes/class-lnh-queue.php:124
+msgid "You are not allowed to publish this article."
+msgstr ""
+
+#: includes/class-lnh-queue.php:128
+msgid "This is not an agent article."
+msgstr ""
+
+#: includes/class-lnh-queue.php:160
+msgid "You are not allowed to reject this article."
+msgstr ""
+
+#: includes/class-lnh-queue.php:176
+msgid "You are not allowed to restore this article."
+msgstr ""
+
+#: includes/class-lnh-queue.php:189
+msgid "You are not allowed to delete this article."
+msgstr ""
+
+#: includes/class-lnh-queue.php:240
+msgid "[%1$s] New AI draft to review: %2$s (score %3$d)"
+msgstr ""
+
+#: includes/class-lnh-queue.php:243
+msgid "The agents have a new article waiting for your decision.\n\nAudit: %1$s (%2$d/100)\n\nReview it here: %3$s\n"
+msgstr ""
+
+#: includes/class-lnh-rest.php:78
+msgid "The run report is missing run_id."
+msgstr ""
+
+#: includes/class-lnh-runs.php:21
+msgid "Agent runs"
+msgstr ""
+
+#: includes/class-lnh-settings.php:74
+msgid "Grid of cards"
+msgstr ""
+
+#: includes/class-lnh-settings.php:75
+msgid "List with thumbnails"
+msgstr ""
+
+#: includes/class-lnh-settings.php:76
+msgid "Featured first + grid"
+msgstr ""
+
+#: includes/class-lnh-settings.php:77
+msgid "Compact list"
+msgstr ""
+
+#: includes/class-lnh-settings.php:78
+msgid "Headlines only"
+msgstr ""
+
+#: includes/class-lnh-settings.php:82
+msgid "General"
+msgstr ""
+
+#: includes/class-lnh-settings.php:84
+msgid "Auto-publish approved drafts"
+msgstr ""
+
+#: includes/class-lnh-settings.php:84
+msgid "Publish agent drafts immediately when the Auditor approves them with a high score. Off by default: you decide what goes live."
+msgstr ""
+
+#: includes/class-lnh-settings.php:85
+msgid "Minimum score for auto-publish"
+msgstr ""
+
+#: includes/class-lnh-settings.php:85
+msgid "Only used when auto-publish is on."
+msgstr ""
+
+#: includes/class-lnh-settings.php:86
+msgid "Email me when a new draft arrives"
+msgstr ""
+
+#: includes/class-lnh-settings.php:87
+msgid "Notification address"
+msgstr ""
+
+#: includes/class-lnh-settings.php:87
+msgid "Leave empty to use the site admin email."
+msgstr ""
+
+#: includes/class-lnh-settings.php:88
+msgid "Author for published articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:88
+msgid "Leave on “keep as is” to keep the account the agents post with."
+msgstr ""
+
+#: includes/class-lnh-settings.php:89
+msgid "Default category"
+msgstr ""
+
+#: includes/class-lnh-settings.php:89
+msgid "Assigned to agent articles that have no category yet."
+msgstr ""
+
+#: includes/class-lnh-settings.php:90
+msgid "Rows per page in the queue"
+msgstr ""
+
+#: includes/class-lnh-settings.php:94
+msgid "Transparency"
+msgstr ""
+
+#: includes/class-lnh-settings.php:96
+msgid "Show the source under agent articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:97
+msgid "Source line"
+msgstr ""
+
+#: includes/class-lnh-settings.php:97
+msgid "Variables: {source} (linked publisher), {date}."
+msgstr ""
+
+#: includes/class-lnh-settings.php:98
+msgid "Source line position"
+msgstr ""
+
+#: includes/class-lnh-settings.php:98
+msgid "After the article"
+msgstr ""
+
+#: includes/class-lnh-settings.php:98
+msgid "Before the article"
+msgstr ""
+
+#: includes/class-lnh-settings.php:99
+msgid "Show an AI disclosure on agent articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:99
+msgid "Recommended. AI-generated featured images are always labelled in their caption."
+msgstr ""
+
+#: includes/class-lnh-settings.php:100
+msgid "Disclosure text"
+msgstr ""
+
+#: includes/class-lnh-settings.php:100
+msgid "Variables: {score} (audit score), {source}."
+msgstr ""
+
+#: includes/class-lnh-settings.php:104
+msgid "Shortcode defaults"
+msgstr ""
+
+#: includes/class-lnh-settings.php:106
+msgid "Layout"
+msgstr ""
+
+#: includes/class-lnh-settings.php:107
+msgid "Number of articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:108
+msgid "Columns (grid)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:109
+msgid "Which articles"
+msgstr ""
+
+#: includes/class-lnh-settings.php:109
+msgid "Only articles created by the agents"
+msgstr ""
+
+#: includes/class-lnh-settings.php:109
+msgid "All posts"
+msgstr ""
+
+#: includes/class-lnh-settings.php:110
+msgid "Image shape"
+msgstr ""
+
+#: includes/class-lnh-settings.php:110
+msgid "Original"
+msgstr ""
+
+#: includes/class-lnh-settings.php:111
+msgid "Excerpt length (words)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:112
+msgid "Date style"
+msgstr ""
+
+#: includes/class-lnh-settings.php:112
+msgid "3 hours ago"
+msgstr ""
+
+#: includes/class-lnh-settings.php:112
+msgid "Site date format"
+msgstr ""
+
+#: includes/class-lnh-settings.php:113
+msgid "“Read more” text"
+msgstr ""
+
+#: includes/class-lnh-settings.php:114
+msgid "Show image"
+msgstr ""
+
+#: includes/class-lnh-settings.php:115
+msgid "Show category"
+msgstr ""
+
+#: includes/class-lnh-settings.php:116
+msgid "Show date"
+msgstr ""
+
+#: includes/class-lnh-settings.php:117
+msgid "Show excerpt"
+msgstr ""
+
+#: includes/class-lnh-settings.php:118
+msgid "Show source name"
+msgstr ""
+
+#: includes/class-lnh-settings.php:119
+msgid "Show author"
+msgstr ""
+
+#: includes/class-lnh-settings.php:120
+msgid "Show “read more” link"
+msgstr ""
+
+#: includes/class-lnh-settings.php:121
+msgid "Show “AI image” badge on AI-generated images"
+msgstr ""
+
+#: includes/class-lnh-settings.php:122
+msgid "Cache (minutes)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:122
+msgid "0 disables caching. The cache is cleared automatically when posts change."
+msgstr ""
+
+#: includes/class-lnh-settings.php:126
+msgid "Design"
+msgstr ""
+
+#: includes/class-lnh-settings.php:128
+msgid "Accent colour"
+msgstr ""
+
+#: includes/class-lnh-settings.php:129
+msgid "Corner radius (px)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:130
+msgid "Gap between cards (px)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:131
+msgid "Title size (%)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:132
+msgid "Card shadow"
+msgstr ""
+
+#: includes/class-lnh-settings.php:133
+msgid "Colour scheme"
+msgstr ""
+
+#: includes/class-lnh-settings.php:133
+msgid "Match the site theme"
+msgstr ""
+
+#: includes/class-lnh-settings.php:133
+msgid "Always light"
+msgstr ""
+
+#: includes/class-lnh-settings.php:133
+msgid "Always dark"
+msgstr ""
+
+#: includes/class-lnh-settings.php:137
+msgid "Agents"
+msgstr ""
+
+#: includes/class-lnh-settings.php:139
+msgid "Expected run interval (minutes)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:139
+msgid "The dashboard warns you when the agents have not reported for twice this time."
+msgstr ""
+
+#: includes/class-lnh-settings.php:140
+msgid "Keep activity logs (days)"
+msgstr ""
+
+#: includes/class-lnh-settings.php:144
+msgid "Advanced"
+msgstr ""
+
+#: includes/class-lnh-settings.php:146
+msgid "Delete all plugin data when uninstalling"
+msgstr ""
+
+#: includes/class-lnh-settings.php:146
+msgid "Removes settings, presets and activity logs. Articles and their audit metadata are never deleted."
+msgstr ""
+
+#: includes/class-lnh-shortcode.php:64
+msgid "View all"
+msgstr ""
+
+#: includes/class-lnh-shortcode.php:70
+msgid "No articles yet."
+msgstr ""
+
+#: includes/class-lnh-shortcode.php:204
+msgid "%s ago"
+msgstr ""
+
+#: includes/class-lnh-shortcode.php:245
+msgid "AI image"
+msgstr ""
+
+#: includes/class-lnh-shortcode.php:322
+msgid "Articles pagination"
+msgstr ""
+
+#: views/activity.php:10
+msgid "last report %s"
+msgstr ""
+
+#: views/activity.php:18
+msgid "web searches"
+msgstr ""
+
+#: views/activity.php:19
+msgid "pages read"
+msgstr ""
+
+#: views/activity.php:20
+msgid "stories found"
+msgstr ""
+
+#: views/activity.php:21
+msgid "skipped"
+msgstr ""
+
+#: views/activity.php:24
+msgid "drafts written"
+msgstr ""
+
+#: views/activity.php:25
+msgid "image prompts"
+msgstr ""
+
+#: views/activity.php:26
+msgid "images generated"
+msgstr ""
+
+#: views/activity.php:29
+msgid "audits"
+msgstr ""
+
+#: views/activity.php:30
+msgid "approved"
+msgstr ""
+
+#: views/activity.php:31
+msgid "flagged"
+msgstr ""
+
+#: views/activity.php:32
+msgid "sent to WordPress"
+msgstr ""
+
+#: views/activity.php:40
+msgid "idle"
+msgstr ""
+
+#: views/activity.php:49
+msgid "Pipeline – last 7 days"
+msgstr ""
+
+#: views/activity.php:52
+msgid "Stories found"
+msgstr ""
+
+#: views/activity.php:53
+msgid "Articles written"
+msgstr ""
+
+#: views/activity.php:54
+msgid "Approved by auditor"
+msgstr ""
+
+#: views/activity.php:56
+msgid "Published by you"
+msgstr ""
+
+#: views/activity.php:70
+msgid "Live feed"
+msgstr ""
+
+#: views/activity.php:73
+msgid "All agents"
+msgstr ""
+
+#: views/activity.php:95
+msgid "Runs"
+msgstr ""
+
+#: views/activity.php:96
+msgid "No runs yet."
+msgstr ""
+
+#: views/activity.php:11
+msgid "%d run in the last 7 days"
+msgid_plural "%d runs in the last 7 days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/builder.php:7
+msgid "Yes"
+msgstr ""
+
+#: views/builder.php:7
+msgid "No"
+msgstr ""
+
+#: views/builder.php:35
+msgid "Columns"
+msgstr ""
+
+#: views/builder.php:37
+msgid "Light"
+msgstr ""
+
+#: views/builder.php:37
+msgid "Dark"
+msgstr ""
+
+#: views/builder.php:44
+msgid "Source"
+msgstr ""
+
+#: views/builder.php:44
+msgid "Created by the agents"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Order by"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Date"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Last modified"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Audit score"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Title"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Comments"
+msgstr ""
+
+#: views/builder.php:45
+msgid "Random"
+msgstr ""
+
+#: views/builder.php:46
+msgid "Direction"
+msgstr ""
+
+#: views/builder.php:46
+msgid "Newest / highest first"
+msgstr ""
+
+#: views/builder.php:46
+msgid "Oldest / lowest first"
+msgstr ""
+
+#: views/builder.php:48
+msgid "Categories"
+msgstr ""
+
+#: views/builder.php:53
+msgid "Exclude categories (slugs)"
+msgstr ""
+
+#: views/builder.php:54
+msgid "Tags (slugs)"
+msgstr ""
+
+#: views/builder.php:55
+msgid "Only newer than"
+msgstr ""
+
+#: views/builder.php:56
+msgid "Minimum audit score"
+msgstr ""
+
+#: views/builder.php:57
+msgid "Skip the first N"
+msgstr ""
+
+#: views/builder.php:58
+msgid "Only these post IDs"
+msgstr ""
+
+#: views/builder.php:59
+msgid "Exclude post IDs"
+msgstr ""
+
+#: views/builder.php:60
+msgid "Language code"
+msgstr ""
+
+#: views/builder.php:64
+msgid "What to show"
+msgstr ""
+
+#: views/builder.php:66
+msgid "Image"
+msgstr ""
+
+#: views/builder.php:67
+msgid "Category"
+msgstr ""
+
+#: views/builder.php:69
+msgid "Excerpt"
+msgstr ""
+
+#: views/builder.php:70
+msgid "Source name"
+msgstr ""
+
+#: views/builder.php:71
+msgid "Author"
+msgstr ""
+
+#: views/builder.php:72
+msgid "“Read more” link"
+msgstr ""
+
+#: views/builder.php:73
+msgid "“AI image” badge"
+msgstr ""
+
+#: views/builder.php:74
+msgid "Excerpt words"
+msgstr ""
+
+#: views/builder.php:77
+msgid "Title tag"
+msgstr ""
+
+#: views/builder.php:78
+msgid "Open links"
+msgstr ""
+
+#: views/builder.php:78
+msgid "In the same tab"
+msgstr ""
+
+#: views/builder.php:78
+msgid "In a new tab"
+msgstr ""
+
+#: views/builder.php:82
+msgid "Extras"
+msgstr ""
+
+#: views/builder.php:84
+msgid "Section heading"
+msgstr ""
+
+#: views/builder.php:84
+msgid "Latest news"
+msgstr ""
+
+#: views/builder.php:85
+msgid "“View all” link (URL)"
+msgstr ""
+
+#: views/builder.php:86
+msgid "“View all” text"
+msgstr ""
+
+#: views/builder.php:87
+msgid "Pagination"
+msgstr ""
+
+#: views/builder.php:89
+msgid "Extra CSS class"
+msgstr ""
+
+#: views/builder.php:90
+msgid "Message when empty"
+msgstr ""
+
+#: views/builder.php:95
+msgid "Preset name, e.g. homepage"
+msgstr ""
+
+#: views/builder.php:96
+msgid "Save as preset"
+msgstr ""
+
+#: views/builder.php:102
+msgid "Shortcode"
+msgstr ""
+
+#: views/builder.php:103
+msgid "Copy"
+msgstr ""
+
+#: views/builder.php:104
+msgid "Only options that differ from your defaults are included. Change the defaults in Settings → Shortcode defaults."
+msgstr ""
+
+#: views/builder.php:108
+msgid "Live preview"
+msgstr ""
+
+#: views/builder.php:113
+msgid "Saved presets"
+msgstr ""
+
+#: views/builder.php:115
+msgid "No presets yet. Save one to reuse it with [lehigh_news preset=\"name\"]."
+msgstr ""
+
+#: views/builder.php:126
+msgid "Delete"
+msgstr ""
+
+#: views/dashboard.php:15
+msgid "See what the agents did"
+msgstr ""
+
+#: views/dashboard.php:19
+msgid "Waiting for review"
+msgstr ""
+
+#: views/dashboard.php:20
+msgid "Flagged by the auditor"
+msgstr ""
+
+#: views/dashboard.php:21
+msgid "Published this week"
+msgstr ""
+
+#: views/dashboard.php:22
+msgid "Average audit score (30 days)"
+msgstr ""
+
+#: views/dashboard.php:23
+msgid "AI images this week"
+msgstr ""
+
+#: views/dashboard.php:24
+msgid "Tokens used this week"
+msgstr ""
+
+#: views/dashboard.php:30
+msgid "Waiting for your decision"
+msgstr ""
+
+#: views/dashboard.php:30
+msgid "Open the queue"
+msgstr ""
+
+#: views/dashboard.php:32
+msgid "Nothing to review right now. New articles appear here as soon as the agents finish them."
+msgstr ""
+
+#: views/dashboard.php:53
+msgid "Recent agent runs"
+msgstr ""
+
+#: views/dashboard.php:53
+msgid "All activity"
+msgstr ""
+
+#: views/dashboard.php:64
+msgid "Your agents"
+msgstr ""
+
+#: views/dashboard.php:76
+msgid "active %s"
+msgstr ""
+
+#: views/dashboard.php:76
+msgid "no activity yet"
+msgstr ""
+
+#: views/dashboard.php:84
+msgid "Connect your agents"
+msgstr ""
+
+#: views/dashboard.php:89
+msgid "Create an %s for the account the agents will post with."
+msgstr ""
+
+#: views/dashboard.php:90
+msgid "Application Password"
+msgstr ""
+
+#: views/dashboard.php:93
+msgid "Put these two lines in the agents’ .env file:"
+msgstr ""
+
+#: views/dashboard.php:96
+msgid "Run python main.py check, then python main.py run."
+msgstr ""
+
+#: views/metabox.php:14
+msgid "Open full review"
+msgstr ""
+
+#: views/queue.php:15
+msgid "Search articles…"
+msgstr ""
+
+#: views/queue.php:16
+msgid "Min. score"
+msgstr ""
+
+#: views/queue.php:18
+msgid "Newest first"
+msgstr ""
+
+#: views/queue.php:19
+msgid "Highest score first"
+msgstr ""
+
+#: views/queue.php:21
+msgid "Filter"
+msgstr ""
+
+#: views/queue.php:25
+msgid "No articles here."
+msgstr ""
+
+#: views/queue.php:30
+msgid "Bulk actions"
+msgstr ""
+
+#: views/queue.php:31
+msgid "Publish"
+msgstr ""
+
+#: views/queue.php:32
+msgid "Reject"
+msgstr ""
+
+#: views/queue.php:33
+msgid "Move back to review"
+msgstr ""
+
+#: views/queue.php:33
+msgid "Delete permanently"
+msgstr ""
+
+#: views/queue.php:35
+msgid "Apply"
+msgstr ""
+
+#: views/queue.php:41
+msgid "Article"
+msgstr ""
+
+#: views/queue.php:41
+msgid "Audit"
+msgstr ""
+
+#: views/queue.php:41
+msgid "Received"
+msgstr ""
+
+#: views/queue.php:79
+msgid "Restore"
+msgstr ""
+
+#: views/queue.php:81
+msgid "View"
+msgstr ""
+
+#: views/queue.php:36
+msgid "%d article"
+msgid_plural "%d articles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/queue.php:65
+msgid "%d revision"
+msgid_plural "%d revisions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/queue.php:66
+msgid "%d media item pending"
+msgid_plural "%d media items pending"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/review.php:19
+msgid "Draft – waiting for review"
+msgstr ""
+
+#: views/review.php:19
+msgid "Flagged – pending review"
+msgstr ""
+
+#: views/review.php:31
+msgid "AI-generated image"
+msgstr ""
+
+#: views/review.php:37
+msgid "No featured image"
+msgstr ""
+
+#: views/review.php:41
+msgid "Search result preview"
+msgstr ""
+
+#: views/review.php:52
+msgid "Your decision"
+msgstr ""
+
+#: views/review.php:54
+msgid "This article is live."
+msgstr ""
+
+#: views/review.php:55
+msgid "View article"
+msgstr ""
+
+#: views/review.php:57
+msgid "Rejected: %s"
+msgstr ""
+
+#: views/review.php:60
+msgid "Publish now"
+msgstr ""
+
+#: views/review.php:64
+msgid "Or schedule it"
+msgstr ""
+
+#: views/review.php:65
+msgid "Schedule"
+msgstr ""
+
+#: views/review.php:75
+msgid "Reject (optional reason)"
+msgstr ""
+
+#: views/review.php:77
+msgid "Reject article"
+msgstr ""
+
+#: views/review.php:81
+msgid "Edit in the WordPress editor"
+msgstr ""
+
+#: views/review.php:87
+msgid "Score given by the Auditor agent after comparing the article with the facts reported by the Researcher."
+msgstr ""
+
+#: views/review.php:96
+msgid "%d links checked, none broken"
+msgstr ""
+
+#: views/review.php:99
+msgid "Unsafe HTML found"
+msgstr ""
+
+#: views/review.php:99
+msgid "HTML is clean"
+msgstr ""
+
+#: views/review.php:103
+msgid "Figures not found in the source: %s"
+msgstr ""
+
+#: views/review.php:104
+msgid "All figures appear in the source"
+msgstr ""
+
+#: views/review.php:108
+msgid "Copied from source: %d%%"
+msgstr ""
+
+#: views/review.php:111
+msgid "%d words"
+msgstr ""
+
+#: views/review.php:119
+msgid "Auditor notes"
+msgstr ""
+
+#: views/review.php:121
+msgid "No issues reported."
+msgstr ""
+
+#: views/review.php:128
+msgid "Auto"
+msgstr ""
+
+#: views/review.php:128
+msgid "AI"
+msgstr ""
+
+#: views/review.php:140
+msgid "Facts the Researcher extracted"
+msgstr ""
+
+#: views/review.php:145
+msgid "Featured image"
+msgstr ""
+
+#: views/review.php:147
+msgid "AI-generated"
+msgstr ""
+
+#: views/review.php:148
+msgid "It is labelled as an illustration in its caption. Check that it does not suggest something the story does not say."
+msgstr ""
+
+#: views/review.php:149
+msgid "Prompt the Writer wrote"
+msgstr ""
+
+#: views/review.php:151
+msgid "Openly licensed photo – credit is in the caption."
+msgstr ""
+
+#: views/review.php:153
+msgid "No image yet. Set one in the editor."
+msgstr ""
+
+#: views/review.php:156
+msgid "Media still to add"
+msgstr ""
+
+#: views/review.php:162
+msgid "How the agents got here"
+msgstr ""
+
+#: views/review.php:162
+msgid "Full run"
+msgstr ""
+
+#: views/review.php:167
+msgid "No trace stored for this article."
+msgstr ""
+
+#: views/review.php:95
+msgid "%d broken link"
+msgid_plural "%d broken links"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/run.php:5
+msgid "Run not found."
+msgstr ""
+
+#: views/run.php:5
+msgid "Back to activity"
+msgstr ""
+
+#: views/run.php:22
+msgid "OK"
+msgstr ""
+
+#: views/run.php:24
+msgid "Started"
+msgstr ""
+
+#: views/run.php:25
+msgid "Duration"
+msgstr ""
+
+#: views/run.php:26
+msgid "Topic"
+msgstr ""
+
+#: views/run.php:27
+msgid "Mode"
+msgstr ""
+
+#: views/run.php:27
+msgid "Test (nothing sent)"
+msgstr ""
+
+#: views/run.php:31
+msgid "Model"
+msgstr ""
+
+#: views/run.php:31
+msgid "Calls"
+msgstr ""
+
+#: views/run.php:31
+msgid "Input tokens"
+msgstr ""
+
+#: views/run.php:31
+msgid "Output tokens"
+msgstr ""
+
+#: views/run.php:42
+msgid "Run-level steps"
+msgstr ""
+
+#: views/run.php:45
+msgid "Open article"
+msgstr ""
+
+#: views/run.php:57
+msgid "Show the image prompt"
+msgstr ""
+
+#: views/runs-table.php:7
+msgid "Run"
+msgstr ""
+
+#: views/runs-table.php:8
+msgid "Found"
+msgstr ""
+
+#: views/runs-table.php:8
+msgid "Failed"
+msgstr ""
+
+#: views/runs-table.php:8
+msgid "Status"
+msgstr ""
+
+#: views/runs-table.php:15
+msgid "test"
+msgstr ""
+
+#: views/settings.php:44
+msgid "— keep as is —"
+msgstr ""
+
+#: views/settings.php:47
+msgid "— none —"
+msgstr ""
+
+#: views/settings.php:63
+msgid "Save changes"
+msgstr ""

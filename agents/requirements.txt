@@ -1,0 +1,8 @@
+google-genai>=1.0
+python-dotenv>=1.0
+requests>=2.31
+# Only needed when REDACCTOR_MODEL points at a Claude / GPT model:
+anthropic>=0.40
+openai>=1.50
+# Tests
+pytest>=8
