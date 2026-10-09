@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Arimo:wght@400&display=swap">
 
 <style>
-  /* Layout: scrolling home. Full-bleed hero, full-width rotating 3D carousel, wireframe globe, ledger table, sticky-card journey, dark photo columns, quote band, marquee. Every photo is a numbered colour block (FOTO 01-25). */
+  /* Layout: scrolling home. Full-bleed hero, full-width rotating 3D carousel, ledger table, sticky-card journey, dark photo columns, quote band, marquee. Every photo is a numbered colour block (FOTO 01-25). */
   :root {
     --bg: #FFFFFF;
     --soft: #F4F7F2;
@@ -98,9 +98,11 @@
 
   /* City */
   .world { padding-block: clamp(48px, 8vw, 112px); border-top: 1px solid var(--line); }
-  .world-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 80px); align-items: center; }
-  #globe { width: 100%; aspect-ratio: 1; max-width: 520px; display: block; margin-inline: auto; }
-  .stats { display: flex; gap: clamp(20px, 4vw, 56px); margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .world-in { display: grid; justify-items: center; text-align: center; }
+  .world-in .label { justify-content: center; }
+  .world-in .label::after { content: ''; width: 44px; height: 1px; background: currentColor; }
+  .world-in .lead { max-width: 30ch; font-size: clamp(1.3rem, 3vw, 2.2rem); margin-inline: auto; }
+  .stats { display: flex; justify-content: center; gap: clamp(28px, 7vw, 120px); margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--line); flex-wrap: wrap; width: 100%; max-width: 720px; }
   .stats b { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
   .stats span { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
 
@@ -178,7 +180,7 @@
   }
   @media (max-width: 860px) {
     .rail { display: none; }
-    .world-grid, .proc-grid, .foot { grid-template-columns: 1fr; }
+    .proc-grid, .foot { grid-template-columns: 1fr; }
     .sticky-card, .contrib .copy { position: static; }
     .contrib-grid { grid-template-columns: 1fr 1fr; }
     .contrib .copy { grid-column: 1 / -1; order: -1; }
@@ -252,8 +254,7 @@
   </section>
 
   <section class="world" data-num="03" data-name="City">
-    <div class="wrap world-grid">
-      <canvas id="globe" width="520" height="520" role="img" aria-label="Wireframe globe with Florida marked"></canvas>
+    <div class="wrap world-in">
       <div class="rise">
         <p class="label">The city</p>
         <p class="lead" style="margin-top: 24px">A local guide to Lehigh Acres, Florida: businesses, jobs, events and upcoming projects, <span class="coral">in one place.</span></p>
@@ -459,33 +460,4 @@
     });
     document.addEventListener('pointerleave', function () { cur.classList.remove('on'); });
   }
-
-  /* Wireframe globe with Florida marked */
-  var cv = $('#globe'), ctx = cv.getContext('2d'), rot = -1.2, FL = { lat: 26.6, lon: -81.6 };
-  function proj(lat, lon, w, R) {
-    var la = lat * Math.PI / 180, lo = lon * Math.PI / 180 + rot;
-    return { x: w / 2 + Math.cos(la) * Math.sin(lo) * R, y: w / 2 - Math.sin(la) * R, z: Math.cos(la) * Math.cos(lo) };
-  }
-  function draw() {
-    var w = cv.width, R = w * 0.42, lat, lon, p, pen;
-    ctx.clearRect(0, 0, w, w); ctx.lineWidth = 1; ctx.strokeStyle = '#14181A'; ctx.globalAlpha = 0.25;
-    ctx.beginPath(); ctx.arc(w / 2, w / 2, R, 0, 7); ctx.stroke();
-    for (lat = -60; lat <= 60; lat += 30) {
-      ctx.beginPath(); pen = false;
-      for (lon = -180; lon <= 180; lon += 6) { p = proj(lat, lon, w, R); if (p.z < 0) { pen = false; continue; } if (!pen) { ctx.moveTo(p.x, p.y); pen = true; } else ctx.lineTo(p.x, p.y); }
-      ctx.stroke();
-    }
-    for (lon = -180; lon < 180; lon += 30) {
-      ctx.beginPath(); pen = false;
-      for (lat = -90; lat <= 90; lat += 6) { p = proj(lat, lon, w, R); if (p.z < 0) { pen = false; continue; } if (!pen) { ctx.moveTo(p.x, p.y); pen = true; } else ctx.lineTo(p.x, p.y); }
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1; p = proj(FL.lat, FL.lon, w, R);
-    if (p.z > 0) {
-      ctx.fillStyle = '#FF5A5F'; ctx.beginPath(); ctx.arc(p.x, p.y, 7, 0, 7); ctx.fill();
-      ctx.strokeStyle = '#FF5A5F'; ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.arc(p.x, p.y, 15, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
-    }
-  }
-  function spin() { rot += 0.004; draw(); requestAnimationFrame(spin); }
-  if (reduce) { rot = 1.43; draw(); } else { spin(); }
 </script>
