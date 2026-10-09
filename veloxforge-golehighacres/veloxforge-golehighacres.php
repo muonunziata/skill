@@ -24,6 +24,7 @@ add_action( 'plugins_loaded', function () {
 		return;
 	}
 	require_once GLH_DIR . 'includes/class-glh.php';
+	require_once GLH_DIR . 'includes/business.php';
 	require_once GLH_DIR . 'includes/widgets.php';
 	require_once GLH_DIR . 'includes/presets.php';
 	GLH::init();

@@ -22,9 +22,19 @@ Módulo de VeloxForge que convierte cada sección de GoLehighAcres.org en un **b
 | Negocios fundadores | Texto, botón, fotos de cada columna; las dos columnas son espejo (interruptor de simetría) |
 | Cita | Frase, palabra destacada, autor, foto de fondo, altura |
 | Cinta de palabras | Palabras, separador, velocidad |
+| Perfil de negocio | Nombre, categoría, logo, descripción, galería de fotos, dirección, enlace propio de Google Maps, teléfono, correo, sitio web, horario, etiquetas, puntuación, insignia de fundador, redes, datos estructurados LocalBusiness para Google, y todos los textos |
 | Pared de videos infinita | Videos (portada, archivo, título, categoría, orientación), filas y columnas, movimiento solo, vista previa, ventana emergente, cursor |
 
 Todos los bloques traen además los controles comunes de VeloxForge: fondo, espacios, bordes, sombra, animación de entrada, visibilidad por dispositivo, condiciones y CSS propio.
+
+## Perfil de negocio
+
+Al hacer click en un negocio del directorio se abre su perfil: ventana emergente centrada en escritorio y pantalla completa en celular, con galería de fotos, logo, descripción, botones **Open in Google Maps** y **Get directions** (usan la dirección del negocio), teléfono, correo, sitio web, horario, etiquetas, puntuación, redes y la insignia de negocio fundador.
+
+- **Negocios reales:** en el bloque «Directorio con buscador» → «Negocios reales», cada negocio tiene todos esos campos (hasta 6 fotos).
+- **Negocios de ejemplo:** usan los textos de «Perfil: datos de ejemplo» y llevan un aviso que se puede ocultar.
+- **Página propia de cada negocio:** el bloque «Perfil de negocio» muestra el mismo diseño dentro de una página y añade datos estructurados `LocalBusiness` para buscadores.
+- Para desactivar la ventana emergente: interruptor «Abrir el perfil del negocio al hacer click».
 
 ## Biblioteca
 
@@ -57,7 +67,8 @@ Se cargan Poppins desde Google Fonts. Para desactivarlo (por privacidad): `add_f
 ```
 veloxforge-golehighacres.php   arranque y comprobación de VeloxForge
 includes/class-glh.php         módulo, controles, fotos marcadas, carga de recursos
-includes/widgets.php           los 10 bloques
+includes/business.php          perfil de negocio (bloque, marcado compartido, Google Maps, datos estructurados)
+includes/widgets.php           los demás bloques
 includes/presets.php           biblioteca de secciones y páginas
 assets/glh.css, assets/glh.js  estilos y comportamiento (solo se cargan si la página usa un bloque)
 ```

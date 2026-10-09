@@ -1,0 +1,19 @@
+GoLehighAcres.org - proyecto completo
+=====================================
+
+EMPIEZA POR: GUIA-DE-TRASPASO.md  (que se hizo, por que, y como continuar en local)
+
+paginas/
+  golehighacres-home.html       Explore (inicio)                  <- vigente
+  golehighacres-menu.html       News & Events (pared de videos)   <- vigente
+  golehighacres-immersion.html  primera version (espanol)         <- referencia
+  golehighacres-feature.html    version editorial (espanol)       <- referencia
+  golehighacres.html            primera pagina (espanol)          <- referencia
+  Se abren con doble clic. Las fotos son recuadros numerados (FOTO 01... / VIDEO 01...).
+
+veloxforge-golehighacres.zip    Plugin listo para instalar en WordPress (requiere VeloxForge 1.3+).
+veloxforge-golehighacres/       Mismo plugin con codigo fuente y README.md.
+referencias/                    Logo (simbolo y nombre).
+dev/                            Pruebas automaticas y herramientas (ver dev/README.md).
+
+Pendiente principal: probar el plugin en un WordPress real con el editor visual abierto.

@@ -37,6 +37,7 @@ class GLH_Presets {
 		$add( 'glh-carousel', 'Carrusel 3D giratorio', $c, '🎠', 'Fotos en anillo 3D que giran solas, a todo el ancho.', array( self::S( array( self::W( 'glh-carousel' ) ), array( 'padding' => array( 'desktop' => array( 'top' => 96, 'right' => 0, 'bottom' => 64, 'left' => 0, 'unit' => 'px' ) ) ) ) ) );
 		$add( 'glh-stats', 'Ciudad: texto y cifras', $c, '🔢', 'Frase principal y tres cifras que se animan.', array( self::B( array( self::W( 'glh-stats' ) ) ) ) );
 		$add( 'glh-directory', 'Directorio con buscador y categorías', $c, '🔎', 'Buscador, 18 categorías de negocio, filtros y tabla de novedades.', array( self::B( array( self::W( 'glh-directory' ) ) ) ) );
+		$add( 'glh-business', 'Perfil de negocio', $c, '🏪', 'Logo, descripción, galería, contacto, horario y enlace a Google Maps.', array( self::B( array( self::W( 'glh-business', array( 'sample' => 1 ) ) ) ) ) );
 		$add( 'glh-journey', 'Recorrido con tarjeta fija', $c, '🧭', 'Etapas con una tarjeta de foto que cambia al avanzar.', array( self::B( array( self::W( 'glh-journey' ) ) ) ) );
 		$add( 'glh-founding', 'Negocios fundadores (simétrico)', $c, '🤝', 'Texto centrado y una columna de fotos espejo a cada lado.', array( self::S( array( self::W( 'glh-founding' ) ), array( 'bg_color' => '#0B2F22' ) ) ) );
 		$add( 'glh-quote', 'Cita a pantalla completa', $c, '❝', 'Frase grande sobre una foto de fondo.', array( self::S( array( self::W( 'glh-quote' ) ) ) ) );

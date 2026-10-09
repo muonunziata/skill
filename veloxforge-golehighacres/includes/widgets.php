@@ -43,6 +43,7 @@ class GLH_Widgets {
 	}
 
 	public static function register() {
+		GLH_Business::register();
 
 		/* ======================= 1. CABECERA ======================= */
 		self::reg( 'glh-header', 'Cabecera GoLehighAcres', '🧭', array(
@@ -205,7 +206,7 @@ class GLH_Widgets {
 				'default' => self::default_cats(),
 				'fields' => array( GLH::t( 'name', 'Nombre', '' ), self::c( 'color', 'Color', 'color', 'content' ), self::c( 'types', 'Tipos de negocio (separados por coma)', 'textarea', 'content' ) ) ) ),
 			self::c( 'listings', 'Negocios reales (vacío = se generan ejemplos, uno por cada tipo)', 'repeater', 'content', array( 'group' => 'Negocios', 'max' => 200, 'title_field' => 'name',
-				'fields' => array( GLH::t( 'name', 'Nombre', '' ), GLH::t( 'category', 'Categoría (igual que arriba)', '' ), GLH::t( 'type', 'Tipo', '' ), GLH::t( 'area', 'Zona', 'Lehigh Acres' ), self::c( 'url', 'Enlace', 'url', 'content' ) ) ) ),
+				'fields' => array_merge( array( GLH::t( 'name', 'Nombre', '' ), GLH::t( 'category', 'Categoría (igual que arriba)', '' ), GLH::t( 'type', 'Tipo', '' ), GLH::t( 'area', 'Zona', 'Lehigh Acres' ), self::c( 'url', 'Enlace (si no hay sitio web)', 'url', 'content' ) ), GLH_Business::profile_fields(), GLH_Business::photo_fields() ) ) ),
 			GLH::t( 'sample_label', 'Etiqueta de los ejemplos (vacío = ocultar)', 'Sample', 'text', 'Negocios' ),
 			GLH::t( 'sample_name', 'Prefijo del nombre de ejemplo', 'Sample', 'text', 'Negocios' ),
 			GLH::t( 'area_default', 'Zona por defecto', 'Lehigh Acres', 'text', 'Negocios' ),
@@ -215,7 +216,7 @@ class GLH_Widgets {
 			GLH::col( 'c_accent', 'Color de énfasis (foco y resaltado)', '--glh-coral' ),
 			GLH::col( 'c_ink', 'Color del texto', '--glh-ink' ),
 			GLH::size( 'title_size', 'Tamaño del título (px)', '.glh-dir__title', 24, 160 ),
-		), self::ph_controls( 8 ) ), function ( $s, $ctx ) {
+		), self::profile_controls(), GLH_Business::label_controls( 'Perfil: textos' ), self::ph_controls( 8 ) ), function ( $s, $ctx ) {
 			$cats = array();
 			foreach ( array_values( (array) self::v( $s, 'cats', array() ) ) as $i => $c ) {
 				$types = array_values( array_filter( array_map( 'trim', explode( ',', isset( $c['types'] ) ? (string) $c['types'] : '' ) ) ) );
@@ -233,7 +234,12 @@ class GLH_Widgets {
 						break;
 					}
 				}
-				$items[] = array( 'n' => (string) $l['name'], 'k' => $ci === false ? 0 : $ci, 's' => isset( $l['type'] ) ? (string) $l['type'] : '', 'a' => ! empty( $l['area'] ) ? (string) $l['area'] : self::v( $s, 'area_default', '' ), 'u' => isset( $l['url'] ) ? GLH::url( $l['url'] ) : '', 'x' => 0 );
+				$ck    = $ci === false ? 0 : $ci;
+				$prof  = GLH_Business::normalize( $l, array( 'name' => (string) $l['name'], 'cat' => isset( $cats[ $ck ] ) ? $cats[ $ck ]['n'] : '', 'color' => isset( $cats[ $ck ] ) ? $cats[ $ck ]['c'] : '#2E7D55' ) );
+				if ( $prof['web'] === '' && ! empty( $l['url'] ) ) {
+					$prof['web'] = GLH::url( $l['url'] );
+				}
+				$items[] = array( 'n' => (string) $l['name'], 'k' => $ck, 's' => isset( $l['type'] ) ? (string) $l['type'] : '', 'a' => ! empty( $l['area'] ) ? (string) $l['area'] : self::v( $s, 'area_default', '' ), 'u' => isset( $l['url'] ) ? GLH::url( $l['url'] ) : '', 'x' => 0, 'p' => $prof );
 			}
 			$sample = self::v( $s, 'sample_name', 'Sample' );
 			if ( ! $items ) {
@@ -243,11 +249,20 @@ class GLH_Widgets {
 					}
 				}
 			}
-			$data = array( 'cats' => $cats, 'items' => $items, 'sample' => self::v( $s, 'sample_label', '' ), 'none' => array( self::v( $s, 'lbl_none_t', '' ), self::v( $s, 'lbl_none_d', '' ) ), 'types' => self::v( $s, 'lbl_types', 'types' ) );
+			$sp_hours = array();
+			foreach ( preg_split( '/\r\n|\r|\n/', (string) self::v( $s, 'sample_hours', '' ) ) as $line ) {
+				$hp = array_map( 'trim', explode( '|', $line, 2 ) );
+				if ( $hp[0] !== '' ) {
+					$sp_hours[] = array( $hp[0], isset( $hp[1] ) ? $hp[1] : '' );
+				}
+			}
+			$data = array( 'profile' => ! empty( $s['profile'] ) ? 1 : 0, 'L' => GLH_Business::labels( $s ), 'note' => self::v( $s, 'sample_note', '' ),
+				'sp' => array( 'desc' => self::v( $s, 'sample_desc', '' ), 'address' => self::v( $s, 'sample_address', '' ), 'phone' => self::v( $s, 'sample_phone', '' ), 'email' => self::v( $s, 'sample_email', '' ), 'web' => GLH::url( self::v( $s, 'sample_web', '' ) ), 'hours' => $sp_hours, 'tags' => array_values( array_filter( array_map( 'trim', explode( ',', (string) self::v( $s, 'sample_tags', '' ) ) ) ) ) ),
+				'cats' => $cats, 'items' => $items, 'sample' => self::v( $s, 'sample_label', '' ), 'none' => array( self::v( $s, 'lbl_none_t', '' ), self::v( $s, 'lbl_none_d', '' ) ), 'types' => self::v( $s, 'lbl_types', 'types' ) );
 			$start = (int) self::v( $s, 'ph_start', 8 );
 			$rows  = '';
 			foreach ( array_values( (array) self::v( $s, 'recent', array() ) ) as $i => $r ) {
-				$rows .= '<tr><td class="glh-thumb">' . GLH::photo( isset( $r['image'] ) ? $r['image'] : array(), $start + $i, $i + 2, '4/3', isset( $r['name'] ) ? $r['name'] : '', self::v( $s, 'ph_prefix', 'FOTO' ) ) . '</td><td class="glh-tn">' . ( ! empty( $r['url'] ) ? '<a href="' . GLH::url( $r['url'] ) . '">' . esc_html( $r['name'] ) . '</a>' : esc_html( isset( $r['name'] ) ? $r['name'] : '' ) ) . '</td><td>' . esc_html( isset( $r['category'] ) ? $r['category'] : '' ) . '</td><td>' . esc_html( isset( $r['area'] ) ? $r['area'] : '' ) . '</td></tr>';
+				$rows .= '<tr' . ( ! empty( $s['profile'] ) ? ' data-row tabindex="0" role="button"' : '' ) . '><td class="glh-thumb">' . GLH::photo( isset( $r['image'] ) ? $r['image'] : array(), $start + $i, $i + 2, '4/3', isset( $r['name'] ) ? $r['name'] : '', self::v( $s, 'ph_prefix', 'FOTO' ) ) . '</td><td class="glh-tn">' . ( ! empty( $r['url'] ) ? '<a href="' . GLH::url( $r['url'] ) . '">' . esc_html( $r['name'] ) . '</a>' : esc_html( isset( $r['name'] ) ? $r['name'] : '' ) ) . '</td><td>' . esc_html( isset( $r['category'] ) ? $r['category'] : '' ) . '</td><td>' . esc_html( isset( $r['area'] ) ? $r['area'] : '' ) . '</td></tr>';
 			}
 			$uid   = 'glhq' . substr( md5( wp_json_encode( $s ) ), 0, 6 );
 			$count = array();
@@ -452,6 +467,21 @@ class GLH_Widgets {
 			);
 			return '<section class="glh glh-wall' . ( ! empty( $s['frame'] ) ? ' has-frame' : '' ) . '" data-glh="wall"' . self::static_attr( $ctx ) . ' data-glh-cfg="' . GLH::json( $cfg ) . '" aria-label="Video wall. Drag to explore."><div class="glh-wall__stage">' . $tiles . '</div></section>';
 		} );
+	}
+
+	/** Ventana emergente con el perfil del negocio y datos de los perfiles de ejemplo. */
+	private static function profile_controls() {
+		return array(
+			GLH::sw( 'profile', 'Abrir el perfil del negocio al hacer click (ventana emergente en escritorio, pantalla completa en móvil)', 1, 'Perfil: ventana emergente' ),
+			GLH::t( 'sample_desc', 'Ejemplo: descripción ({type} = tipo de negocio)', 'Sample description for this {type}. Tell visitors what makes the business special: what you offer, how long you have served Lehigh Acres and why neighbours choose you.', 'textarea', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_address', 'Ejemplo: dirección', 'Sample Ave, Lehigh Acres, FL 33971', 'text', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_phone', 'Ejemplo: teléfono', '(239) 555-0100', 'text', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_email', 'Ejemplo: correo', 'hello@example.com', 'text', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_web', 'Ejemplo: sitio web', 'https://example.com', 'text', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_hours', 'Ejemplo: horario (Día|Horas, una línea por día)', "Mon – Fri|8:00 AM – 5:00 PM\nSaturday|9:00 AM – 1:00 PM\nSunday|Closed", 'textarea', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_tags', 'Ejemplo: etiquetas (coma)', 'Locally owned, Sample tag', 'text', 'Perfil: datos de ejemplo' ),
+			GLH::t( 'sample_note', 'Aviso en perfiles de ejemplo (vacío = ocultar)', 'This is a sample profile. Every field (logo, description, photos, address, phone, hours, links) is editable for each real business.', 'textarea', 'Perfil: datos de ejemplo' ),
+		);
 	}
 
 	/** Categorías de negocio típicas de Lehigh Acres, con los tipos de cada una. */

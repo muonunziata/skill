@@ -138,6 +138,80 @@
 		update();
 	}
 
+
+	/* ---------- Perfil de negocio: galería, marcado y ventana emergente ---------- */
+	function bindGallery(root) {
+		var slides = q('.glh-pf-slide', root), th = q('.glh-pf-th', root), cnt = root.querySelector('.glh-pf-count'), i = 0;
+		function show(n) {
+			if (!slides.length) { return; }
+			i = (n + slides.length) % slides.length;
+			slides.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+			th.forEach(function (t, k) { t.setAttribute('aria-current', String(k === i)); });
+			if (cnt) { cnt.textContent = (i + 1) + ' / ' + slides.length; }
+		}
+		root.addEventListener('click', function (e) {
+			if (e.target.closest('.glh-pf-prev')) { show(i - 1); } else if (e.target.closest('.glh-pf-next')) { show(i + 1); }
+			var t = e.target.closest('.glh-pf-th'); if (t) { show(th.indexOf(t)); }
+		});
+		return { show: show, step: function (d) { show(i + d); }, count: slides.length };
+	}
+	function mapsUrl(p) { return p.maps || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address || (p.name + ' Lehigh Acres FL')); }
+	function dirUrl(p) { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address || (p.name + ' Lehigh Acres FL')); }
+	function profileHTML(p, L, ph) {
+		var gal = p.gallery && p.gallery.length ? p.gallery : null, n = gal ? gal.length : Math.max(1, ph || 4), slides = '', thumbs = '', i, k;
+		for (i = 0; i < n; i++) {
+			k = (i % 6) + 1;
+			var src = gal ? gal[i].src : '';
+			slides += '<div class="glh-pf-slide glh-k' + k + (i === 0 ? ' on' : '') + '">' + (src ? '<img src="' + esc(src) + '" alt="' + esc((gal[i].alt) || p.name) + '">' : '<b>' + esc(L.photo.toUpperCase() + ' ' + (i + 1)) + '</b><small>' + esc(p.name) + '</small>') + '</div>';
+			thumbs += '<button type="button" class="glh-pf-th glh-k' + k + '" aria-label="' + esc(L.photo + ' ' + (i + 1)) + '" aria-current="' + (i === 0) + '">' + (src ? '<img src="' + esc(src) + '" alt="">' : '') + '</button>';
+		}
+		var ini = p.name.replace(/^Sample\s+/i, '').split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('') || 'GO';
+		var stars = '';
+		if (p.rating > 0) { var r = Math.round(p.rating); stars = '<span class="glh-pf-stars" aria-label="' + p.rating + ' / 5">' + '★★★★★'.slice(0, r) + '☆☆☆☆☆'.slice(0, 5 - r) + '</span> <span>' + Number(p.rating).toFixed(1) + (p.reviews ? ' (' + p.reviews + ')' : '') + '</span>'; }
+		var tel = (p.phone || '').replace(/[^+\d]/g, '');
+		var rows = '<div><dt>' + esc(L.address) + '</dt><dd>' + esc(p.address || '') + '<br><a href="' + esc(mapsUrl(p)) + '" target="_blank" rel="noopener">' + esc(L.maps) + ' ↗</a></dd></div>';
+		if (p.phone) { rows += '<div><dt>' + esc(L.phone) + '</dt><dd><a href="tel:' + esc(tel) + '">' + esc(p.phone) + '</a></dd></div>'; }
+		if (p.email) { rows += '<div><dt>' + esc(L.email) + '</dt><dd>' + esc(p.email) + '</dd></div>'; }
+		if (p.web) { rows += '<div><dt>' + esc(L.web) + '</dt><dd><a href="' + esc(p.web) + '" target="_blank" rel="noopener">' + esc(p.web.replace(/^https?:\/\//, '')) + '</a></dd></div>'; }
+		if (p.hours && p.hours.length) { rows += '<div><dt>' + esc(L.hours) + '</dt><dd><div class="glh-pf-hours">' + p.hours.map(function (h) { return '<span>' + esc(h[0]) + '</span><span>' + esc(h[1]) + '</span>'; }).join('') + '</div></dd></div>'; }
+		return '<div class="glh-pf-gal"><div class="glh-pf-main">' + slides + (n > 1 ? '<button type="button" class="glh-pf-arrow glh-pf-prev" aria-label="‹">‹</button><button type="button" class="glh-pf-arrow glh-pf-next" aria-label="›">›</button><span class="glh-pf-count">1 / ' + n + '</span>' : '') + '</div>' + (n > 1 ? '<div class="glh-pf-thumbs">' + thumbs + '</div>' : '') + '</div>'
+			+ '<div class="glh-pf-info"><div class="glh-pf-head"><div class="glh-pf-logo" style="--dot:' + esc(p.color) + '">' + (p.logo ? '<img src="' + esc(p.logo) + '" alt="">' : esc(ini)) + '</div><div><h2 class="glh-pf-name">' + esc(p.name) + '</h2><div class="glh-pf-meta">' + (p.cat ? '<span class="glh-pf-cat"><i style="--dot:' + esc(p.color) + '"></i>' + esc(p.cat) + '</span>' : '') + stars + (p.founding ? '<span class="glh-pf-badge">' + esc(L.found) + '</span>' : '') + '</div></div></div>'
+			+ (p.desc ? '<p class="glh-pf-desc">' + esc(p.desc) + '</p>' : '')
+			+ '<div class="glh-pf-actions"><a class="glh-pf-btn main" href="' + esc(mapsUrl(p)) + '" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> ' + esc(L.maps) + '</a><a class="glh-pf-btn" href="' + esc(dirUrl(p)) + '" target="_blank" rel="noopener">' + esc(L.dir) + '</a>' + (p.phone ? '<a class="glh-pf-btn" href="tel:' + esc(tel) + '">' + esc(L.call) + '</a>' : '') + (p.web ? '<a class="glh-pf-btn" href="' + esc(p.web) + '" target="_blank" rel="noopener">' + esc(L.web) + '</a>' : '') + '</div>'
+			+ '<dl class="glh-pf-list">' + rows + '</dl>'
+			+ (p.tags && p.tags.length ? '<div class="glh-pf-tags">' + p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '')
+			+ (p.social && p.social.length ? '<div class="glh-pf-social">' + p.social.map(function (x) { return '<a href="' + esc(x[1]) + '" target="_blank" rel="noopener">' + esc(x[0]) + '</a>'; }).join('') + '</div>' : '')
+			+ (p.note ? '<p class="glh-pf-note">' + esc(p.note) + '</p>' : '') + '</div>';
+	}
+	var pmEl = null, pmGal = null, pmOpener = null;
+	function closeProfile() {
+		if (!pmEl) { return; }
+		pmEl.remove(); pmEl = null; pmGal = null; d.documentElement.classList.remove('glh-lock');
+		if (pmOpener && d.body.contains(pmOpener)) { pmOpener.focus({ preventScroll: true }); }
+	}
+	function openProfile(p, L, opener) {
+		closeProfile(); pmOpener = opener || null;
+		pmEl = d.createElement('div'); pmEl.className = 'glh-pm'; pmEl.setAttribute('role', 'dialog'); pmEl.setAttribute('aria-modal', 'true'); pmEl.setAttribute('aria-label', p.name);
+		pmEl.innerHTML = '<div class="glh-pm__box"><button type="button" class="glh-pm__close" aria-label="' + esc(L.close) + '">&#10005;</button>' + profileHTML(p, L, 4) + '</div>';
+		d.body.appendChild(pmEl); d.documentElement.classList.add('glh-lock');
+		pmGal = bindGallery(pmEl);
+		pmEl.addEventListener('click', function (e) { if (e.target === pmEl || e.target.closest('.glh-pm__close')) { closeProfile(); } });
+		pmEl.querySelector('.glh-pm__close').focus({ preventScroll: true });
+	}
+	d.addEventListener('keydown', function (e) {
+		if (!pmEl) { return; }
+		if (e.key === 'Escape') { closeProfile(); }
+		else if (e.key === 'ArrowLeft' && pmGal) { pmGal.step(-1); } else if (e.key === 'ArrowRight' && pmGal) { pmGal.step(1); }
+		else if (e.key === 'Tab') {
+			var f = q('button, a[href]', pmEl).filter(function (n) { return n.offsetParent !== null || n === d.activeElement; });
+			if (!f.length) { return; }
+			if (e.shiftKey && d.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && d.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+		}
+	});
+	function business(r) {
+		q('[data-glh="business"]', r).forEach(function (root) { if (once(root, 'bz') && !root.hasAttribute('data-glh-static')) { bindGallery(root); } });
+	}
+
 	/* ---------- Directorio: buscador, filtros y secciones ---------- */
 	function directory(r) {
 		q('[data-glh="directory"]', r).forEach(function (root) {
@@ -147,7 +221,25 @@
 			var dd = root.querySelector('.glh-dd'), ddBtn = root.querySelector('.glh-dd-btn'), ddList = root.querySelector('.glh-dd-list'), ddLabel = root.querySelector('.glh-dd-label'), opts = q('.glh-dd-opt', ddList), actI = 0, typed = '', typedT = 0;
 			var status = root.querySelector('.glh-status'), recent = root.querySelector('.glh-recent'), found = root.querySelector('.glh-found');
 			var active = null;
-			items.forEach(function (l) { l.h = ((cats[l.k] ? cats[l.k].n : '') + ' ' + l.s + ' ' + l.n).toLowerCase(); });
+			items.forEach(function (l, i) { l.i = i; l.h = ((cats[l.k] ? cats[l.k].n : '') + ' ' + l.s + ' ' + l.n).toLowerCase(); });
+			var L = data.L || {}, sp = data.sp || {};
+			function profileFor(l) {
+				if (l.p) { var p = l.p; p.note = ''; return p; }
+				var c = cats[l.k] || { n: '', c: '#2E7D55' };
+				return { name: l.n, cat: c.n, color: c.c, logo: '', desc: String(sp.desc || '').replace('{type}', l.s), address: sp.address || '', maps: '', phone: sp.phone || '', email: sp.email || '', web: sp.web || '', hours: sp.hours || [], tags: [l.s].concat(sp.tags || []), rating: 0, reviews: 0, founding: false, gallery: [], social: [], note: data.note || '' };
+			}
+			root.addEventListener('click', function (e) {
+				var row = e.target.closest('.glh-res[data-i]');
+				if (row && data.profile) { openProfile(profileFor(items[+row.getAttribute('data-i')]), L, row); return; }
+				var tr = e.target.closest('tr[data-row]');
+				if (tr && data.profile) {
+					var nm = tr.querySelector('.glh-tn').textContent, ct = tr.children[2].textContent;
+					openProfile({ name: nm, cat: ct, color: '#2E7D55', logo: '', desc: String(sp.desc || '').replace('{type}', ct.toLowerCase()), address: sp.address || '', maps: '', phone: sp.phone || '', email: sp.email || '', web: sp.web || '', hours: sp.hours || [], tags: [ct].concat(sp.tags || []), rating: 0, reviews: 0, founding: false, gallery: [], social: [], note: data.note || '' }, L, tr);
+				}
+			});
+			root.addEventListener('keydown', function (e) {
+				if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.glh-res[data-i], tr[data-row]')) { e.preventDefault(); e.target.click(); }
+			});
 			function hl(text, toks) {
 				var out = esc(text);
 				toks.forEach(function (t) { if (t) { out = out.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'); } });
@@ -212,8 +304,8 @@
 					groups++;
 					html += '<section class="glh-group"><h3><i style="background:' + esc(c.c) + '"></i>' + hl(c.n, toks) + '<span>' + list.length + '</span></h3>';
 					list.forEach(function (l) {
-						var name = l.u ? '<a href="' + esc(l.u) + '">' + hl(l.n, toks) + '</a>' : hl(l.n, toks);
-						html += '<div class="glh-res"><strong>' + name + '</strong><em>' + hl(l.s, toks) + '</em><em>' + esc(l.a || '') + '</em>' + (l.x && data.sample ? '<span class="glh-smp">' + esc(data.sample) + '</span>' : '<span></span>') + '</div>';
+						var name = (!data.profile && l.u) ? '<a href="' + esc(l.u) + '">' + hl(l.n, toks) + '</a>' : hl(l.n, toks);
+						html += '<div class="glh-res"' + (data.profile ? ' role="button" tabindex="0" data-i="' + l.i + '" aria-label="' + esc(l.n) + '"' : '') + '><strong>' + name + '</strong><em>' + hl(l.s, toks) + '</em><em>' + esc(l.a || '') + '</em>' + (l.x && data.sample ? '<span class="glh-smp">' + esc(data.sample) + '</span>' : '<span></span>') + (data.profile ? '<span class="glh-go" aria-hidden="true">→</span>' : '<span></span>') + '</div>';
 					});
 					html += '</section>';
 				});
@@ -394,7 +486,7 @@
 
 	function init(r) {
 		r = r || d;
-		rise(r); header(r); stats(r); carousel(r); journey(r); parallax(r); directory(r); wall(r);
+		rise(r); header(r); business(r); stats(r); carousel(r); journey(r); parallax(r); directory(r); wall(r);
 	}
 	window.GLH = { init: init };
 	if (d.readyState === 'loading') { d.addEventListener('DOMContentLoaded', function () { init(); }); } else { init(); }
