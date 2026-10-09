@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.0 =
+* Set up the agents in 3 steps: paste a free Gemini key, press “Download my agents” and double-click INICIAR (Windows / Mac). The downloaded package already contains the site address, a private connection password and the key, and installs everything it needs on first run. The manual flow remains under “Advanced”.
 
 = 1.4.1 =
 * “Working” animation on the control card: the four agents as a pipeline, the busy one wrapped in the logo's colour ring, finished ones ticked, data packets flowing between them, and a breathing idle state. Updates live and respects reduced-motion settings.

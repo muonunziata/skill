@@ -203,13 +203,17 @@ final class LNH_Admin {
 			'agents_started' => __( 'The agents will start working as soon as they connect.', 'lehigh-news-hub' ),
 			'agents_paused'  => __( 'The agents are paused. They finish the article in progress and then stop.', 'lehigh-news-hub' ),
 			'agents_run_now' => __( 'A run was requested: the agents will start within seconds.', 'lehigh-news-hub' ),
+			'pkg_key'         => __( 'Paste your Gemini key first (it looks like AIza… and is free at aistudio.google.com/apikey).', 'lehigh-news-hub' ),
+			'pkg_rejected'    => __( 'Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey.', 'lehigh-news-hub' ),
+			'pkg_unavailable' => __( 'This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead.', 'lehigh-news-hub' ),
+			'pkg_error'       => __( 'The agents package could not be created. Check that Application Passwords are available on this site.', 'lehigh-news-hub' ),
 			'error'     => __( 'Something went wrong. Nothing was changed.', 'lehigh-news-hub' ),
 			'none'      => __( 'Select at least one article first.', 'lehigh-news-hub' ),
 		);
 		if ( ! isset( $msgs[ $code ] ) ) {
 			return array();
 		}
-		return array( 'type' => in_array( $code, array( 'error', 'none' ), true ) ? 'error' : 'success', 'message' => $msgs[ $code ] );
+		return array( 'type' => ( in_array( $code, array( 'error', 'none' ), true ) || 0 === strpos( $code, 'pkg_' ) ) ? 'error' : 'success', 'message' => $msgs[ $code ] );
 	}
 
 	private static function open( string $title, string $sub = '' ): void {
@@ -358,7 +362,7 @@ final class LNH_Admin {
 			check_admin_referer( 'lnh_connect' );
 			$result = LNH_Connect::generate();
 		}
-		self::view( 'connect', array( 'result' => $result, 'available' => wp_is_application_passwords_available(), 'existing' => LNH_Connect::agent_user() ) );
+		self::view( 'connect', array( 'package' => LNH_Package::available(), 'result' => $result, 'available' => wp_is_application_passwords_available(), 'existing' => LNH_Connect::agent_user() ) );
 		self::close();
 	}
 

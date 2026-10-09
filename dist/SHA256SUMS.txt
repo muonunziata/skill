@@ -1,2 +1,2 @@
-7a145513dd64d2b27466617df2535d463aaf3e0eaa9a518e1aaa23b6314d7160  lehigh-news-hub-complete-1.4.1.zip
-bf69dabbb3d873be611b9b79417c725cf656caeedb1a41f57d947b274f5c1b2a  lehigh-news-hub.zip
+752fcf3b1abb843118f33cb650e81c20bf8b7d1cbbc6e6c138c62f67b2620e97  lehigh-news-hub-complete-1.5.0.zip
+6b225c1a89744c5199fe9eed13da7312e2bdbbf7d7ef4236f8123ea19e289a83  lehigh-news-hub.zip

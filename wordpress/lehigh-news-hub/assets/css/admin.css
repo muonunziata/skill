@@ -270,3 +270,12 @@ details summary{cursor:pointer;color:var(--c-accent);font-size:12.5px}
 @media (max-width:600px){.lnh-node{width:64px}.lnh-node__disc{width:50px;height:50px}.lnh-node__ico{font-size:22px}.lnh-node__label{font-size:10.5px}.lnh-anim__link{margin-top:23px}}
 @media (prefers-reduced-motion:reduce){.lnh-control::after,.lnh-node__ring,.lnh-node__ico,.lnh-node__disc,.lnh-spark,.lnh-anim__link b,.lnh-dots i{animation:none!important}
   .lnh-node.is-active .lnh-spark{opacity:0}.lnh-anim__link.is-flow b{left:40%}}
+
+/* easy agent setup */
+.lnh-easy{border-left:5px solid var(--c-accent)}
+.lnh-bigsteps{margin:.2rem 0 .6rem;padding-left:1.4rem;font-size:14px}
+.lnh-bigsteps>li{margin:0 0 1rem;padding-left:.3rem}
+.lnh-easy__row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.5rem 0 .4rem}
+.lnh-easy__row input{min-width:280px}
+.lnh-advanced summary{cursor:pointer}
+.lnh-advanced[open] summary{margin-bottom:.8rem}

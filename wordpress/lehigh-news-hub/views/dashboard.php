@@ -106,22 +106,25 @@ $state  = $health['state'];
 		<section class="lnh-card-box">
 			<header><h2><?php esc_html_e( 'Connect your agents', 'lehigh-news-hub' ); ?></h2></header>
 			<?php if ( current_user_can( 'manage_options' ) ) : ?>
-				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Generate agent credentials', 'lehigh-news-hub' ); ?></a>
-				<span class="lnh-muted lnh-small"><?php esc_html_e( 'One click: creates the account and gives you the .env lines.', 'lehigh-news-hub' ); ?></span></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Set up my agents', 'lehigh-news-hub' ); ?></a></p>
 			<?php endif; ?>
 			<ol class="lnh-steps">
-				<li><?php
+				<li><?php esc_html_e( 'Paste your free Gemini key and download your agents (already configured for this site).', 'lehigh-news-hub' ); ?></li>
+				<li><?php esc_html_e( 'Unzip and double-click INICIAR.', 'lehigh-news-hub' ); ?></li>
+				<li><?php esc_html_e( 'Press “Start working” at the top of this page.', 'lehigh-news-hub' ); ?></li>
+			</ol>
+			<details class="lnh-small"><summary><?php esc_html_e( 'Manual setup for technical users', 'lehigh-news-hub' ); ?></summary>
+				<p><?php
 					printf(
 						/* translators: %s: link to the profile screen */
 						esc_html__( 'Create an %s for the account the agents will post with.', 'lehigh-news-hub' ),
 						'<a href="' . esc_url( $profile ) . '">' . esc_html__( 'Application Password', 'lehigh-news-hub' ) . '</a>'
 					);
-				?></li>
-				<li><?php esc_html_e( 'Put these two lines in the agents’ .env file:', 'lehigh-news-hub' ); ?>
-					<div class="lnh-copy"><pre>WP_REST_URL=<?php echo esc_html( $rest_url ); ?>
-WP_AUTH_TOKEN=<?php echo esc_html( wp_get_current_user()->user_login ); ?>:xxxx xxxx xxxx xxxx xxxx xxxx</pre><button type="button" class="button" data-lnh-copy><?php esc_html_e( 'Copy', 'lehigh-news-hub' ); ?></button></div></li>
-				<li><?php esc_html_e( 'Run python main.py setup (it configures the rest for you), then start them with ./start.sh and press “Start working” above.', 'lehigh-news-hub' ); ?></li>
-			</ol>
+				?> <?php esc_html_e( 'Put these two lines in the agents’ .env file:', 'lehigh-news-hub' ); ?></p>
+				<div class="lnh-copy"><pre>WP_REST_URL=<?php echo esc_html( $rest_url ); ?>
+WP_AUTH_TOKEN=<?php echo esc_html( wp_get_current_user()->user_login ); ?>:xxxx xxxx xxxx xxxx xxxx xxxx</pre><button type="button" class="button" data-lnh-copy><?php esc_html_e( 'Copy', 'lehigh-news-hub' ); ?></button></div>
+				<p><?php esc_html_e( 'Run python main.py setup (it configures the rest for you), then start them with ./start.sh and press “Start working” above.', 'lehigh-news-hub' ); ?></p>
+			</details>
 		</section>
 	</div>
 </div>

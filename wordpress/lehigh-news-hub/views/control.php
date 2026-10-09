@@ -70,11 +70,10 @@ $btn = function ( string $do, string $label, string $class ) use ( $back ) {
 	</div>
 	<?php if ( ! $w['connected'] ) : ?>
 		<div class="lnh-control__help">
-			<p><strong><?php esc_html_e( 'The buttons control the agents, but the agents have to be running to obey.', 'lehigh-news-hub' ); ?></strong>
-				<?php esc_html_e( 'On the computer or server where you installed them, start them once; they connect to this site by themselves with the credentials in their .env file:', 'lehigh-news-hub' ); ?></p>
-			<div class="lnh-copy"><pre id="lnh-start-cmd">./start.sh</pre><button type="button" class="button" data-lnh-copy-target="#lnh-start-cmd"><?php esc_html_e( 'Copy', 'lehigh-news-hub' ); ?></button></div>
-			<p class="lnh-small lnh-muted"><?php esc_html_e( 'Windows: start.bat. Servers: Docker or systemd keep them running (see the README).', 'lehigh-news-hub' ); ?>
-				<?php if ( current_user_can( 'manage_options' ) ) : ?><a href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Generate agent credentials', 'lehigh-news-hub' ); ?></a><?php endif; ?></p>
+			<p><strong><?php esc_html_e( 'The agents are not connected yet.', 'lehigh-news-hub' ); ?></strong>
+				<?php esc_html_e( 'The buttons control the agents, but the agents run on a computer: download them already configured for this site and double-click INICIAR.', 'lehigh-news-hub' ); ?></p>
+			<p><?php if ( current_user_can( 'manage_options' ) ) : ?><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Set up my agents (2 minutes)', 'lehigh-news-hub' ); ?></a><?php endif; ?>
+				<span class="lnh-small lnh-muted"><?php esc_html_e( 'Already downloaded them? Open INICIAR.bat (Windows) or INICIAR.command (Mac) and leave the window open.', 'lehigh-news-hub' ); ?></span></p>
 		</div>
 	<?php elseif ( 'paused' === $phase || 'pausing' === $phase ) : ?>
 		<p class="lnh-small lnh-muted lnh-control__note"><?php esc_html_e( 'Pausing never cuts an article in half: the agents finish the one in progress, then wait until you press Start.', 'lehigh-news-hub' ); ?></p>

@@ -1,6 +1,6 @@
 {
   "name": "lehigh-news-hub",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Skills and subagents for the GoLehighAcres.org local-news system: research, write, audit and design Instagram/TikTok content on the official brand.",
   "author": { "name": "GoLehighAcres.org" },
   "homepage": "https://github.com/muonunziata/skill",

@@ -16,6 +16,7 @@ final class LNH_Plugin {
 		LNH_Meta::init();
 		LNH_Runs::init();
 		LNH_Control::init();
+		LNH_Package::init();
 		LNH_Rest::init();
 		LNH_Queue::init();
 		LNH_Shortcode::init();

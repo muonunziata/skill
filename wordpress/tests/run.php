@@ -405,11 +405,11 @@ $render = function () use ( $admin ) {
 	return ob_get_clean();
 };
 $html = $render();
-t( 'paused view: Start button, no Pause, start instructions, nonce', false !== strpos( $html, 'data-lnh-do="start"' ) && false === strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, './start.sh' ) && false !== strpos( $html, '_wpnonce' ) );
+t( 'paused view: Start button, no Pause, set-up link, nonce', false !== strpos( $html, 'data-lnh-do="start"' ) && false === strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, 'page=lnh-connect' ) && false !== strpos( $html, 'INICIAR' ) && false !== strpos( $html, '_wpnonce' ) );
 LNH_Control::apply( 'start', $admin );
 LNH_Control::sync( array( 'status' => 'idle', 'host' => 'srv1' ) );
 $html = $render();
-t( 'running view: Pause + Run now, connected line, no setup help', false !== strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, 'data-lnh-do="run_now"' ) && false !== strpos( $html, 'Agents connected' ) && false === strpos( $html, './start.sh' ), $html );
+t( 'running view: Pause + Run now, connected line, no setup help', false !== strpos( $html, 'data-lnh-do="pause"' ) && false !== strpos( $html, 'data-lnh-do="run_now"' ) && false !== strpos( $html, 'Agents connected' ) && false === strpos( $html, 'INICIAR' ), $html );
 wp_set_current_user( $mk_user( 'subscriber' ) );
 ob_start();
 LNH_Admin::view( 'control', array( 'control' => LNH_Control::status(), 'back' => '' ) );
@@ -417,6 +417,92 @@ t( 'people who cannot review do not even see the buttons', '' === ob_get_clean()
 wp_set_current_user( $admin );
 delete_option( LNH_Control::STATE_OPTION );
 delete_option( LNH_Control::WORKER_OPTION );
+
+echo "Download my agents (package)\n";
+$bundle = LNH_Package::bundle_dir();
+$had_bundle = is_dir( $bundle );
+t( 'without the bundled agents the feature reports itself unavailable', $had_bundle || false === LNH_Package::available() );
+if ( ! $had_bundle ) {
+	mkdir( $bundle . '/lehigh_agents', 0777, true );
+	mkdir( $bundle . '/tests', 0777, true );
+	mkdir( $bundle . '/state', 0777, true );
+	file_put_contents( $bundle . '/main.py', "print('hi')\n" );
+	file_put_contents( $bundle . '/lehigh_agents/__init__.py', "" );
+	file_put_contents( $bundle . '/tests/test_x.py', "x" );
+	file_put_contents( $bundle . '/state/db', "x" );
+	file_put_contents( $bundle . '/.env', "GEMINI_API_KEY=LEAKED-SECRET\n" );
+	file_put_contents( $bundle . '/install.sh', "#!/bin/sh\n" );
+	file_put_contents( $bundle . '/INICIAR.command', "#!/bin/sh\n" );
+	file_put_contents( $bundle . '/INICIAR.bat', "@echo off\n" );
+	file_put_contents( $bundle . '/.env.example', "# keys\nGEMINI_API_KEY=\nWP_REST_URL=https://your-site.com/wp-json\nWP_AUTH_TOKEN=\nREDACCTOR_MODEL=gemini-1.5-flash\nIMAGE_PROVIDER=replicate\nSOCIAL_ENABLED=true\n" );
+}
+t( 'available once the agents are bundled (zip extension present)', class_exists( 'ZipArchive' ) ? LNH_Package::available() : true );
+$env = LNH_Package::build_env( "# c\nA=1\nB=old\n", array( 'B' => 'new value', 'C' => 'x"y', 'D' => '' ) );
+t( 'env: replaces, quotes only when needed, appends missing, keeps the rest', "# c\nA=1\nB=\"new value\"\nC=\"x\\\"y\"\nD=\n" === $env, $env );
+$pre = function ( $code ) {
+	return function () use ( $code ) {
+		return is_wp_error( $code ) ? $code : array( 'headers' => array(), 'body' => '', 'response' => array( 'code' => $code, 'message' => '' ) );
+	};
+};
+add_filter( 'pre_http_request', $pre( 200 ), 10, 3 );
+$ok_key = LNH_Package::key_is_accepted( 'AIzaGoodKeyGoodKeyGoodKey' );
+remove_all_filters( 'pre_http_request' );
+add_filter( 'pre_http_request', $pre( 400 ), 10, 3 );
+$bad_key = LNH_Package::key_is_accepted( 'AIzaBadKeyBadKeyBadKey1' );
+remove_all_filters( 'pre_http_request' );
+add_filter( 'pre_http_request', $pre( new WP_Error( 'x', 'offline' ) ), 10, 3 );
+$unk_key = LNH_Package::key_is_accepted( 'AIzaWhoKnowsWhoKnows1' );
+remove_all_filters( 'pre_http_request' );
+t( 'Gemini key check: accepted / rejected / unknown (offline never blocks)', true === $ok_key && false === $bad_key && null === $unk_key );
+if ( class_exists( 'ZipArchive' ) ) {
+	$built = LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', true );
+	t( 'the package is built', is_array( $built ) && is_file( $built['path'] ), is_wp_error( $built ) ? $built->get_error_message() : '' );
+	$z = new ZipArchive();
+	$z->open( $built['path'] );
+	$names = array();
+	for ( $i = 0; $i < $z->numFiles; $i++ ) {
+		$names[] = $z->getNameIndex( $i );
+	}
+	$envz = (string) $z->getFromName( 'golehighacres-agents/.env' );
+	t( 'zip: agents + launchers + readme + generated .env, in one folder', in_array( 'golehighacres-agents/main.py', $names, true ) && in_array( 'golehighacres-agents/lehigh_agents/__init__.py', $names, true ) && in_array( 'golehighacres-agents/INICIAR.bat', $names, true ) && in_array( 'golehighacres-agents/LEEME.txt', $names, true ), $names );
+	t( 'zip: tests, state and the bundle\'s own .env are left out', ! preg_grep( '#/(tests|state)/#', $names ) && false === strpos( $envz, 'LEAKED-SECRET' ) );
+	t( '.env: site, token, key, working models and language are filled in', false !== strpos( $envz, 'WP_REST_URL=' . untrailingslashit( rest_url() ) ) && 1 === preg_match( '/^WP_AUTH_TOKEN="lehigh-agents[\w-]*:[A-Za-z0-9 ]+"$/m', $envz ) && false !== strpos( $envz, 'GEMINI_API_KEY=AIzaTestKeyTestKeyTestKey1' ) && 3 === preg_match_all( '/^(RASTREADOR|REDACCTOR|AUDITOR)_MODEL=gemini-2\.5-flash$/m', $envz ) && false !== strpos( $envz, 'SOCIAL_ENABLED=true' ), $envz );
+	t( '.env: AI images only when asked', false !== strpos( $envz, 'IMAGE_PROVIDER=gemini' ) && false !== strpos( $envz, 'IMAGE_MODEL=gemini-2.5-flash-image' ) );
+	t( 'zip: launchers keep their executable bit, .env is private', ( $z->getExternalAttributesName( 'golehighacres-agents/INICIAR.command', $o, $a ) ? ( ( $a >> 16 ) & 0111 ) > 0 : false ) && ( $z->getExternalAttributesName( 'golehighacres-agents/.env', $o, $a2 ) ? ( ( $a2 >> 16 ) & 0077 ) === 0 : false ) );
+	$z->close();
+	preg_match( '/^WP_AUTH_TOKEN="([^:]+):([^"]+)"/m', $envz, $mm );
+	add_filter( 'application_password_is_api_request', '__return_true' );
+	$authed = wp_authenticate_application_password( null, $mm[1] ?? '', $mm[2] ?? '' );
+	remove_filter( 'application_password_is_api_request', '__return_true' );
+	t( 'the token inside the package really authenticates as the agents\' account', $authed instanceof WP_User && LNH_Connect::agent_user() && (int) $authed->ID === (int) LNH_Connect::agent_user()->ID );
+	wp_delete_file( $built['path'] );
+	wp_set_current_user( $mk_user( 'editor' ) );
+	t( 'only administrators can build it', is_wp_error( LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', false ) ) );
+	wp_set_current_user( $admin );
+	$conn = LNH_Connect::agent_user();
+	if ( $conn ) {
+		foreach ( WP_Application_Passwords::get_user_application_passwords( $conn->ID ) as $item ) {
+			WP_Application_Passwords::delete_application_password( $conn->ID, $item['uuid'] );
+		}
+	}
+}
+ob_start();
+LNH_Admin::view( 'connect', array( 'package' => true, 'result' => null, 'available' => true, 'existing' => null ) );
+$conn_html = ob_get_clean();
+t( 'connect screen: 3 easy steps with the key field, advanced credentials tucked away', false !== strpos( $conn_html, 'name="gemini_key"' ) && false !== strpos( $conn_html, 'value="lnh_agents_package"' ) && false !== strpos( $conn_html, 'INICIAR' ) && false !== strpos( $conn_html, '<details class="lnh-card-box lnh-advanced">' ) );
+ob_start();
+LNH_Admin::view( 'connect', array( 'package' => false, 'result' => null, 'available' => true, 'existing' => null ) );
+t( 'connect screen without the bundle: no download form, manual steps remain', false === strpos( ob_get_clean(), 'name="gemini_key"' ) );
+t( 'the package handler is registered and its notices exist', false !== has_action( 'admin_post_lnh_agents_package' ) );
+if ( ! $had_bundle ) {
+	$rm = function ( $d ) use ( &$rm ) {
+		foreach ( array_diff( scandir( $d ), array( '.', '..' ) ) as $f ) {
+			is_dir( "$d/$f" ) ? $rm( "$d/$f" ) : unlink( "$d/$f" );
+		}
+		rmdir( $d );
+	};
+	$rm( $bundle );
+}
 
 echo "Social kit (Agent 4)\n";
 $kit_in = array(

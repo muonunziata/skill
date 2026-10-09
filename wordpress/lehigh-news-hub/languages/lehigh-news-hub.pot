@@ -280,74 +280,90 @@ msgid "A run was requested: the agents will start within seconds."
 msgstr ""
 
 #: includes/class-lnh-admin.php:206
-msgid "Something went wrong. Nothing was changed."
+msgid "Paste your Gemini key first (it looks like AIza… and is free at aistudio.google.com/apikey)."
 msgstr ""
 
 #: includes/class-lnh-admin.php:207
+msgid "Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey."
+msgstr ""
+
+#: includes/class-lnh-admin.php:208
+msgid "This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead."
+msgstr ""
+
+#: includes/class-lnh-admin.php:209
+msgid "The agents package could not be created. Check that Application Passwords are available on this site."
+msgstr ""
+
+#: includes/class-lnh-admin.php:210
+msgid "Something went wrong. Nothing was changed."
+msgstr ""
+
+#: includes/class-lnh-admin.php:211
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:235
+#: includes/class-lnh-admin.php:239
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:270
+#: includes/class-lnh-admin.php:274
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:287
+#: includes/class-lnh-admin.php:291
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:287
+#: includes/class-lnh-admin.php:291
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:298
+#: includes/class-lnh-admin.php:302
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:343
+#: includes/class-lnh-admin.php:347
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:369
+#: includes/class-lnh-admin.php:373
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:386
+#: includes/class-lnh-admin.php:390
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:512
+#: includes/class-lnh-admin.php:516
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:521
+#: includes/class-lnh-admin.php:525
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:534
+#: includes/class-lnh-admin.php:538
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:542
+#: includes/class-lnh-admin.php:546
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:542
+#: includes/class-lnh-admin.php:546
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:559
+#: includes/class-lnh-admin.php:563
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:564
+#: includes/class-lnh-admin.php:568
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:565
+#: includes/class-lnh-admin.php:569
 msgid "Flagged"
 msgstr ""
 
@@ -429,6 +445,14 @@ msgstr ""
 
 #: includes/class-lnh-front.php:74
 msgid "How we work"
+msgstr ""
+
+#: includes/class-lnh-package.php:116
+msgid "This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server."
+msgstr ""
+
+#: includes/class-lnh-package.php:131
+msgid "Could not create the archive."
 msgstr ""
 
 #: includes/class-lnh-pages.php:311
@@ -1125,59 +1149,107 @@ msgstr ""
 msgid "Back to the dashboard"
 msgstr ""
 
-#: views/connect.php:13
-msgid "Credentials for your agents"
+#: views/connect.php:9
+msgid "Set up your agents in 3 steps"
 msgstr ""
 
-#: views/connect.php:14
-msgid "Copy them now: the password is shown only once."
+#: views/connect.php:15
+msgid "Paste your Gemini key"
+msgstr ""
+
+#: views/connect.php:16
+msgid "it is free: get it at %s (sign in with Google, press “Create API key”)."
 msgstr ""
 
 #: views/connect.php:18
-msgid "We created the account “%s” (Author role) for the agents."
+msgid "Download my agents"
 msgstr ""
 
 #: views/connect.php:19
-msgid "We used the existing agents’ account “%s” and added a new password."
+msgid "Also create AI featured images with this key (needs a Google plan that allows image generation)."
 msgstr ""
 
-#: views/connect.php:26
-msgid "Download .env"
+#: views/connect.php:21
+msgid "Unzip the file and double-click INICIAR"
 msgstr ""
 
-#: views/connect.php:29
-msgid "Save these two lines in the .env file inside the agents folder (or download the file and move it there)."
+#: views/connect.php:22
+msgid "INICIAR.bat on Windows, INICIAR.command on Mac. The first time it installs everything by itself (a few minutes)."
 msgstr ""
 
-#: views/connect.php:30
-msgid "In a terminal inside that folder run:"
+#: views/connect.php:23
+msgid "Come back here and press “Start working”"
 msgstr ""
 
-#: views/connect.php:30
-msgid "it asks only for your Gemini key and configures everything else."
+#: views/connect.php:24
+msgid "the agents connect by themselves; you will see them turn green on the dashboard."
+msgstr ""
+
+#: views/connect.php:27
+msgid "The file already contains your site address, a private connection password and your key, so there is nothing to type or copy. Keep it private. Your Gemini key is only written into that file; this site does not store it."
 msgstr ""
 
 #: views/connect.php:31
+msgid "This copy of the plugin does not include the agents (or the zip extension is missing on this server). Use the manual steps below."
+msgstr ""
+
+#: views/connect.php:36
+msgid "Advanced: only create the connection credentials"
+msgstr ""
+
+#: views/connect.php:43
+msgid "Credentials for your agents"
+msgstr ""
+
+#: views/connect.php:44
+msgid "Copy them now: the password is shown only once."
+msgstr ""
+
+#: views/connect.php:48
+msgid "We created the account “%s” (Author role) for the agents."
+msgstr ""
+
+#: views/connect.php:49
+msgid "We used the existing agents’ account “%s” and added a new password."
+msgstr ""
+
+#: views/connect.php:56
+msgid "Download .env"
+msgstr ""
+
+#: views/connect.php:59
+msgid "Save these two lines in the .env file inside the agents folder (or download the file and move it there)."
+msgstr ""
+
+#: views/connect.php:60
+msgid "In a terminal inside that folder run:"
+msgstr ""
+
+#: views/connect.php:60
+msgid "it asks only for your Gemini key and configures everything else."
+msgstr ""
+
+#: views/connect.php:61
 msgid "Start the agents with ./start.sh (Windows: start.bat). They connect by themselves; then press “Start working” in the News Hub dashboard."
 msgstr ""
 
-#: views/connect.php:33
+#: views/connect.php:63
 msgid "You can revoke this access any time in Users → Profile → Application Passwords."
 msgstr ""
 
-#: views/connect.php:37
+#: views/connect.php:67
 msgid "Connect your agents in one click"
 msgstr ""
 
-#: views/connect.php:38
+#: views/connect.php:68
 msgid "We create a dedicated “Lehigh Agents” account with the Author role and an Application Password, and give you the two lines your agents need. Nothing is stored in plain text."
 msgstr ""
 
-#: views/connect.php:40
+#: views/connect.php:70
 msgid "The account “%s” already exists; a new password will be added to it."
 msgstr ""
 
-#: views/connect.php:47
+#: views/connect.php:77
 msgid "Generate agent credentials"
 msgstr ""
 
@@ -1206,18 +1278,22 @@ msgid "Start working"
 msgstr ""
 
 #: views/control.php:73
-msgid "The buttons control the agents, but the agents have to be running to obey."
+msgid "The agents are not connected yet."
 msgstr ""
 
 #: views/control.php:74
-msgid "On the computer or server where you installed them, start them once; they connect to this site by themselves with the credentials in their .env file:"
+msgid "The buttons control the agents, but the agents run on a computer: download them already configured for this site and double-click INICIAR."
+msgstr ""
+
+#: views/control.php:75
+msgid "Set up my agents (2 minutes)"
 msgstr ""
 
 #: views/control.php:76
-msgid "Windows: start.bat. Servers: Docker or systemd keep them running (see the README)."
+msgid "Already downloaded them? Open INICIAR.bat (Windows) or INICIAR.command (Mac) and leave the window open."
 msgstr ""
 
-#: views/control.php:80
+#: views/control.php:79
 msgid "Pausing never cuts an article in half: the agents finish the one in progress, then wait until you press Start."
 msgstr ""
 
@@ -1313,23 +1389,39 @@ msgstr ""
 msgid "no activity yet"
 msgstr ""
 
-#: views/dashboard.php:110
-msgid "One click: creates the account and gives you the .env lines."
+#: views/dashboard.php:109
+msgid "Set up my agents"
+msgstr ""
+
+#: views/dashboard.php:112
+msgid "Paste your free Gemini key and download your agents (already configured for this site)."
+msgstr ""
+
+#: views/dashboard.php:113
+msgid "Unzip and double-click INICIAR."
+msgstr ""
+
+#: views/dashboard.php:114
+msgid "Press “Start working” at the top of this page."
 msgstr ""
 
 #: views/dashboard.php:116
-msgid "Create an %s for the account the agents will post with."
-msgstr ""
-
-#: views/dashboard.php:117
-msgid "Application Password"
+msgid "Manual setup for technical users"
 msgstr ""
 
 #: views/dashboard.php:120
-msgid "Put these two lines in the agents’ .env file:"
+msgid "Create an %s for the account the agents will post with."
+msgstr ""
+
+#: views/dashboard.php:121
+msgid "Application Password"
 msgstr ""
 
 #: views/dashboard.php:123
+msgid "Put these two lines in the agents’ .env file:"
+msgstr ""
+
+#: views/dashboard.php:126
 msgid "Run python main.py setup (it configures the rest for you), then start them with ./start.sh and press “Start working” above."
 msgstr ""
 

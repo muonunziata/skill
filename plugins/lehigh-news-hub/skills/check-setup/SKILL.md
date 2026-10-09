@@ -11,7 +11,7 @@ allowed-tools: Bash(python main.py check:*), Bash(python main.py setup:*), Bash(
    - **Model not available** -> `python main.py setup` re-picks a working Gemini model, or edit `RASTREADOR_MODEL` / `REDACCTOR_MODEL` / `AUDITOR_MODEL` (`gemini-2.5-flash` is a safe default).
    - **WordPress 401/403** -> regenerate credentials in WP: *News Hub -> Panel -> Generate agent credentials*, or `python main.py setup`. App passwords need HTTPS (or a local site).
    - **404 on `/lnh/v1/ping`** -> plugin inactive: drafts still work, but no agent panel.
-   - **Dashboard says "Waiting for the agents to connect"** -> start the worker (`./start.sh` = `python main.py watch`); it syncs with `/lnh/v1/control/sync`. They start paused: press *Start working* in News Hub. A 404 there means an old plugin (the worker then runs on its own schedule).
+   - **Dashboard says "Waiting for the agents to connect"** -> start the worker: double-click `INICIAR.bat` / `INICIAR.command` from the package downloaded in *News Hub -> Set up my agents* (or `./start.sh` = `python main.py watch`); it syncs with `/lnh/v1/control/sync`. They start paused: press *Start working* in News Hub. A 404 there means an old plugin (the worker then runs on its own schedule).
    - **Social: no browser** -> `python -m playwright install chromium` or `CHROMIUM_PATH`. **No ffmpeg** -> `pip install imageio-ffmpeg` or `FFMPEG_PATH`.
    - **Mediastack `https_access_restricted`** -> expected on the free plan; the client falls back to http (`MEDIASTACK_HTTPS=auto`). Free plan = 100 calls/month; the project throttles itself.
 3. Prefer `python main.py setup` (guided, validates keys, writes `.env` with 0600) over hand edits. Never echo secrets; show only whether each is set.

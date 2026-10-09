@@ -29,7 +29,7 @@ python -m playwright install chromium >/dev/null 2>&1 && echo "✓ Chromium read
   || echo "! Chromium was not installed; run '.venv/bin/python -m playwright install chromium' later or set CHROMIUM_PATH."
 
 if [ "${1:-}" = "--no-setup" ]; then
-  echo "Next: .venv/bin/python main.py setup"
+  [ -n "${LEHIGH_LAUNCHER:-}" ] || echo "Next: .venv/bin/python main.py setup"
   exit 0
 fi
 python main.py setup "$@"

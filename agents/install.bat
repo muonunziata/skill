@@ -7,7 +7,13 @@ cd /d "%~dp0"
 where py >nul 2>&1 && (set "PY=py -3") || (set "PY=python")
 %PY% -c "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
 if errorlevel 1 (
-  echo Python 3.11 or newer is required: https://www.python.org/downloads/
+  echo Python 3.11 or newer is required.
+  where winget >nul 2>&1 && (
+    echo Installing Python with winget, please accept the prompts...
+    winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
+    echo.
+    echo Python was installed. CLOSE this window and open INICIAR.bat again.
+  ) || echo Download it from https://www.python.org/downloads/ ^(tick "Add python.exe to PATH"^) and open INICIAR.bat again.
   pause
   exit /b 1
 )
@@ -27,7 +33,7 @@ echo Installing Chromium (used by Agent 4 to draw Instagram/TikTok slides)...
 if errorlevel 1 echo Chromium was not installed. Run: .venv\Scripts\python.exe -m playwright install chromium
 
 if /i "%~1"=="--no-setup" (
-  echo Next: .venv\Scripts\python.exe main.py setup
+  if not defined LEHIGH_LAUNCHER echo Next: .venv\Scripts\python.exe main.py setup
   exit /b 0
 )
 .venv\Scripts\python.exe main.py setup %*
