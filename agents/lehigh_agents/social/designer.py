@@ -276,7 +276,8 @@ class SocialDesigner:
                     up = self.wp.upload_media(data, f"{slugify(ctx.title)[:40]}-{n}", mime,
                                               alt=alt if key != "video" else "", title=f"{ctx.title} · {n}", timeout=180)
                 except Exception as exc:  # noqa: BLE001 - WPError, network, anything: the local files still exist
-                    kit.warnings.append(f"No se pudo subir {n} a WordPress: {str(exc)[:150]}")
+                    hint = " (si es por tamaño, sube upload_max_filesize en tu hosting)" if n.endswith(".mp4") else ""
+                    kit.warnings.append(f"No se pudo subir {n} a WordPress: {str(exc)[:150]}{hint} · archivo local: {folder / n}")
                     self._ev("warn", f"Subida fallida de {n}: {exc}", level="warn")
                     continue
                 kit.uploaded.setdefault(key, []).append({"id": up["id"], "url": up["source_url"], "name": n})

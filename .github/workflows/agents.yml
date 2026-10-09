@@ -1,0 +1,89 @@
+name: Run the news agents
+
+# Optional. Runs Rastreador -> Redactor -> Auditor -> Social designer on GitHub's servers and leaves DRAFTS in WordPress.
+# It does nothing until you opt in:
+#   Settings -> Secrets and variables -> Actions
+#     Secrets:   GEMINI_API_KEY, WP_REST_URL, WP_AUTH_TOKEN   (+ optional ANTHROPIC_API_KEY, OPENAI_API_KEY, IMAGE_API_KEY, MEDIASTACK_API_KEY)
+#     Variables: AGENTS_ENABLED=true  (+ RASTREADOR_MODEL, REDACCTOR_MODEL, AUDITOR_MODEL - set them to a current model such as gemini-2.5-flash, the
+#                 built-in default gemini-1.5-flash no longer exists - and optional IMAGE_PROVIDER, SEARCH_TOPIC, MAX_ITEMS_PER_RUN, SOCIAL_VOICE ...)
+# You can always start it by hand from the Actions tab (it defaults to a dry run).
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (nothing is written to WordPress)"
+        type: boolean
+        default: true
+      no_social:
+        description: "Skip the Instagram/TikTok kit"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lehigh-agents
+  cancel-in-progress: false
+
+jobs:
+  run:
+    if: github.event_name == 'workflow_dispatch' || vars.AGENTS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: agents
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
+      MEDIASTACK_API_KEY: ${{ secrets.MEDIASTACK_API_KEY }}
+      WP_REST_URL: ${{ secrets.WP_REST_URL }}
+      WP_AUTH_TOKEN: ${{ secrets.WP_AUTH_TOKEN }}
+      IMAGE_PROVIDER: ${{ vars.IMAGE_PROVIDER }}
+      RASTREADOR_MODEL: ${{ vars.RASTREADOR_MODEL }}
+      REDACCTOR_MODEL: ${{ vars.REDACCTOR_MODEL }}
+      AUDITOR_MODEL: ${{ vars.AUDITOR_MODEL }}
+      SEARCH_TOPIC: ${{ vars.SEARCH_TOPIC }}
+      MAX_ITEMS_PER_RUN: ${{ vars.MAX_ITEMS_PER_RUN }}
+      SOCIAL_VOICE: ${{ vars.SOCIAL_VOICE }}
+      STATE_DIR: ${{ github.workspace }}/agents/state
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: agents/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      # The anti-duplicate memory (and the Mediastack call counter) must survive between runs.
+      - uses: actions/cache@v4
+        with:
+          path: agents/state
+          key: lehigh-state-${{ github.run_id }}
+          restore-keys: lehigh-state-
+      - name: Check configuration
+        run: python main.py check
+      - name: Run the agents
+        run: |
+          ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            [ "${{ inputs.dry_run }}" = "true" ] && ARGS="$ARGS --dry-run"
+            [ "${{ inputs.no_social }}" = "true" ] && ARGS="$ARGS --no-social"
+          fi
+          python main.py run $ARGS
+      - name: Keep the run reports and social kits
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-run-${{ github.run_id }}
+          path: |
+            agents/state/runs
+            agents/state/social
+          retention-days: 14
+          if-no-files-found: ignore

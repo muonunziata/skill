@@ -13,6 +13,31 @@ from .settings import Settings
 from .wordpress import WPError, WordPressClient
 
 
+def _check_social(s: Settings) -> None:
+    """Agent 4 needs Chromium and ffmpeg; their absence is a warning (the other agents keep working), not a failure."""
+    if not s.social_enabled:
+        print("Agente 4 (kit social): desactivado (SOCIAL_ENABLED=false)")
+        return
+    from .social.render import SlideRenderer, SocialRenderError
+    from .social.video import VideoError, ffmpeg_path
+
+    notes = []
+    try:
+        with SlideRenderer(s.chromium_path):
+            notes.append("navegador ✓")
+    except SocialRenderError as exc:
+        notes.append("navegador ✗ (ejecuta `python -m playwright install chromium` o define CHROMIUM_PATH)")
+        log_detail = str(exc)[:160]
+        notes.append(log_detail)
+    try:
+        ffmpeg_path()
+        notes.append("ffmpeg ✓")
+    except VideoError:
+        notes.append("ffmpeg ✗ (pip install imageio-ffmpeg): sin video")
+    voice = f"voz {s.social_voice}" if s.social_voice != "none" else "sin voz"
+    print(f"Agente 4 (kit social): {', '.join(notes)} · formatos {','.join(s.social_formats)} · tema {s.social_theme} · {voice}")
+
+
 def _check(s: Settings) -> int:
     ok = True
     print(f"Tema: {s.topic}\nModelos: rastreador={s.rastreador_model} · redactor={s.redactor_model} · auditor={s.auditor_model}")
@@ -28,6 +53,7 @@ def _check(s: Settings) -> int:
                       "Actualiza el .env (p. ej. gemini-2.5-flash).")
     ig = ImageGenerator(s)
     print(f"Imágenes IA: {'%s / %s' % (ig.provider, ig.model) if ig.enabled else 'desactivadas (sin IMAGE_API_KEY)'}")
+    _check_social(s)
     if s.wp_rest_url and s.wp_auth_token:
         try:
             wp = WordPressClient(s.wp_rest_url, s.wp_auth_token)

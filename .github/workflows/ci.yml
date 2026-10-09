@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Agents (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: agents
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: agents/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      # Agent 4 draws its slides with Chromium; the rendering tests skip themselves when it is missing.
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -q
+
+  wordpress-plugin:
+    name: WordPress plugin (lint + translations)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+      - name: PHP syntax
+        run: find wordpress -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Translations are up to date
+        run: |
+          python3 wordpress/tools/build_i18n.py
+          git diff --exit-code -- wordpress/lehigh-news-hub/languages
+
+  claude-package:
+    name: Claude Code plugin, skills and subagents
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Marketplace and plugin manifests
+        run: |
+          claude plugin validate .
+          claude plugin validate --strict plugins/lehigh-news-hub
+          claude plugin validate --strict plugins/lehigh-news-hub/skills
+          claude plugin validate --strict plugins/lehigh-news-hub/agents
+      - name: .claude/ matches the plugin
+        run: scripts/sync-claude.sh --check

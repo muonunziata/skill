@@ -1,0 +1,16 @@
+{
+  "name": "golehighacres-tools",
+  "owner": { "name": "GoLehighAcres.org" },
+  "metadata": {
+    "description": "Claude Code tools for the GoLehighAcres.org local-news automation (Lehigh Acres, Florida)."
+  },
+  "plugins": [
+    {
+      "name": "lehigh-news-hub",
+      "source": "./plugins/lehigh-news-hub",
+      "description": "Skills and subagents to run, audit and extend the 4-agent news pipeline and its Instagram/TikTok social designer, always on the GoLehighAcres.org brand.",
+      "version": "1.3.0",
+      "category": "productivity"
+    }
+  ]
+}

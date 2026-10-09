@@ -1,6 +1,6 @@
 # Lehigh News Hub
 
-Una redacción automática para noticias locales de **Lehigh Acres, Florida**: tres agentes de IA investigan, redactan y auditan, y un plugin de WordPress te muestra **todo el trabajo de los agentes** para que tú decidas qué se publica.
+Una redacción automática para noticias locales de **Lehigh Acres, Florida** (marca **GoLehighAcres.org**): tres agentes de IA investigan, redactan y auditan, un cuarto diseña los carruseles y videos de Instagram y TikTok, y un plugin de WordPress te muestra **todo el trabajo de los agentes** para que tú decidas qué se publica.
 
 ```
  ┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
@@ -10,13 +10,13 @@ Una redacción automática para noticias locales de **Lehigh Acres, Florida**: t
  │ páginas reales     │   │ + prompt + imagen  │   │ ortografía, enlaces│
  └────────────────────┘   └────────────────────┘   └─────────┬──────────┘
                                                              │ aprobado → POST (borrador)
-                                                             ▼
-                              ┌──────────────────────────────────────────┐
-                              │ WordPress · plugin «Lehigh News Hub»     │
-                              │ cola de revisión · actividad de agentes  │
-                              │ publicar / programar / rechazar          │
-                              │ shortcode [lehigh_news] configurable     │
-                              └──────────────────────────────────────────┘
+                              ┌──────────────────────────────▼───────────┐   ┌────────────────────────┐
+                              │ WordPress · plugin «Lehigh News Hub»     │ → │ 4 · DISEÑADOR SOCIAL   │
+                              │ cola de revisión · actividad de agentes  │   │ carruseles IG/TikTok + │
+                              │ publicar / programar / rechazar          │ ← │ video 9:16 con la marca│
+                              │ shortcode [lehigh_news] configurable     │   │ GoLehighAcres.org      │
+                              └──────────────────────────────────────────┘   └────────────────────────┘
+                                                         «Kit social» en cada artículo aprobado
 ```
 
 ## Qué hace cada pieza
@@ -26,6 +26,7 @@ Una redacción automática para noticias locales de **Lehigh Acres, Florida**: t
 | **Agente 1 – Rastreador** | Busca novedades con Google Search (Gemini), **abre cada página citada** y construye los hallazgos solo con lo que leyó (`titulo_fuente`, `url`, `resumen_hechos`, `fecha`, `palabras_clave`). Descarta duplicados, noticias viejas y URLs que no leyó. |
 | **Agente 2 – Redactor** | Escribe el artículo en bloques Gutenberg optimizado para SEO (`post_title`, `post_content`, `excerpt`, `meta_description`, `suggested_tags`, `featured_image_url`). Resuelve marcadores de fotos (Wikimedia Commons, licencia abierta) y videos (YouTube verificado). Escribe un **prompt fotorrealista en inglés** y genera la imagen destacada (Flux/Replicate, Nano Banana/Gemini u OpenAI). Su modelo se cambia con `REDACCTOR_MODEL`. |
 | **Agente 3 – Auditor** | Compara el artículo con los hechos del Rastreador y con el texto original; revisa ortografía, **enlaces rotos**, HTML inseguro, cifras inventadas y copia literal. Devuelve `audit_score` (0-100), `audit_notes` y `status` (`approved`/`flagged`). Si es `approved`, **publica el borrador en WordPress** con sus metadatos de auditoría. |
+| **Agente 4 – Diseñador Social** | Convierte cada artículo aprobado en un **carrusel de Instagram (4:5)**, un **carrusel de TikTok (9:16)** y un **video vertical** (voz opcional) con pies de foto y hashtags, **siempre sobre la marca GoLehighAcres.org** (logos oficiales en `brand/`, verde `#1b6a55`, coral `#ff5757`, Poppins). Etiqueta las imágenes de IA y no inventa cifras. Aparece en el plugin como tarjeta **«Kit social»** (vista previa, descargas, copiar texto). No publica en las redes: lo haces tú. |
 | **Plugin de WordPress** | Cola de revisión con puntuaciones, pantalla de revisión por artículo, **actividad en vivo de los agentes** (búsquedas, páginas leídas, prompts, imágenes, auditorías, tokens), publicar/programar/rechazar, publicación automática opcional, avisos por correo, aviso de IA y fuente en el sitio, y el shortcode `[lehigh_news]` con constructor visual y presets. Interfaz en inglés y español. |
 
 ## Puesta en marcha (10 minutos)
@@ -72,6 +73,7 @@ Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`
 * **News Hub → Cola de revisión**: ve las noticias que esperan tu decisión, con su nota de auditoría.
 * **Revisar**: vista previa, notas del auditor, fuente, imagen (con el prompt que escribió el Redactor) y la línea de tiempo de lo que hizo cada agente. Botones: *Publicar ahora*, *Programar*, *Rechazar*.
 * **Actividad de los agentes**: tarjetas por agente, embudo de 7 días, feed en vivo y detalle de cada ejecución.
+* **Kit social** (en la pantalla de revisión): carruseles de Instagram y TikTok, video, pies de foto con hashtags; descarga y publica donde quieras.
 * **Constructor de shortcode**: diseña la lista de últimas noticias con vista previa en vivo, cópiala o guárdala como preajuste.
 
 ## Variables de entorno (`agents/.env`)
@@ -83,9 +85,27 @@ Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`
 | `WP_REST_URL`, `WP_AUTH_TOKEN` | Sitio (`https://tu-sitio.com` o `…/wp-json`) y `usuario:contraseña de aplicación` (o token Bearer) |
 | `RASTREADOR_MODEL`, `REDACCTOR_MODEL`, `AUDITOR_MODEL` | Modelos (por defecto `gemini-1.5-flash`) |
 | `IMAGE_API_KEY`, `IMAGE_API_ENDPOINT`, `IMAGE_PROVIDER`, `IMAGE_MODEL` | Generación de imágenes (opcional) |
+| `MEDIASTACK_API_KEY` | Fuente de noticias extra opcional ([Mediastack](https://mediastack.com/signup), plan gratuito de 100 consultas/mes; el proyecto se limita solo) |
+| `SOCIAL_ENABLED`, `SOCIAL_FORMATS`, `SOCIAL_VIDEO`, `SOCIAL_THEME`, `SOCIAL_VOICE`, `SOCIAL_WEBHOOK_URL`, `BRAND_*` | Agente 4 y marca (ver `.env.example`) |
 | `AUDIT_MIN_SCORE`, `MAX_REVISIONS`, `POST_FLAGGED`, … | Comportamiento (ver `.env.example`) |
 
 > ⚠️ **Modelos:** Google retiró la familia Gemini 1.5 de la API pública. El valor por defecto sigue siendo `gemini-1.5-flash` como pediste, pero `python main.py check` te avisará si no está disponible; en ese caso pon `gemini-2.5-flash` (o el que prefieras) en las tres variables de modelo.
+
+## Claude Code y GitHub
+
+Todo lo necesario está en este repositorio:
+
+| Qué | Dónde | Cómo se usa |
+|---|---|---|
+| **Plugin de Claude Code** (skills + subagentes) | `plugins/lehigh-news-hub/` | `/plugin marketplace add muonunziata/skill` y luego `/plugin install lehigh-news-hub --marketplace muonunziata/skill` |
+| **Skills** | `lehigh-news-hub` (mapa del proyecto), `brand-guide` (marca), `social-carousel`, `social-video`, `news-audit`, `check-setup`, y de uso manual `run-pipeline` y `social-kit` | `/lehigh-news-hub:social-kit --latest 1` (con plugin) o `/social-kit --latest 1` (en el proyecto) |
+| **Subagentes** | `news-researcher`, `news-writer`, `news-auditor`, `social-designer` | Claude los usa solo o con «usa el subagente social-designer…» |
+| **Memoria del proyecto** | `CLAUDE.md` | Reglas de marca, anti-alucinación y comandos |
+| **Copia para sesiones web/nube** | `.claude/skills`, `.claude/agents` | Las sesiones de Claude Code sobre este repo los cargan solas; `scripts/sync-claude.sh` los mantiene idénticos al plugin (la CI lo comprueba) |
+| **CI** | `.github/workflows/ci.yml` | Pruebas Python (con Chromium), sintaxis PHP, traducciones al día, validación del plugin/marketplace |
+| **Agentes en GitHub (opcional)** | `.github/workflows/agents.yml` | Se ejecuta a mano desde *Actions* (por defecto en modo prueba) o cada 6 h si defines la variable `AGENTS_ENABLED=true`. Secretos necesarios: `GEMINI_API_KEY`, `WP_REST_URL`, `WP_AUTH_TOKEN` (+ opcionales). |
+
+La marca está documentada en [`brand/BRAND.md`](brand/BRAND.md) y las fuentes de referencia en [`docs/RECURSOS.md`](docs/RECURSOS.md).
 
 ## Seguridad y transparencia
 
@@ -100,7 +120,7 @@ Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`
 
 ```bash
 # Agentes (no consumen APIs: usan dobles de prueba)
-cd agents && pip install -r requirements-dev.txt && python -m pytest
+cd agents && pip install -r requirements-dev.txt && python -m playwright install chromium && python -m pytest
 
 # Plugin dentro de un WordPress de pruebas (¡no en producción!)
 php wordpress/tests/run.php /ruta/a/wordpress
@@ -112,11 +132,19 @@ php wordpress/tests/run.php /ruta/a/wordpress
 agents/                      Agentes en Python (Gemini · Claude · OpenAI · imágenes)
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
-  tests/                       62 pruebas
+  lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
+  tests/                       92 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      92 comprobaciones dentro de WordPress
+wordpress/tests/run.php      108 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
+brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
+plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes
+.claude/ · CLAUDE.md         Los mismos skills/subagentes para sesiones del proyecto (web/nube)
+.claude-plugin/             Marketplace de Claude Code
+.github/workflows/           CI y ejecución opcional de los agentes
 scripts/build-release.sh     Genera los .zip descargables
+scripts/sync-claude.sh       Sincroniza .claude/ con el plugin
+docs/RECURSOS.md             Fuentes y enlaces de referencia
 ```
 
 ## Costos
