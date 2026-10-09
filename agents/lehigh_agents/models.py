@@ -22,20 +22,27 @@ def _model_rows(models) -> list[tuple[str, tuple[str, ...]]]:
     return rows
 
 
-def pick_text_model(models) -> str | None:
-    """Best stable Gemini Flash model that can generate content (newest version wins; previews only as a last resort)."""
-    best: tuple | None = None
+def rank_text_models(models, include_lite: bool = False) -> list[str]:
+    """Gemini Flash models that can generate content, best first (newest stable version wins; previews and, unless asked,
+    the cheaper `lite` variants come last). `include_lite` adds them as fallbacks, e.g. when a quota is exhausted."""
+    ranked: list[tuple] = []
+    exclude = tuple(x for x in _EXCLUDE if include_lite is False or x != "lite")
     for name, actions in _model_rows(models):
-        if not name.startswith("gemini-") or "flash" not in name or any(x in name for x in _EXCLUDE):
+        if not name.startswith("gemini-") or "flash" not in name or any(x in name for x in exclude):
             continue
         if actions and "generateContent" not in actions:
             continue
         m = re.match(r"gemini-(\d+)(?:\.(\d+))?-flash", name)
         major, minor = (int(m.group(1)), int(m.group(2) or 0)) if m else (0, 0)  # gemini-flash-latest -> lowest
-        key = ("preview" not in name and "-0" not in name[-4:], major, minor, -len(name))
-        if best is None or key > best[0]:
-            best = (key, name)
-    return best[1] if best else None
+        key = ("lite" not in name, "preview" not in name and "-0" not in name[-4:], major, minor, -len(name))
+        ranked.append((key, name))
+    return [n for _, n in sorted(ranked, reverse=True)]
+
+
+def pick_text_model(models) -> str | None:
+    """Best stable Gemini Flash model that can generate content."""
+    ranked = rank_text_models(models)
+    return ranked[0] if ranked else None
 
 
 def pick_image_model(models) -> str | None:

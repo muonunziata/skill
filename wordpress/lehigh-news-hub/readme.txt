@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.6 =
+* Gemini quota (HTTP 429) handling: the agents space their requests (GEMINI_RPM, default 8 per minute), wait when Google asks them to, switch to another Flash model when one model's quota is exhausted, and explain in plain language what to do when every model is out. Use the “Update the agents” button to get it.
 
 = 1.5.5 =
 * One-button agent updates: when the agents on your computer are older than the plugin, the dashboard shows “Update the agents”. The agents download the new code from this site, keep their .env/keys and logs, reinstall libraries if needed and restart by themselves. (Agents older than 1.5.5 must be downloaded once more; from then on they update with the button.)

@@ -12,7 +12,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-from .models import AUTO, FALLBACK_ALIAS, pick_text_model
+from .models import AUTO, FALLBACK_ALIAS, pick_text_model, rank_text_models
 from .settings import Settings
 
 log = logging.getLogger("lehigh.llm")
@@ -63,6 +63,9 @@ class LLM:
         self.usage: dict[str, dict[str, int]] = {}
         self._swapped: dict[str, str] = {}     # requested/retired model name -> model the API really serves
         self._catalog_cache: list | None = None
+        self._cool: dict[str, float] = {}      # model -> time until which its quota counts as exhausted
+        self._alt: dict[str, str] = {}         # exhausted model -> the model used instead meanwhile
+        self._last_call = 0.0
 
     # ───────────────────────── public API ─────────────────────────
     def json(self, model: str, system: str, prompt: str, validate: Callable[[Any], str | None] | None = None,
@@ -101,11 +104,17 @@ class LLM:
                 return []
         return self._catalog_cache
 
+    def _ranked(self, exclude: set[str] | None = None, include_lite: bool = False) -> list[str]:
+        """Candidate models, best first, skipping the excluded ones and those whose quota is exhausted right now."""
+        now = time.time()
+        names = rank_text_models(self._catalog(), include_lite=include_lite) or [FALLBACK_ALIAS, "gemini-flash-lite-latest"]
+        return [n for n in names if n not in (exclude or set()) and self._cool.get(n, 0) <= now]
+
     def _pick_replacement(self, avoid: str) -> str:
-        picked = pick_text_model(self._catalog())
-        if not picked or picked == avoid:
-            picked = FALLBACK_ALIAS if avoid != FALLBACK_ALIAS else ""
-        return picked or ""
+        ranked = self._ranked(exclude={avoid})
+        if ranked:
+            return ranked[0]
+        return FALLBACK_ALIAS if avoid != FALLBACK_ALIAS else ""
 
     def gemini_model(self, model: str) -> str:
         """The model name to send: `auto` becomes the newest available Flash model; retired names follow their replacement."""
@@ -115,6 +124,8 @@ class LLM:
             self._swapped[name] = picked
             log.info("model 'auto' -> %s", picked)
         for _ in range(4):                       # follow replacement chains (auto -> X -> Y)
+            if name in self._alt and self._cool.get(name, 0) > time.time():
+                name = self._alt[name]          # its quota is exhausted for now: keep using the stand-in
             if name not in self._swapped:
                 break
             name = self._swapped[name]
@@ -190,32 +201,95 @@ class LLM:
             return LLMError(f"Gemini rejected the API key / permissions ({code}): {msg}")
         return LLMError(f"Gemini API error {code}: {msg}", retryable=code == 429 or code >= 500 or code == 0)
 
+    def _throttle(self) -> None:
+        """Stay under the key's requests-per-minute limit (free plans are small) instead of colliding with HTTP 429."""
+        rpm = getattr(self.s, "gemini_rpm", 0)
+        if rpm > 0:
+            wait = self._last_call + 60.0 / rpm - time.time()
+            if wait > 0:
+                self._sleep(wait)
+        self._last_call = time.time()
+
+    @staticmethod
+    def _retry_delay(exc: Exception) -> float | None:
+        """Seconds Google asks us to wait ("Please retry in 23.4s" / retryDelay: '23s'); None when it does not say."""
+        text = f"{getattr(exc, 'message', '')} {exc}"
+        m = re.search(r"retry in ([\d.]+)\s*s", text, re.I) or re.search(r"retryDelay['\"]?\s*:\s*['\"]?([\d.]+)s", text)
+        return float(m.group(1)) if m else None
+
     def _gemini_generate(self, model: str, prompt: str, cfg: Any) -> Any:
         """One generate_content call with error mapping and token accounting (shared by plain and grounded requests)."""
         from google.genai import errors
 
         model = self.gemini_model(model)
+
+        def call(m: str) -> Any:
+            self._throttle()
+            return self._client("gemini").models.generate_content(model=m, contents=prompt, config=cfg)
+
         try:
             try:
-                resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
+                resp = call(model)
             except errors.APIError as exc:
-                if getattr(exc, "code", 0) != 404:
+                code = getattr(exc, "code", 0)
+                if code == 404:
+                    # Google retired this name (or the key cannot use it): use the newest model that is served and retry once
+                    replacement = self._pick_replacement(avoid=model)
+                    if not replacement:
+                        raise
+                    log.warning("Gemini model '%s' is not served any more; using '%s' instead", model, replacement)
+                    self._swapped[model] = replacement
+                    model = replacement
+                    resp = call(model)
+                elif code == 429:
+                    resp, model = self._after_quota_error(model, call, exc)
+                else:
                     raise
-                # Google retired this name (or the key cannot use it): switch to the newest model that is served and retry once
-                replacement = self._pick_replacement(avoid=model)
-                if not replacement:
-                    raise
-                log.warning("Gemini model '%s' is not served any more; using '%s' instead", model, replacement)
-                self._swapped[model] = replacement
-                model = replacement
-                resp = self._client("gemini").models.generate_content(model=model, contents=prompt, config=cfg)
         except errors.APIError as exc:
             raise self._gemini_error(exc, model) from exc
+        except LLMError:
+            raise
         except Exception as exc:  # network / SDK problems
             raise LLMError(f"Gemini request failed: {exc}", retryable=True) from exc
         meta = getattr(resp, "usage_metadata", None)
         self._track(model, getattr(meta, "prompt_token_count", 0), getattr(meta, "candidates_token_count", 0))
         return resp
+
+    def _after_quota_error(self, model: str, call: Callable[[str], Any], exc: Exception) -> tuple[Any, str]:
+        """HTTP 429: wait if Google says it is a short per-minute limit, otherwise move to another model (quotas are per model)."""
+        from google.genai import errors
+
+        text = f"{getattr(exc, 'message', '')} {exc}"
+        delay = self._retry_delay(exc)
+        if delay is not None and delay <= 75 and "limit: 0" not in text and "PerDay" not in text:
+            log.warning("Gemini quota hit on %s; waiting %.0fs as Google asks", model, delay)
+            self._sleep(delay + 1)
+            try:
+                return call(model), model
+            except errors.APIError as exc2:
+                if getattr(exc2, "code", 0) != 429:
+                    raise
+        self._cool[model] = time.time() + 900
+        tried = [model]
+        for cand in self._ranked(exclude={model}, include_lite=True)[:3]:
+            tried.append(cand)
+            try:
+                resp = call(cand)
+            except errors.APIError as exc3:
+                if getattr(exc3, "code", 0) == 429:
+                    self._cool[cand] = time.time() + 900
+                    continue
+                if getattr(exc3, "code", 0) == 404:
+                    continue
+                raise
+            log.warning("Gemini quota exhausted on %s; using %s for now", model, cand)
+            self._alt[model] = cand
+            return resp, cand
+        raise LLMError(
+            "Google dice que se agotó la cuota de Gemini de tu clave (error 429) en: " + ", ".join(tried) + ". "
+            "Si es el plan gratuito: espera unos minutos (límite por minuto) o hasta mañana (límite diario), o activa la facturación "
+            "en https://aistudio.google.com/. Para gastar menos: baja MAX_ITEMS_PER_RUN, desactiva SOCIAL_ENABLED o sube el intervalo de ejecución.",
+            retryable=False)
 
     def _gemini(self, model: str, system: str, prompt: str, max_tokens: int, want_json: bool) -> str:
         from google.genai import types

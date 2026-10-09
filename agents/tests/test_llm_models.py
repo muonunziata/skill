@@ -136,3 +136,83 @@ def test_voice_model_name_is_replaced_too(settings):
     n._gemini = SimpleNamespace(models=M())
     wav = n._gemini_tts("hola")
     assert wav[:4] == b"RIFF" and calls == ["gemini-2.5-flash-preview-tts", "gemini-3-flash-tts"] and n.model == "gemini-3-flash-tts"
+
+
+# ───────────────────────── quota (HTTP 429) ─────────────────────────
+def quota(msg="You exceeded your current quota"):
+    return errors.ClientError(429, {"error": {"message": msg, "status": "RESOURCE_EXHAUSTED"}}, None)
+
+
+class QuotaModels(Models):
+    """`limits`: model -> list of exceptions to raise on successive calls (then it works)."""
+
+    def __init__(self, served, listing, limits):
+        super().__init__(served, listing)
+        self.limits = {k: list(v) for k, v in limits.items()}
+
+    def generate_content(self, model, contents, config):
+        q = self.limits.get(model)
+        if q:
+            self.calls.append(model)
+            raise q.pop(0)
+        return super().generate_content(model, contents, config)
+
+
+def test_a_per_minute_limit_waits_as_google_asks_then_retries_the_same_model(settings):
+    sleeps = []
+    m = QuotaModels({"gemini-3-flash"}, ["gemini-3-flash", "gemini-2.5-flash"],
+                    {"gemini-3-flash": [quota("Please retry in 3.2s.")]})
+    llm = make(settings, m)
+    llm._sleep = sleeps.append
+    assert llm.json("gemini-3-flash", "s", "p") == {"ok": True}
+    assert m.calls == ["gemini-3-flash", "gemini-3-flash"] and any(4 <= x <= 5 for x in sleeps)
+
+
+def test_an_exhausted_model_hands_over_to_another_and_is_not_hammered(settings):
+    m = QuotaModels({"gemini-2.5-flash"}, ["gemini-3-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+                    {"gemini-3-flash": [quota("Quota exceeded, limit: 0")] * 5})
+    llm = make(settings, m)
+    assert llm.json("auto", "s", "p") == {"ok": True}
+    assert m.calls == ["gemini-3-flash", "gemini-2.5-flash"]             # no waiting on a "limit: 0" / daily quota
+    llm.json("auto", "s", "p")
+    llm.json("auto", "s", "p")
+    assert m.calls.count("gemini-3-flash") == 1                          # remembered for a while: no more 429s
+    assert llm.resolved("auto") == "gemini-2.5-flash"
+
+
+def test_when_every_model_is_out_of_quota_the_error_explains_what_to_do(settings):
+    always = [quota("Quota exceeded for metric PerDay")] * 10
+    m = QuotaModels(set(), ["gemini-3-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+                    {k: always for k in ("gemini-3-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite")})
+    with pytest.raises(LLMError, match="429") as ei:
+        make(settings, m).json("auto", "s", "p")
+    assert "facturación" in str(ei.value) and not ei.value.retryable
+    assert len(m.calls) <= 4                                              # tried each model once, no retry storm
+
+
+def test_requests_are_spaced_to_the_configured_rate(settings):
+    from dataclasses import replace
+
+    m = Models(served={"gemini-3-flash"}, listing=["gemini-3-flash"])
+    llm = make(replace(settings, gemini_rpm=6), m)                        # 6 per minute = one every 10 s
+    sleeps = []
+    llm._sleep = sleeps.append
+    llm.json("gemini-3-flash", "s", "p")
+    llm.json("gemini-3-flash", "s", "p")
+    assert len(sleeps) == 1 and 8 <= sleeps[0] <= 10
+    llm2 = make(replace(settings, gemini_rpm=0), m)
+    s2 = []
+    llm2._sleep = s2.append
+    llm2.json("gemini-3-flash", "s", "p")
+    llm2.json("gemini-3-flash", "s", "p")
+    assert s2 == []                                                       # 0 = unlimited (paid plans)
+
+
+def test_ranking_puts_lite_and_previews_last_and_only_when_asked():
+    from lehigh_agents.models import rank_text_models
+
+    rows = [{"name": f"models/{n}", "supported_actions": ["generateContent"]} for n in
+            ["gemini-3-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-3-flash-preview", "gemini-flash-latest", "gemini-2.5-pro"]]
+    assert rank_text_models(rows) == ["gemini-3-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-3-flash-preview"]
+    full = rank_text_models(rows, include_lite=True)
+    assert full[-1] == "gemini-2.5-flash-lite" and "gemini-2.5-pro" not in full      # lite only as a last resort

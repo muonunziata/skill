@@ -69,6 +69,7 @@ def _image_provider(e) -> str:
 @dataclass(frozen=True)
 class Settings:
     gemini_api_key: str
+    gemini_rpm: int
     anthropic_api_key: str
     openai_api_key: str
     wp_rest_url: str
@@ -137,6 +138,7 @@ class Settings:
         redactor = e("REDACCTOR_MODEL") or e("REDACTOR_MODEL") or DEFAULT_MODEL  # accept the correctly spelled alias too
         return cls(
             gemini_api_key=(e("GEMINI_API_KEY") or e("GOOGLE_API_KEY") or "").strip(),
+            gemini_rpm=_int(e("GEMINI_RPM"), 8, 0, 600),   # requests per minute the agents allow themselves (0 = no limit)
             anthropic_api_key=(e("ANTHROPIC_API_KEY") or "").strip(),
             openai_api_key=(e("OPENAI_API_KEY") or "").strip(),
             wp_rest_url=(e("WP_REST_URL") or "").strip(),
