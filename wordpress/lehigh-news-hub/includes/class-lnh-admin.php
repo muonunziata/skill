@@ -35,6 +35,7 @@ final class LNH_Admin {
 		add_submenu_page( 'lnh', __( 'Agent activity', 'lehigh-news-hub' ), __( 'Agent activity', 'lehigh-news-hub' ), self::CAP_REVIEW, 'lnh-activity', array( __CLASS__, 'page_activity' ) );
 		add_submenu_page( 'lnh', __( 'Shortcode builder', 'lehigh-news-hub' ), __( 'Shortcode builder', 'lehigh-news-hub' ), self::CAP_REVIEW, 'lnh-builder', array( __CLASS__, 'page_builder' ) );
 		add_submenu_page( 'lnh', __( 'Settings', 'lehigh-news-hub' ), __( 'Settings', 'lehigh-news-hub' ), self::CAP_ADMIN, 'lnh-settings', array( __CLASS__, 'page_settings' ) );
+		add_submenu_page( '', __( 'Connect your agents', 'lehigh-news-hub' ), '', self::CAP_ADMIN, 'lnh-connect', array( __CLASS__, 'page_connect' ) );
 		// Hidden: single article review (reached from the queue).
 		add_submenu_page( '', __( 'Review article', 'lehigh-news-hub' ), '', self::CAP_REVIEW, 'lnh-review', array( __CLASS__, 'page_review' ) );
 	}
@@ -325,6 +326,18 @@ final class LNH_Admin {
 			'categories' => get_categories( array( 'hide_empty' => false ) ),
 			'initial'    => LNH_Shortcode::render( array( 'cache' => 0 ) ),
 		) );
+		self::close();
+	}
+
+	/** One-click credentials. The POST is handled here so the one-time password is rendered in the same response. */
+	public static function page_connect(): void {
+		self::open( __( 'Connect your agents', 'lehigh-news-hub' ) );
+		$result = null;
+		if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+			check_admin_referer( 'lnh_connect' );
+			$result = LNH_Connect::generate();
+		}
+		self::view( 'connect', array( 'result' => $result, 'available' => wp_is_application_passwords_available(), 'existing' => LNH_Connect::agent_user() ) );
 		self::close();
 	}
 

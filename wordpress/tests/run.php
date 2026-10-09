@@ -281,6 +281,48 @@ foreach ( get_terms( array( 'taxonomy' => 'category', 'hide_empty' => false, 'na
 }
 update_option( LNH_Settings::OPTION, array_merge( LNH_Settings::all(), array( 'public_contact_email' => '', 'default_category' => $orig_default_cat ) ) );
 
+echo "One-click agent credentials\n";
+if ( $old_agent = LNH_Connect::agent_user() ) { // leftovers from a previous manual run
+	foreach ( WP_Application_Passwords::get_user_application_passwords( $old_agent->ID ) as $item ) {
+		WP_Application_Passwords::delete_application_password( $old_agent->ID, $item['uuid'] );
+	}
+	wp_delete_user( $old_agent->ID );
+}
+$pre_users = (int) ( new WP_User_Query( array( 'count_total' => true, 'fields' => 'ID', 'number' => 1 ) ) )->get_total();
+$g = LNH_Connect::generate();
+t( 'generate() succeeds for an administrator', is_array( $g ), $g instanceof WP_Error ? $g->get_error_message() : '' );
+$u = LNH_Connect::agent_user();
+t( 'creates a dedicated Author account flagged as the agents\' user', $u && in_array( 'author', $u->roles, true ) && 'lehigh-agents' === $u->user_login );
+t( 'the .env block has the REST root and a quoted token', false !== strpos( $g['env'], 'WP_REST_URL=' . untrailingslashit( rest_url() ) ) && 1 === preg_match( '/^WP_AUTH_TOKEN="lehigh-agents:[A-Za-z0-9 ]{20,}"$/m', $g['env'] ), $g['env'] );
+add_filter( 'application_password_is_api_request', '__return_true' );
+$authed = wp_authenticate_application_password( null, $g['user'], $g['password'] );
+remove_filter( 'application_password_is_api_request', '__return_true' );
+t( 'the generated password authenticates', $authed instanceof WP_User && (int) $authed->ID === (int) $u->ID );
+t( 'the plain password is not stored anywhere', 0 === count( array_filter( WP_Application_Passwords::get_user_application_passwords( $u->ID ), function ( $p ) use ( $g ) { return false !== strpos( wp_json_encode( $p ), str_replace( ' ', '', $g['password'] ) ); } ) ) );
+$g2 = LNH_Connect::generate();
+$users_now = (int) ( new WP_User_Query( array( 'count_total' => true, 'fields' => 'ID', 'number' => 1 ) ) )->get_total();
+t( 'second call reuses the account and adds another password', is_array( $g2 ) && false === $g2['created_user'] && 2 === count( WP_Application_Passwords::get_user_application_passwords( $u->ID ) ) && $users_now === $pre_users + 1, array( is_array( $g2 ) ? $g2['created_user'] : $g2->get_error_message(), count( WP_Application_Passwords::get_user_application_passwords( $u->ID ) ), $users_now, $pre_users ) );
+$ap_user = $u;
+add_filter( 'wp_is_application_passwords_available', '__return_false', 99 );
+$g3 = LNH_Connect::generate();
+t( 'refuses when Application Passwords are unavailable (e.g. no HTTPS)', is_wp_error( $g3 ) && 'lnh_no_app_passwords' === $g3->get_error_code() );
+remove_filter( 'wp_is_application_passwords_available', '__return_false', 99 );
+$contrib2 = wp_insert_user( array( 'user_login' => 'lnh_c2_' . wp_rand(), 'user_pass' => wp_generate_password(), 'role' => 'editor' ) );
+wp_set_current_user( $contrib2 );
+t( 'non-administrators cannot generate credentials', is_wp_error( LNH_Connect::generate() ) && 'lnh_forbidden' === LNH_Connect::generate()->get_error_code() );
+wp_set_current_user( $admin );
+$agent_post = wp_insert_post( array( 'post_title' => 'x', 'post_status' => 'draft', 'post_author' => $u->ID ) );
+wp_set_current_user( $u->ID );
+t( 'the agents\' account can create drafts and post run reports', current_user_can( 'edit_posts' ) && LNH_Rest::can_post() && ! LNH_Rest::can_review() );
+wp_set_current_user( $admin );
+wp_delete_post( $agent_post, true );
+foreach ( WP_Application_Passwords::get_user_application_passwords( $u->ID ) as $item ) {
+	WP_Application_Passwords::delete_application_password( $u->ID, $item['uuid'] );
+}
+wp_delete_user( $u->ID );
+wp_delete_user( $contrib2 );
+t( 'cleanup leaves no agents account', null === LNH_Connect::agent_user() );
+
 echo "Front-end decorations\n";
 $fp = $mk( array( 'lnh_audit_status' => 'approved', 'lnh_audit_score' => 88, 'lnh_source_url' => 'https://wink.example/a', 'lnh_source_name' => 'WINK <b>News</b>', 'lnh_source_date' => '2026-10-01' ), 'publish' );
 $GLOBALS['post'] = get_post( $fp );

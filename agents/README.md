@@ -3,10 +3,12 @@
 Rastreador → Redactor → Auditor → WordPress. Ver el [README principal](../README.md) para el panorama completo.
 
 ```bash
-pip install -r requirements.txt
-cp .env.example .env
+./install.sh                 # (install.bat en Windows) entorno + dependencias + asistente
+python main.py setup         # asistente guiado: crea/actualiza el .env automáticamente
 python main.py check | run [--dry-run] [--no-images] | watch
 ```
+
+`setup` valida la clave de Gemini, elige el mejor modelo disponible, localiza el sitio y obtiene la contraseña de aplicación mediante la pantalla de aprobación de WordPress (o reutiliza la del botón «Generar credenciales» del plugin). Módulo: `setup_wizard.py`.
 
 ## Módulos
 

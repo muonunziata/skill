@@ -102,6 +102,10 @@ $state  = $health['state'];
 
 		<section class="lnh-card-box">
 			<header><h2><?php esc_html_e( 'Connect your agents', 'lehigh-news-hub' ); ?></h2></header>
+			<?php if ( current_user_can( 'manage_options' ) ) : ?>
+				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>"><?php esc_html_e( 'Generate agent credentials', 'lehigh-news-hub' ); ?></a>
+				<span class="lnh-muted lnh-small"><?php esc_html_e( 'One click: creates the account and gives you the .env lines.', 'lehigh-news-hub' ); ?></span></p>
+			<?php endif; ?>
 			<ol class="lnh-steps">
 				<li><?php
 					printf(
@@ -113,7 +117,7 @@ $state  = $health['state'];
 				<li><?php esc_html_e( 'Put these two lines in the agents’ .env file:', 'lehigh-news-hub' ); ?>
 					<div class="lnh-copy"><pre>WP_REST_URL=<?php echo esc_html( $rest_url ); ?>
 WP_AUTH_TOKEN=<?php echo esc_html( wp_get_current_user()->user_login ); ?>:xxxx xxxx xxxx xxxx xxxx xxxx</pre><button type="button" class="button" data-lnh-copy><?php esc_html_e( 'Copy', 'lehigh-news-hub' ); ?></button></div></li>
-				<li><?php esc_html_e( 'Run python main.py check, then python main.py run.', 'lehigh-news-hub' ); ?></li>
+				<li><?php esc_html_e( 'Run python main.py setup (it configures the rest for you), then python main.py run.', 'lehigh-news-hub' ); ?></li>
 			</ol>
 		</section>
 	</div>

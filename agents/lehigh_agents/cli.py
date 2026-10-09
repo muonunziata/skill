@@ -48,11 +48,30 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--env-file", help="ruta al archivo .env (por defecto ./.env)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("check", help="valida configuración, modelos y conexión con WordPress")
+    sp = sub.add_parser("setup", help="asistente de configuración guiado (crea el .env automáticamente)")
+    sp.add_argument("--output", default=".env", help="archivo .env a crear o actualizar (por defecto ./.env)")
+    sp.add_argument("--site", help="dirección del sitio WordPress")
+    sp.add_argument("--gemini-key")
+    sp.add_argument("--wp-user")
+    sp.add_argument("--wp-password", help="contraseña de aplicación")
+    sp.add_argument("--redactor-model", help="modelo del Agente 2 (gemini-*, claude-*, gpt-*)")
+    sp.add_argument("--anthropic-key")
+    sp.add_argument("--openai-key")
+    sp.add_argument("--image-provider", choices=["none", "gemini", "replicate", "openai"])
+    sp.add_argument("--image-key")
+    sp.add_argument("--non-interactive", action="store_true", help="no preguntar: usar solo flags y el .env existente")
+    sp.add_argument("--no-check", action="store_true", help="omitir la comprobación final")
+    sp.add_argument("--timeout", type=int, default=300, help="segundos de espera de la aprobación en el navegador")
     for name, hlp in (("run", "una ejecución"), ("watch", "ejecuciones continuas")):
         p = sub.add_parser(name, help=hlp)
         p.add_argument("--dry-run", action="store_true", help="no escribe en WordPress; guarda el resultado en ./state")
         p.add_argument("--no-images", action="store_true", help="no genera imágenes con IA")
     args = ap.parse_args(argv)
+
+    if args.cmd == "setup":
+        from .setup_wizard import run_wizard
+
+        return run_wizard(args)
 
     s = Settings.from_env(args.env_file)
     logging.basicConfig(level=getattr(logging, s.log_level, logging.INFO), format="%(asctime)s %(levelname)s %(message)s")

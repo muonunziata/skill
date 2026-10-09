@@ -36,6 +36,19 @@
 		copy(text, b);
 	});
 
+	document.addEventListener('click', function (e) {
+		var b = e.target.closest('[data-lnh-download]');
+		if (!b) { return; }
+		var el = qs(b.getAttribute('data-lnh-download'));
+		if (!el) { return; }
+		var blob = new Blob([el.textContent], { type: 'text/plain' });
+		var a = document.createElement('a');
+		a.href = URL.createObjectURL(blob);
+		a.download = b.getAttribute('data-filename') || 'download.txt';
+		document.body.appendChild(a); a.click(); document.body.removeChild(a);
+		setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+	});
+
 	/* ---------- confirmations ---------- */
 	document.addEventListener('click', function (e) {
 		var b = e.target.closest('[data-confirm]');

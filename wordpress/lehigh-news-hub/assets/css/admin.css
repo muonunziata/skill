@@ -183,3 +183,4 @@ details summary{cursor:pointer;color:var(--c-accent);font-size:12.5px}
 .lnh-welcome__pages{margin:.4rem 0 .8rem;padding-left:1.2rem}
 .lnh-welcome__pages li{margin:.25rem 0}
 .lnh-welcome form{display:flex;gap:.5rem;flex-wrap:wrap}
+.lnh-copy__buttons{display:flex;flex-direction:column;gap:.4rem}

@@ -43,22 +43,30 @@ Al activarlo, el plugin **crea automáticamente lo que el sitio necesita** y te 
 
 Además crea la categoría **Noticias** (categoría por defecto de los artículos de los agentes). Las páginas salen en español si el idioma del sitio/usuario es español y en inglés en otro caso. Nunca se duplican al reactivar, nunca se sobrescriben tus ediciones y, si borras una a propósito, no se vuelve a crear sola; en *News Hub → Ajustes → Páginas* hay un botón para recrear las que falten. Añádelas a tu menú desde *Apariencia → Menús*.
 
-### 2 · Crea el acceso de los agentes
-*Usuarios → tu perfil → Contraseñas de aplicación* → crea una (p. ej. «agentes»).
-Recomendado: una cuenta con rol **Autor** o **Editor** solo para los agentes (el plugin además filtra el HTML de los agentes con `wp_kses_post`).
+### 2 · Conecta los agentes (casi todo automático)
+En WordPress: **News Hub → Panel → «Generar credenciales de los agentes»**. Crea la cuenta «Lehigh Agents» (rol Autor) con su contraseña de aplicación y te muestra dos líneas para copiar o un `.env` para descargar.
 
-### 3 · Configura y arranca los agentes
+### 3 · Instala y configura los agentes con el asistente
 ```bash
 cd agents
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env        # rellena GEMINI_API_KEY, WP_REST_URL, WP_AUTH_TOKEN…
-python main.py check        # valida claves, modelos y conexión con WordPress
-python main.py run --dry-run  # prueba completa sin escribir en WordPress
-python main.py run            # una ejecución real
-python main.py watch          # ejecuciones continuas (cada LOOP_INTERVAL_MINUTES)
+./install.sh          # Windows: install.bat
 ```
-Para dejarlo corriendo: `agents/Dockerfile` + `docker-compose.yml`, o `agents/deploy/lehigh-agents.service` (systemd).
+Crea el entorno de Python, instala las dependencias y arranca **`python main.py setup`**, que:
+
+* te pide **solo la clave de Gemini** (https://aistudio.google.com/apikey) y la valida;
+* **elige automáticamente el mejor modelo Gemini disponible** (así no importa que `gemini-1.5-flash` ya no exista);
+* busca tu sitio, confirma que el plugin está activo y consigue la contraseña de aplicación **abriendo el navegador: tú pulsas «Aprobar»** (o reutiliza la del paso 2 si ya la pusiste en el `.env`);
+* te deja elegir imágenes con IA (Nano Banana reutiliza tu clave de Gemini);
+* escribe el `.env` (permisos solo para tu usuario) y ejecuta la comprobación final.
+
+Después:
+```bash
+python main.py run --dry-run   # prueba completa sin escribir en WordPress
+./start.sh                      # funcionamiento continuo (start.bat en Windows)
+```
+Para dejarlo corriendo como servicio: `agents/Dockerfile` + `docker-compose.yml`, o `agents/deploy/lehigh-agents.service` (systemd).
+
+> ¿Prefieres hacerlo a mano? `cp .env.example .env`, rellénalo y usa `python main.py check`. Todo el asistente también funciona sin preguntas con `python main.py setup --non-interactive --gemini-key … --site …`.
 
 ### 4 · Usa el plugin
 * **News Hub → Cola de revisión**: ve las noticias que esperan tu decisión, con su nota de auditoría.
@@ -104,9 +112,9 @@ php wordpress/tests/run.php /ruta/a/wordpress
 agents/                      Agentes en Python (Gemini · Claude · OpenAI · imágenes)
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
-  tests/                       44 pruebas
+  tests/                       57 pruebas
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      65 comprobaciones dentro de WordPress
+wordpress/tests/run.php      92 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 scripts/build-release.sh     Genera los .zip descargables
 ```

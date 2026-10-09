@@ -31,297 +31,317 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:39
+#: includes/class-lnh-admin.php:38
+msgid "Connect your agents"
+msgstr ""
+
+#: includes/class-lnh-admin.php:40
 msgid "Review article"
 msgstr ""
 
-#: includes/class-lnh-admin.php:79
+#: includes/class-lnh-admin.php:80
 msgid "%s ago"
 msgstr ""
 
-#: includes/class-lnh-admin.php:80
+#: includes/class-lnh-admin.php:81
 msgid "Copied!"
 msgstr ""
 
-#: includes/class-lnh-admin.php:81
+#: includes/class-lnh-admin.php:82
 msgid "Reject the selected article(s)? They move to the Rejected tab and can be restored."
 msgstr ""
 
-#: includes/class-lnh-admin.php:82
+#: includes/class-lnh-admin.php:83
 msgid "Delete permanently? This cannot be undone."
 msgstr ""
 
-#: includes/class-lnh-admin.php:83
+#: includes/class-lnh-admin.php:84
 msgid "No activity yet."
 msgstr ""
 
-#: includes/class-lnh-admin.php:84
+#: includes/class-lnh-admin.php:85
 msgid "Live"
 msgstr ""
 
-#: includes/class-lnh-admin.php:85
+#: includes/class-lnh-admin.php:86
 msgid "Paused"
 msgstr ""
 
-#: includes/class-lnh-admin.php:86
+#: includes/class-lnh-admin.php:87
 msgid "Could not render the preview."
 msgstr ""
 
-#: includes/class-lnh-admin.php:108
+#: includes/class-lnh-admin.php:109
 msgid "Researcher"
 msgstr ""
 
-#: includes/class-lnh-admin.php:108
+#: includes/class-lnh-admin.php:109
 msgid "Searches the web and reads the sources"
 msgstr ""
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:110
 msgid "Writer"
 msgstr ""
 
-#: includes/class-lnh-admin.php:109
+#: includes/class-lnh-admin.php:110
 msgid "Writes the article and its featured image"
 msgstr ""
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:111
 msgid "Auditor"
 msgstr ""
 
-#: includes/class-lnh-admin.php:110
+#: includes/class-lnh-admin.php:111
 msgid "Fact-checks, then decides if it can be sent"
 msgstr ""
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:112
 msgid "Coordinator"
 msgstr ""
 
-#: includes/class-lnh-admin.php:111
+#: includes/class-lnh-admin.php:112
 msgid "Runs the three agents in order"
 msgstr ""
 
-#: includes/class-lnh-admin.php:122
+#: includes/class-lnh-admin.php:123
 msgid "Run started"
 msgstr ""
 
-#: includes/class-lnh-admin.php:123
+#: includes/class-lnh-admin.php:124
 msgid "Run finished"
 msgstr ""
 
-#: includes/class-lnh-admin.php:124
+#: includes/class-lnh-admin.php:125
 msgid "Working"
 msgstr ""
 
-#: includes/class-lnh-admin.php:125
+#: includes/class-lnh-admin.php:126
 msgid "Web search"
 msgstr ""
 
-#: includes/class-lnh-admin.php:126
+#: includes/class-lnh-admin.php:127
 msgid "Read a page"
 msgstr ""
 
-#: includes/class-lnh-admin.php:127
+#: includes/class-lnh-admin.php:128
 msgid "Story found"
 msgstr ""
 
-#: includes/class-lnh-admin.php:128
+#: includes/class-lnh-admin.php:129
 msgid "Skipped"
 msgstr ""
 
-#: includes/class-lnh-admin.php:129
+#: includes/class-lnh-admin.php:130
 msgid "Draft written"
 msgstr ""
 
-#: includes/class-lnh-admin.php:130
+#: includes/class-lnh-admin.php:131
 msgid "Media"
 msgstr ""
 
-#: includes/class-lnh-admin.php:131
+#: includes/class-lnh-admin.php:132
 msgid "Image prompt"
 msgstr ""
 
-#: includes/class-lnh-admin.php:132
+#: includes/class-lnh-admin.php:133
 msgid "Image generated"
 msgstr ""
 
-#: includes/class-lnh-admin.php:133
+#: includes/class-lnh-admin.php:134
 msgid "Image attached"
 msgstr ""
 
-#: includes/class-lnh-admin.php:134
+#: includes/class-lnh-admin.php:135
 msgid "Automatic check"
 msgstr ""
 
-#: includes/class-lnh-admin.php:135
+#: includes/class-lnh-admin.php:136
 msgid "Audit result"
 msgstr ""
 
-#: includes/class-lnh-admin.php:136
+#: includes/class-lnh-admin.php:137
 msgid "Sent to WordPress"
 msgstr ""
 
-#: includes/class-lnh-admin.php:137
+#: includes/class-lnh-admin.php:138
 msgid "Held back"
 msgstr ""
 
-#: includes/class-lnh-admin.php:138
+#: includes/class-lnh-admin.php:139
 msgid "Cleanup"
 msgstr ""
 
-#: includes/class-lnh-admin.php:139
+#: includes/class-lnh-admin.php:140
 msgid "Test mode"
 msgstr ""
 
-#: includes/class-lnh-admin.php:140
+#: includes/class-lnh-admin.php:141
 msgid "Warning"
 msgstr ""
 
-#: includes/class-lnh-admin.php:141
+#: includes/class-lnh-admin.php:142
 msgid "Error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:142
+#: includes/class-lnh-admin.php:143
 msgid "Page unavailable"
 msgstr ""
 
-#: includes/class-lnh-admin.php:143
+#: includes/class-lnh-admin.php:144
 msgid "Retry"
 msgstr ""
 
-#: includes/class-lnh-admin.php:152
+#: includes/class-lnh-admin.php:153
 msgid "Waiting for the first run"
 msgstr ""
 
-#: includes/class-lnh-admin.php:157
+#: includes/class-lnh-admin.php:158
 msgid "The last run reported an error"
 msgstr ""
 
-#: includes/class-lnh-admin.php:160
+#: includes/class-lnh-admin.php:161
 msgid "Agents have not reported for a while"
 msgstr ""
 
-#: includes/class-lnh-admin.php:162
+#: includes/class-lnh-admin.php:163
 msgid "Agents are running normally"
 msgstr ""
 
-#: includes/class-lnh-admin.php:182
+#: includes/class-lnh-admin.php:183
 msgid "Settings saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:183
+#: includes/class-lnh-admin.php:184
 msgid "Preset saved."
 msgstr ""
 
-#: includes/class-lnh-admin.php:186
+#: includes/class-lnh-admin.php:187
 msgid "Preset deleted."
 msgstr ""
 
-#: includes/class-lnh-admin.php:187
+#: includes/class-lnh-admin.php:188
 msgid "Something went wrong. Nothing was changed."
 msgstr ""
 
-#: includes/class-lnh-admin.php:188
+#: includes/class-lnh-admin.php:189
 msgid "Select at least one article first."
 msgstr ""
 
-#: includes/class-lnh-admin.php:215
+#: includes/class-lnh-admin.php:216
 msgid "Your AI newsroom at a glance."
 msgstr ""
 
-#: includes/class-lnh-admin.php:249
+#: includes/class-lnh-admin.php:250
 msgid "Articles written and audited by the agents. You decide what gets published."
 msgstr ""
 
-#: includes/class-lnh-admin.php:266
+#: includes/class-lnh-admin.php:267
 msgid "Article not found."
 msgstr ""
 
-#: includes/class-lnh-admin.php:266
+#: includes/class-lnh-admin.php:267
 msgid "Back to the queue"
 msgstr ""
 
-#: includes/class-lnh-admin.php:277
+#: includes/class-lnh-admin.php:278
 msgid "Everything the Researcher, Writer and Auditor did, step by step."
 msgstr ""
 
-#: includes/class-lnh-admin.php:321
+#: includes/class-lnh-admin.php:322
 msgid "Design a list of the latest articles, preview it live and copy the shortcode."
 msgstr ""
 
-#: includes/class-lnh-admin.php:335
+#: includes/class-lnh-admin.php:348
 msgid "News Hub settings"
 msgstr ""
 
-#: includes/class-lnh-admin.php:352
+#: includes/class-lnh-admin.php:365
 msgid "You are not allowed to do that."
 msgstr ""
 
-#: includes/class-lnh-admin.php:478
+#: includes/class-lnh-admin.php:491
 msgid "AI agents – audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:487
+#: includes/class-lnh-admin.php:500
 msgid "AI audit"
 msgstr ""
 
-#: includes/class-lnh-admin.php:500
+#: includes/class-lnh-admin.php:513
 msgid "Review"
 msgstr ""
 
-#: includes/class-lnh-admin.php:508
+#: includes/class-lnh-admin.php:521
 msgid "All origins"
 msgstr ""
 
-#: includes/class-lnh-admin.php:508
+#: includes/class-lnh-admin.php:521
 msgid "Created by AI agents"
 msgstr ""
 
-#: includes/class-lnh-admin.php:525
+#: includes/class-lnh-admin.php:538
 msgid "Audit score %d/100"
 msgstr ""
 
-#: includes/class-lnh-admin.php:530
+#: includes/class-lnh-admin.php:543
 msgid "Approved"
 msgstr ""
 
-#: includes/class-lnh-admin.php:531
+#: includes/class-lnh-admin.php:544
 msgid "Flagged"
 msgstr ""
 
-#: includes/class-lnh-admin.php:173
+#: includes/class-lnh-admin.php:174
 msgid "%d article published."
 msgid_plural "%d articles published."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:175
+#: includes/class-lnh-admin.php:176
 msgid "%d article scheduled."
 msgid_plural "%d articles scheduled."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:177
+#: includes/class-lnh-admin.php:178
 msgid "%d article rejected."
 msgid_plural "%d articles rejected."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:179
+#: includes/class-lnh-admin.php:180
 msgid "%d article moved back to review."
 msgid_plural "%d articles moved back to review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:181
+#: includes/class-lnh-admin.php:182
 msgid "%d article deleted."
 msgid_plural "%d articles deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-admin.php:185
+#: includes/class-lnh-admin.php:186
 msgid "%d page created."
 msgid_plural "%d pages created."
 msgstr[0] ""
 msgstr[1] ""
+
+#: includes/class-lnh-connect.php:22
+msgid "Only administrators can create the agents’ credentials."
+msgstr ""
+
+#: includes/class-lnh-connect.php:25
+msgid "Application Passwords are not available on this site. They require HTTPS (or a local environment) and must not be disabled by a security plugin."
+msgstr ""
+
+#: includes/class-lnh-connect.php:73
+msgid "Application Passwords are disabled for the agents’ account."
+msgstr ""
+
+#: includes/class-lnh-connect.php:77
+msgid "Lehigh agents – %s"
+msgstr ""
 
 #: includes/class-lnh-front.php:25
 msgid "AI-generated illustration"
@@ -1017,6 +1037,62 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: views/connect.php:5
+msgid "Back to the dashboard"
+msgstr ""
+
+#: views/connect.php:13
+msgid "Credentials for your agents"
+msgstr ""
+
+#: views/connect.php:14
+msgid "Copy them now: the password is shown only once."
+msgstr ""
+
+#: views/connect.php:18
+msgid "We created the account “%s” (Author role) for the agents."
+msgstr ""
+
+#: views/connect.php:19
+msgid "We used the existing agents’ account “%s” and added a new password."
+msgstr ""
+
+#: views/connect.php:26
+msgid "Download .env"
+msgstr ""
+
+#: views/connect.php:29
+msgid "Save these two lines in the .env file inside the agents folder (or download the file and move it there)."
+msgstr ""
+
+#: views/connect.php:30
+msgid "In a terminal inside that folder run:"
+msgstr ""
+
+#: views/connect.php:30
+msgid "it asks only for your Gemini key and configures everything else."
+msgstr ""
+
+#: views/connect.php:32
+msgid "You can revoke this access any time in Users → Profile → Application Passwords."
+msgstr ""
+
+#: views/connect.php:36
+msgid "Connect your agents in one click"
+msgstr ""
+
+#: views/connect.php:37
+msgid "We create a dedicated “Lehigh Agents” account with the Author role and an Application Password, and give you the two lines your agents need. Nothing is stored in plain text."
+msgstr ""
+
+#: views/connect.php:39
+msgid "The account “%s” already exists; a new password will be added to it."
+msgstr ""
+
+#: views/connect.php:46
+msgid "Generate agent credentials"
+msgstr ""
+
 #: views/dashboard.php:9
 msgid "Lehigh News Hub is ready"
 msgstr ""
@@ -1105,24 +1181,24 @@ msgstr ""
 msgid "no activity yet"
 msgstr ""
 
-#: views/dashboard.php:104
-msgid "Connect your agents"
-msgstr ""
-
-#: views/dashboard.php:109
-msgid "Create an %s for the account the agents will post with."
-msgstr ""
-
-#: views/dashboard.php:110
-msgid "Application Password"
+#: views/dashboard.php:107
+msgid "One click: creates the account and gives you the .env lines."
 msgstr ""
 
 #: views/dashboard.php:113
+msgid "Create an %s for the account the agents will post with."
+msgstr ""
+
+#: views/dashboard.php:114
+msgid "Application Password"
+msgstr ""
+
+#: views/dashboard.php:117
 msgid "Put these two lines in the agents’ .env file:"
 msgstr ""
 
-#: views/dashboard.php:116
-msgid "Run python main.py check, then python main.py run."
+#: views/dashboard.php:120
+msgid "Run python main.py setup (it configures the rest for you), then python main.py run."
 msgstr ""
 
 #: views/metabox.php:14
