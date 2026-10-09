@@ -283,8 +283,12 @@ def authorize_in_browser(info: SiteInfo, open_url: Callable[[str], object] = web
 
 
 def test_wordpress(info: SiteInfo, user: str, password: str, http=requests, timeout: float = 20) -> str:
-    """Verify the credentials; returns the account's display name."""
-    r = http.get(info.rest_root + "/wp/v2/users/me", params={"context": "edit"}, auth=(user, password), timeout=timeout)
+    """Verify the credentials (user + application password, or the plugin's `lnh_…` connection key as `user`, empty password)."""
+    if user.startswith("lnh_") and not password:      # the plugin's own connection key, for sites without Application Passwords
+        r = http.get(info.rest_root + "/wp/v2/users/me", params={"context": "edit"},
+                     headers={"Authorization": f"Bearer {user}", "X-Lehigh-Key": user}, timeout=timeout)
+    else:
+        r = http.get(info.rest_root + "/wp/v2/users/me", params={"context": "edit"}, auth=(user, password), timeout=timeout)
     if r.status_code != 200:
         raise SetupError(f"WordPress rechazó las credenciales (HTTP {r.status_code}).")
     try:
@@ -404,7 +408,17 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
 
     user, password = args.wp_user or "", args.wp_password or ""
     token_old = values.get("WP_AUTH_TOKEN", "")
-    if not (user and password) and ":" in token_old and normalize_root(values.get("WP_REST_URL", "") or "x") == info.rest_root:
+    if not (user and password) and token_old.startswith("lnh_") and ":" not in token_old \
+            and normalize_root(values.get("WP_REST_URL", "") or "x") == info.rest_root:
+        try:
+            who = test_wordpress(info, token_old, "", http=http)
+            con.say(f"  ✓ La clave de conexión guardada sigue funcionando ({who}); se conserva.")
+            user, password = token_old, ""
+            new["WP_AUTH_TOKEN"] = token_old
+        except (SetupError, requests.RequestException):
+            pass
+    if not (user and password) and not new.get("WP_AUTH_TOKEN") and ":" in token_old \
+            and normalize_root(values.get("WP_REST_URL", "") or "x") == info.rest_root:
         ou, op = token_old.split(":", 1)
         try:
             who = test_wordpress(info, ou, op, http=http)
@@ -412,7 +426,7 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
             user, password = ou, op
         except (SetupError, requests.RequestException):
             pass
-    if not (user and password):
+    if not (user and password) and not new.get("WP_AUTH_TOKEN"):
         local = is_local_site(info.site)
         mode = 1 if (info.authorize_url and (local or not con.interactive)) else 2
         if con.interactive:
@@ -435,13 +449,14 @@ def run_wizard(args, console: Console | None = None, *, http=requests, open_url:
             con.say("  Crea una en Usuarios → tu perfil → Contraseñas de aplicación (o usa el botón «Generar credenciales» del plugin).")
             user = con.ask("  Usuario de WordPress", user)
             password = con.ask("  Contraseña de aplicación", password, secret=True)
-    try:
-        who = test_wordpress(info, user, password, http=http)
-    except (SetupError, requests.RequestException) as exc:
-        con.say(f"  ✗ {exc}")
-        return 2
-    con.say(f"  ✓ Conectado como «{who}»")
-    new["WP_AUTH_TOKEN"] = f"{user}:{password}"
+    if not new.get("WP_AUTH_TOKEN"):
+        try:
+            who = test_wordpress(info, user, password, http=http)
+        except (SetupError, requests.RequestException) as exc:
+            con.say(f"  ✗ {exc}")
+            return 2
+        con.say(f"  ✓ Conectado como «{who}»")
+        new["WP_AUTH_TOKEN"] = f"{user}:{password}"
 
     # 3 · Images -----------------------------------------------------------------------
     con.say("\n3/4 · Imagen destacada con IA y fuentes extra (opcional)")

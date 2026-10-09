@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.5.1 =
+* Works on sites without Application Passwords (plain HTTP, or disabled by a security plugin): the plugin now creates its own private connection key for the agents. It is stored only as a hash, works only on REST API requests and only for the agents' Author account, and generating a new one revokes the previous.
 
 = 1.5.0 =
 * Set up the agents in 3 steps: paste a free Gemini key, press “Download my agents” and double-click INICIAR (Windows / Mac). The downloaded package already contains the site address, a private connection password and the key, and installs everything it needs on first run. The manual flow remains under “Advanced”.

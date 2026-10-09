@@ -9,6 +9,7 @@ allowed-tools: Bash(python main.py check:*), Bash(python main.py setup:*), Bash(
 1. `cd agents && python main.py check`. It validates settings, lists unavailable models, authenticates against WordPress and detects the plugin.
 2. Interpret:
    - **Model not available** -> `python main.py setup` re-picks a working Gemini model, or edit `RASTREADOR_MODEL` / `REDACCTOR_MODEL` / `AUDITOR_MODEL` (`gemini-2.5-flash` is a safe default).
+   - **"Application Passwords are not available"** (HTTP site or security plugin) -> not a problem since plugin 1.5.1: *Set up my agents* creates a connection key (`WP_AUTH_TOKEN=lnh_...`, sent as `Authorization: Bearer` and `X-Lehigh-Key`). Regenerating it revokes the old one.
    - **WordPress 401/403** -> regenerate credentials in WP: *News Hub -> Panel -> Generate agent credentials*, or `python main.py setup`. App passwords need HTTPS (or a local site).
    - **404 on `/lnh/v1/ping`** -> plugin inactive: drafts still work, but no agent panel.
    - **Dashboard says "Waiting for the agents to connect"** -> start the worker: double-click `INICIAR.bat` / `INICIAR.command` from the package downloaded in *News Hub -> Set up my agents* (or `./start.sh` = `python main.py watch`); it syncs with `/lnh/v1/control/sync`. They start paused: press *Start working* in News Hub. A 404 there means an old plugin (the worker then runs on its own schedule).

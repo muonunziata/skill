@@ -362,7 +362,7 @@ final class LNH_Admin {
 			check_admin_referer( 'lnh_connect' );
 			$result = LNH_Connect::generate();
 		}
-		self::view( 'connect', array( 'package' => LNH_Package::available(), 'result' => $result, 'available' => wp_is_application_passwords_available(), 'existing' => LNH_Connect::agent_user() ) );
+		self::view( 'connect', array( 'package' => LNH_Package::available(), 'result' => $result, 'https' => is_ssl() || wp_is_application_passwords_available(), 'existing' => LNH_Connect::agent_user() ) );
 		self::close();
 	}
 

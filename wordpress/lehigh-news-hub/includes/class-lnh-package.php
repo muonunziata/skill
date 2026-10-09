@@ -58,7 +58,7 @@ final class LNH_Package {
 	public static function env_values( array $creds, string $gemini_key, bool $ai_images ): array {
 		return array(
 			'WP_REST_URL'      => $creds['rest_url'],
-			'WP_AUTH_TOKEN'    => $creds['user'] . ':' . $creds['password'],
+			'WP_AUTH_TOKEN'    => 'key' === ( $creds['mode'] ?? '' ) ? $creds['password'] : $creds['user'] . ':' . $creds['password'],
 			'GEMINI_API_KEY'   => $gemini_key,
 			'RASTREADOR_MODEL' => self::MODEL,
 			'REDACCTOR_MODEL'  => self::MODEL,

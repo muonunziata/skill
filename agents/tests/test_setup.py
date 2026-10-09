@@ -286,3 +286,27 @@ def test_application_password_names_are_unique_per_authorisation(monkeypatch):
     first = sw.app_name()
     monkeypatch.setattr(sw.time, "strftime", lambda fmt: "2026-10-09 10:01")
     assert first != sw.app_name() and first.startswith(sw.APP_NAME)
+
+
+# ───────────────────────── connection key (sites without Application Passwords) ─────────────────────────
+def test_client_sends_the_plugin_key_both_ways():
+    from lehigh_agents.wordpress import WordPressClient
+
+    key = "lnh_" + "A1b2C3d4" * 5
+    h = WordPressClient("https://x.example", key).headers
+    assert h["Authorization"] == f"Bearer {key}" and h["X-Lehigh-Key"] == key
+    basic = WordPressClient("https://x.example", "user:abcd efgh").headers
+    assert basic["Authorization"].startswith("Basic ") and "X-Lehigh-Key" not in basic
+
+
+def test_wizard_checks_a_stored_connection_key():
+    calls = []
+
+    class Http:
+        def get(self, url, **kw):
+            calls.append(kw)
+            return type("R", (), {"status_code": 200, "json": lambda self: {"name": "Lehigh Agents"}})()
+
+    info = sw.SiteInfo(site="https://x.example", rest_root="https://x.example/wp-json", name="X", has_plugin=True, authorize_url="")
+    assert sw.test_wordpress(info, "lnh_" + "a" * 40, "", http=Http()) == "Lehigh Agents"
+    assert calls[0]["headers"]["Authorization"].startswith("Bearer lnh_") and "auth" not in calls[0]

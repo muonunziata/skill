@@ -47,6 +47,8 @@ class WordPressClient:
             auth = "Bearer " + token
         self.headers = {"Authorization": auth, "Accept": "application/json",
                         "User-Agent": f"lehigh-agents/{__version__}"}
+        if token.startswith("lnh_"):   # the plugin's connection key; some hosts strip Authorization, so repeat it in a plain header
+            self.headers["X-Lehigh-Key"] = token
         self._tag_cache: dict[str, int] = {}
 
     # ───────────────────────── low level ─────────────────────────

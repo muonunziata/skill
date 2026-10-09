@@ -305,7 +305,40 @@ t( 'second call reuses the account and adds another password', is_array( $g2 ) &
 $ap_user = $u;
 add_filter( 'wp_is_application_passwords_available', '__return_false', 99 );
 $g3 = LNH_Connect::generate();
-t( 'refuses when Application Passwords are unavailable (e.g. no HTTPS)', is_wp_error( $g3 ) && 'lnh_no_app_passwords' === $g3->get_error_code() );
+t( 'no Application Passwords (HTTP / security plugin): falls back to the plugin\'s own connection key', is_array( $g3 ) && 'key' === $g3['mode'] && 0 === strpos( $g3['password'], 'lnh_' ) && false !== strpos( $g3['env'], 'WP_AUTH_TOKEN=lnh_' ), $g3 );
+t( 'the key is stored only as a hash', hash( 'sha256', $g3['password'] ) === get_user_meta( $u->ID, LNH_Connect::KEY_META, true ) && '' === (string) $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->usermeta} WHERE meta_value = %s", $g3['password'] ) ) );
+$server_backup = $_SERVER;
+$as = function ( array $server ) use ( $server_backup ) {
+	$_SERVER = array_merge( $server_backup, array( 'REQUEST_URI' => '/wp-json/lnh/v1/ping' ) );
+	unset( $_SERVER['HTTP_AUTHORIZATION'], $_SERVER['HTTP_X_LEHIGH_KEY'] );
+	foreach ( $server as $k => $v ) {
+		$_SERVER[ $k ] = $v;
+	}
+	$r = LNH_Connect::authenticate_key( false );
+	$_SERVER = $server_backup;
+	return $r;
+};
+t( 'key: Authorization Bearer authenticates as the agents\' account on REST requests', (int) $u->ID === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g3['password'] ) ) );
+t( 'key: the X-Lehigh-Key header works for hosts that strip Authorization', (int) $u->ID === $as( array( 'HTTP_X_LEHIGH_KEY' => $g3['password'] ) ) );
+t( 'key: a wrong or malformed key is refused', false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer lnh_' . str_repeat( 'a', 40 ) ) ) && false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer nope' ) ) && false === $as( array( 'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode( 'a:b' ) ) ) );
+t( 'key: only on the REST API, never on normal pages or wp-admin', false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g3['password'], 'REQUEST_URI' => '/wp-admin/options.php' ) ) );
+t( 'key: an already authenticated user is left alone', 7 === LNH_Connect::authenticate_key( 7 ) );
+$g4 = LNH_Connect::generate();
+t( 'generating a new key revokes the previous one', false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g3['password'] ) ) && (int) $u->ID === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g4['password'] ) ) );
+if ( LNH_Package::available() ) {
+	$pk = LNH_Package::build( 'AIzaTestKeyTestKeyTestKey1', false );
+	$ze = '';
+	if ( is_array( $pk ) ) {
+		$zz = new ZipArchive();
+		$zz->open( $pk['path'] );
+		$ze = (string) $zz->getFromName( 'golehighacres-agents/.env' );
+		$zz->close();
+		wp_delete_file( $pk['path'] );
+	}
+	t( 'the downloadable package also works without Application Passwords', 1 === preg_match( '/^WP_AUTH_TOKEN=lnh_[A-Za-z0-9]{40}$/m', $ze ), is_wp_error( $pk ) ? $pk->get_error_message() : $ze );
+}
+delete_user_meta( $u->ID, LNH_Connect::KEY_META );
+t( 'removing the key (or the account) disables it', false === $as( array( 'HTTP_AUTHORIZATION' => 'Bearer ' . $g4['password'] ) ) );
 remove_filter( 'wp_is_application_passwords_available', '__return_false', 99 );
 $contrib2 = wp_insert_user( array( 'user_login' => 'lnh_c2_' . wp_rand(), 'user_pass' => wp_generate_password(), 'role' => 'editor' ) );
 wp_set_current_user( $contrib2 );
@@ -487,11 +520,11 @@ if ( class_exists( 'ZipArchive' ) ) {
 	}
 }
 ob_start();
-LNH_Admin::view( 'connect', array( 'package' => true, 'result' => null, 'available' => true, 'existing' => null ) );
+LNH_Admin::view( 'connect', array( 'package' => true, 'result' => null, 'https' => false, 'existing' => null ) );
 $conn_html = ob_get_clean();
-t( 'connect screen: 3 easy steps with the key field, advanced credentials tucked away', false !== strpos( $conn_html, 'name="gemini_key"' ) && false !== strpos( $conn_html, 'value="lnh_agents_package"' ) && false !== strpos( $conn_html, 'INICIAR' ) && false !== strpos( $conn_html, '<details class="lnh-card-box lnh-advanced">' ) );
+t( 'connect screen: 3 easy steps with the key field, advanced credentials tucked away', false !== strpos( $conn_html, 'name="gemini_key"' ) && false !== strpos( $conn_html, 'value="lnh_agents_package"' ) && false !== strpos( $conn_html, 'INICIAR' ) && false !== strpos( $conn_html, '<details class="lnh-card-box lnh-advanced">' ) && false !== strpos( $conn_html, 'connection key' ) );
 ob_start();
-LNH_Admin::view( 'connect', array( 'package' => false, 'result' => null, 'available' => true, 'existing' => null ) );
+LNH_Admin::view( 'connect', array( 'package' => false, 'result' => null, 'https' => true, 'existing' => null ) );
 t( 'connect screen without the bundle: no download form, manual steps remain', false === strpos( ob_get_clean(), 'name="gemini_key"' ) );
 t( 'the package handler is registered and its notices exist', false !== has_action( 'admin_post_lnh_agents_package' ) );
 if ( ! $had_bundle ) {

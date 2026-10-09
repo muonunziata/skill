@@ -403,19 +403,11 @@ msgid_plural "%d pages created."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-lnh-connect.php:22
+#: includes/class-lnh-connect.php:67
 msgid "Only administrators can create the agents’ credentials."
 msgstr ""
 
-#: includes/class-lnh-connect.php:25
-msgid "Application Passwords are not available on this site. They require HTTPS (or a local environment) and must not be disabled by a security plugin."
-msgstr ""
-
-#: includes/class-lnh-connect.php:73
-msgid "Application Passwords are disabled for the agents’ account."
-msgstr ""
-
-#: includes/class-lnh-connect.php:76
+#: includes/class-lnh-connect.php:129
 msgid "Lehigh agents – %s"
 msgstr ""
 
@@ -1153,103 +1145,107 @@ msgstr ""
 msgid "Set up your agents in 3 steps"
 msgstr ""
 
-#: views/connect.php:15
-msgid "Paste your Gemini key"
-msgstr ""
-
-#: views/connect.php:16
-msgid "it is free: get it at %s (sign in with Google, press “Create API key”)."
+#: views/connect.php:11
+msgid "This site does not use HTTPS, so WordPress Application Passwords are off. No problem: the plugin creates its own private connection key for the agents instead. (Enabling HTTPS is still recommended: it encrypts the connection.)"
 msgstr ""
 
 #: views/connect.php:18
-msgid "Download my agents"
+msgid "Paste your Gemini key"
 msgstr ""
 
 #: views/connect.php:19
-msgid "Also create AI featured images with this key (needs a Google plan that allows image generation)."
+msgid "it is free: get it at %s (sign in with Google, press “Create API key”)."
 msgstr ""
 
 #: views/connect.php:21
-msgid "Unzip the file and double-click INICIAR"
+msgid "Download my agents"
 msgstr ""
 
 #: views/connect.php:22
-msgid "INICIAR.bat on Windows, INICIAR.command on Mac. The first time it installs everything by itself (a few minutes)."
-msgstr ""
-
-#: views/connect.php:23
-msgid "Come back here and press “Start working”"
+msgid "Also create AI featured images with this key (needs a Google plan that allows image generation)."
 msgstr ""
 
 #: views/connect.php:24
-msgid "the agents connect by themselves; you will see them turn green on the dashboard."
+msgid "Unzip the file and double-click INICIAR"
+msgstr ""
+
+#: views/connect.php:25
+msgid "INICIAR.bat on Windows, INICIAR.command on Mac. The first time it installs everything by itself (a few minutes)."
+msgstr ""
+
+#: views/connect.php:26
+msgid "Come back here and press “Start working”"
 msgstr ""
 
 #: views/connect.php:27
+msgid "the agents connect by themselves; you will see them turn green on the dashboard."
+msgstr ""
+
+#: views/connect.php:30
 msgid "The file already contains your site address, a private connection password and your key, so there is nothing to type or copy. Keep it private. Your Gemini key is only written into that file; this site does not store it."
 msgstr ""
 
-#: views/connect.php:31
+#: views/connect.php:32
 msgid "This copy of the plugin does not include the agents (or the zip extension is missing on this server). Use the manual steps below."
 msgstr ""
 
-#: views/connect.php:36
+#: views/connect.php:37
 msgid "Advanced: only create the connection credentials"
 msgstr ""
 
-#: views/connect.php:43
+#: views/connect.php:44
 msgid "Credentials for your agents"
 msgstr ""
 
-#: views/connect.php:44
+#: views/connect.php:45
 msgid "Copy them now: the password is shown only once."
 msgstr ""
 
-#: views/connect.php:48
+#: views/connect.php:49
 msgid "We created the account “%s” (Author role) for the agents."
 msgstr ""
 
-#: views/connect.php:49
+#: views/connect.php:50
 msgid "We used the existing agents’ account “%s” and added a new password."
 msgstr ""
 
-#: views/connect.php:56
+#: views/connect.php:57
 msgid "Download .env"
 msgstr ""
 
-#: views/connect.php:59
+#: views/connect.php:60
 msgid "Save these two lines in the .env file inside the agents folder (or download the file and move it there)."
 msgstr ""
 
-#: views/connect.php:60
+#: views/connect.php:61
 msgid "In a terminal inside that folder run:"
 msgstr ""
 
-#: views/connect.php:60
+#: views/connect.php:61
 msgid "it asks only for your Gemini key and configures everything else."
 msgstr ""
 
-#: views/connect.php:61
+#: views/connect.php:62
 msgid "Start the agents with ./start.sh (Windows: start.bat). They connect by themselves; then press “Start working” in the News Hub dashboard."
 msgstr ""
 
-#: views/connect.php:63
+#: views/connect.php:64
 msgid "You can revoke this access any time in Users → Profile → Application Passwords."
 msgstr ""
 
-#: views/connect.php:67
+#: views/connect.php:68
 msgid "Connect your agents in one click"
 msgstr ""
 
-#: views/connect.php:68
-msgid "We create a dedicated “Lehigh Agents” account with the Author role and an Application Password, and give you the two lines your agents need. Nothing is stored in plain text."
+#: views/connect.php:69
+msgid "We create a dedicated “Lehigh Agents” account with the Author role and a private connection password, and give you the two lines your agents need. Nothing is stored in plain text."
 msgstr ""
 
-#: views/connect.php:70
+#: views/connect.php:71
 msgid "The account “%s” already exists; a new password will be added to it."
 msgstr ""
 
-#: views/connect.php:77
+#: views/connect.php:75
 msgid "Generate agent credentials"
 msgstr ""
 

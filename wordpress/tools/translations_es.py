@@ -470,4 +470,6 @@ T = {
     'Unzip and double-click INICIAR.': 'Descomprime y haz doble clic en INICIAR.',
     'Press “Start working” at the top of this page.': 'Pulsa «Iniciar a trabajar» arriba en esta página.',
     'Manual setup for technical users': 'Configuración manual para usuarios técnicos',
+    'This site does not use HTTPS, so WordPress Application Passwords are off. No problem: the plugin creates its own private connection key for the agents instead. (Enabling HTTPS is still recommended: it encrypts the connection.)': 'Este sitio no usa HTTPS, por eso WordPress tiene desactivadas las contraseñas de aplicación. No hay problema: el plugin crea su propia clave de conexión privada para los agentes. (Activar HTTPS sigue siendo lo recomendable: cifra la conexión.)',
+    'We create a dedicated “Lehigh Agents” account with the Author role and a private connection password, and give you the two lines your agents need. Nothing is stored in plain text.': 'Creamos una cuenta «Lehigh Agents» con rol de Autor y una contraseña de conexión privada, y te damos las dos líneas que necesitan tus agentes. No se guarda nada en texto plano.',
 }

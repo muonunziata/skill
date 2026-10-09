@@ -1,5 +1,5 @@
 <?php
-/** @var bool $package @var array|WP_Error|null $result @var bool $available @var WP_User|null $existing */
+/** @var bool $package @var array|WP_Error|null $result @var bool $https @var WP_User|null $existing */
 defined( 'ABSPATH' ) || exit;
 ?>
 <p><a href="<?php echo esc_url( admin_url( 'admin.php?page=lnh' ) ); ?>">← <?php esc_html_e( 'Back to the dashboard', 'lehigh-news-hub' ); ?></a></p>
@@ -7,7 +7,10 @@ defined( 'ABSPATH' ) || exit;
 <?php if ( ! is_array( $result ) ) : ?>
 	<section class="lnh-card-box lnh-easy">
 		<header><h2>🚀 <?php esc_html_e( 'Set up your agents in 3 steps', 'lehigh-news-hub' ); ?></h2></header>
-		<?php if ( $package && $available ) : ?>
+		<?php if ( ! $https ) : ?>
+			<div class="notice notice-info inline"><p><?php esc_html_e( 'This site does not use HTTPS, so WordPress Application Passwords are off. No problem: the plugin creates its own private connection key for the agents instead. (Enabling HTTPS is still recommended: it encrypts the connection.)', 'lehigh-news-hub' ); ?></p></div>
+		<?php endif; ?>
+		<?php if ( $package ) : ?>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" autocomplete="off">
 				<input type="hidden" name="action" value="lnh_agents_package"><?php wp_nonce_field( 'lnh_agents_package' ); ?>
 				<ol class="lnh-bigsteps">
@@ -25,8 +28,6 @@ defined( 'ABSPATH' ) || exit;
 				</ol>
 			</form>
 			<p class="lnh-small lnh-muted"><?php esc_html_e( 'The file already contains your site address, a private connection password and your key, so there is nothing to type or copy. Keep it private. Your Gemini key is only written into that file; this site does not store it.', 'lehigh-news-hub' ); ?></p>
-		<?php elseif ( ! $available ) : ?>
-			<div class="notice notice-warning inline"><p><?php esc_html_e( 'Application Passwords are not available on this site. They require HTTPS (or a local environment) and must not be disabled by a security plugin.', 'lehigh-news-hub' ); ?></p></div>
 		<?php else : ?>
 			<p><?php esc_html_e( 'This copy of the plugin does not include the agents (or the zip extension is missing on this server). Use the manual steps below.', 'lehigh-news-hub' ); ?></p>
 		<?php endif; ?>
@@ -65,18 +66,14 @@ defined( 'ABSPATH' ) || exit;
 <?php else : ?>
 	<section class="lnh-card-box">
 		<header><h2><?php esc_html_e( 'Connect your agents in one click', 'lehigh-news-hub' ); ?></h2></header>
-		<p><?php esc_html_e( 'We create a dedicated “Lehigh Agents” account with the Author role and an Application Password, and give you the two lines your agents need. Nothing is stored in plain text.', 'lehigh-news-hub' ); ?></p>
+		<p><?php esc_html_e( 'We create a dedicated “Lehigh Agents” account with the Author role and a private connection password, and give you the two lines your agents need. Nothing is stored in plain text.', 'lehigh-news-hub' ); ?></p>
 		<?php if ( $existing ) : ?>
 			<p class="lnh-muted"><?php echo esc_html( sprintf( /* translators: %s: user name */ __( 'The account “%s” already exists; a new password will be added to it.', 'lehigh-news-hub' ), $existing->user_login ) ); ?></p>
 		<?php endif; ?>
-		<?php if ( ! $available ) : ?>
-			<div class="notice notice-warning inline"><p><?php esc_html_e( 'Application Passwords are not available on this site. They require HTTPS (or a local environment) and must not be disabled by a security plugin.', 'lehigh-news-hub' ); ?></p></div>
-		<?php else : ?>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=lnh-connect' ) ); ?>">
 				<?php wp_nonce_field( 'lnh_connect' ); ?>
 				<button class="button button-primary button-hero"><?php esc_html_e( 'Generate agent credentials', 'lehigh-news-hub' ); ?></button>
 			</form>
-		<?php endif; ?>
 	</section>
 <?php endif; ?>
 <?php if ( ! is_array( $result ) ) : ?></details><?php endif; ?>

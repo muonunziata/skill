@@ -51,6 +51,8 @@ En WordPress, **News Hub → Panel → «Configurar mis agentes»**:
 2. **Descomprime y haz doble clic en `INICIAR.bat`** (Windows) o **`INICIAR.command`** (Mac; la primera vez, clic derecho → Abrir). La primera vez instala todo solo (unos minutos; necesita Python 3.11+, y en Windows lo instala con `winget` si hace falta). Deja la ventana abierta.
 3. **Vuelve a WordPress y pulsa «Iniciar a trabajar»**. Los agentes se conectan solos y verás la tarjeta ponerse en verde.
 
+**¿Tu sitio no usa HTTPS** (WordPress muestra «Application Passwords are not available»)? No importa: el plugin crea su propia **clave de conexión** (`lnh_…`) para los agentes; se guarda solo como hash, solo sirve en la API REST y solo para la cuenta de agentes (rol Autor), y generar otra revoca la anterior. Aun así conviene activar HTTPS: cifra la conexión.
+
 El paquete lo genera WordPress al momento: la clave de Gemini solo se escribe dentro del `.env` del zip, el sitio no la guarda. (Opcional: casilla para crear también imágenes con IA con esa misma clave.)
 
 <details><summary>Forma manual para técnicos</summary>
@@ -151,9 +153,9 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       114 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       116 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      154 comprobaciones dentro de WordPress
+wordpress/tests/run.php      162 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
 plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes
