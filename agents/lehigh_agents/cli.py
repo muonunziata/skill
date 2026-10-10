@@ -14,6 +14,31 @@ from .settings import Settings
 from .wordpress import WPError, WordPressClient
 
 
+def _check_engines(s: Settings) -> None:
+    """OpenCode and Tavily: say what is missing in plain words (a Tavily test search costs 1 free credit)."""
+    from .models import AUTO  # noqa: F401
+    from .opencode import find_binary, is_opencode, split_models
+
+    used = [m for m in (s.rastreador_model, s.redactor_model, s.auditor_model, s.social_model) if is_opencode(m)]
+    if used:
+        names = sorted({x for spec in used for x in split_models(spec)})
+        binary = find_binary(s.opencode_path)
+        if binary:
+            print(f"  ✓ OpenCode encontrado ({binary}); modelos: {', '.join(names)}")
+        else:
+            print("  ✗ No encuentro OpenCode. Instálalo desde https://opencode.ai (npm i -g opencode-ai) o define OPENCODE_PATH en el .env.")
+    if s.tavily_api_key:
+        from .search_api import SearchError, TavilyClient
+
+        try:
+            n = len(TavilyClient(s).search(f"{s.topic} noticias"))
+            print(f"  ✓ Tavily funciona ({n} resultados de prueba; usa 1 crédito de los 1.000 gratis del mes)")
+        except SearchError as exc:
+            print(f"  ✗ {exc}")
+    elif s.search_mode == "tavily":
+        print("  ✗ SEARCH_MODE=tavily pero falta TAVILY_API_KEY (gratis en https://app.tavily.com)")
+
+
 def _check_social(s: Settings) -> None:
     """Agent 4 needs Chromium and ffmpeg; their absence is a warning (the other agents keep working), not a failure."""
     if not s.social_enabled:
@@ -45,7 +70,8 @@ def _check(s: Settings) -> int:
     for p in s.problems():
         ok = False
         print(f"  ✗ {p}")
-    models = LLM(s).available_models().get("gemini")
+    uses_gemini = any(provider_for(m) == "gemini" for m in (s.rastreador_model, s.redactor_model, s.auditor_model)) and bool(s.gemini_api_key)
+    models = LLM(s).available_models().get("gemini") if uses_gemini else None
     if models is not None:
         for role, m in (("rastreador", s.rastreador_model), ("redactor", s.redactor_model), ("auditor", s.auditor_model)):
             if provider_for(m) != "gemini":
@@ -58,6 +84,7 @@ def _check(s: Settings) -> int:
                       f"{LLM(s).resolved('auto')}. Pon {role.upper().replace('REDACTOR','REDACCTOR')}_MODEL=auto en el .env para quitar este aviso.")
     ig = ImageGenerator(s)
     print(f"Imágenes IA: {'%s / %s' % (ig.provider, ig.model) if ig.enabled else 'desactivadas (sin IMAGE_API_KEY)'}")
+    _check_engines(s)
     _check_social(s)
     if s.wp_rest_url and s.wp_auth_token:
         try:
@@ -215,6 +242,11 @@ def main(argv: list[str] | None = None) -> int:
         print("Agentes en marcha. Conectados a WordPress: usa «Iniciar a trabajar» / «Pausar» en el panel de News Hub "
               "(si no tienes el plugin, trabajan solos cada %d min). Ctrl+C para salir." % s.interval_minutes)
     from . import updater
+    from .opencode import find_binary, is_opencode
+
+    if any(is_opencode(m) for m in (s.rastreador_model, s.redactor_model, s.auditor_model, s.social_model)) and not find_binary(s.opencode_path):
+        print("⚠ Los modelos están configurados con OpenCode, pero no lo encuentro. Instálalo (https://opencode.ai) o define OPENCODE_PATH; "
+              "mientras tanto cada ejecución fallará.")
 
     wp_ctl = control.wp if control is not None else None
     Worker(pipe, control, s.interval_minutes, stop,

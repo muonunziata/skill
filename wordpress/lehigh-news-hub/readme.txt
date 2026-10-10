@@ -4,7 +4,7 @@ Tags: ai, news, editorial workflow, shortcode, latest posts
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.5.6
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ In post meta keys starting with `lnh_`. They are readable through the REST API o
 No. It is filtered with `wp_kses_post` on arrival, regardless of the account's capabilities.
 
 == Changelog ==
+
+= 1.6.0 =
+* New engine choice when setting up the agents: Gemini (as before) or OpenCode — the agents use the free models of your OpenCode (Big Pickle, MiMo…) with automatic fall-back to the next model, and Tavily (free key) finds the news pages. No Gemini key needed in that mode.
 
 = 1.5.6 =
 * Gemini quota (HTTP 429) handling: the agents space their requests (GEMINI_RPM, default 8 per minute), wait when Google asks them to, switch to another Flash model when one model's quota is exhausted, and explain in plain language what to do when every model is out. Use the “Update the agents” button to get it.

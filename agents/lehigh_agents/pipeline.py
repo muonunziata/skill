@@ -12,6 +12,7 @@ from .imagegen import ImageGenError, ImageGenerator
 from .llm import LLM, LLMError
 from .net import Fetcher
 from .news_api import MediastackClient
+from .search_api import TavilyClient
 from .runlog import RunLog
 from .schemas import Articulo, Hallazgo
 from .settings import Settings
@@ -54,7 +55,8 @@ class Pipeline:
             "topic": s.topic, "items": [], "status": "running",
         }
         runlog("pipeline", "run_started", f"Ejecución {runlog.run_id} iniciada" + (" (modo prueba)" if self.dry_run else ""))
-        rastreador = Rastreador(s, self.llm, self.fetcher, self.store, runlog, news_api=MediastackClient(s, self.store))
+        rastreador = Rastreador(s, self.llm, self.fetcher, self.store, runlog, news_api=MediastackClient(s, self.store),
+                              search_api=TavilyClient(s, self.store))
 
         try:
             hallazgos = rastreador.run()

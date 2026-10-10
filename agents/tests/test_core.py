@@ -25,7 +25,14 @@ def test_problems_depend_on_provider(monkeypatch):
     msgs = Settings.from_env("/x").problems(need_wordpress=False)
     assert any("ANTHROPIC_API_KEY" in m for m in msgs)
     monkeypatch.setenv("AUDITOR_MODEL", "gpt-4o")
-    assert any("AUDITOR_MODEL must be a Gemini" in m for m in Settings.from_env("/x").problems(False))
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    assert any("OPENAI_API_KEY" in m for m in Settings.from_env("/x").problems(False))        # any provider may audit, with its key
+    monkeypatch.setenv("RASTREADOR_MODEL", "opencode/big-pickle")
+    assert any("TAVILY_API_KEY" in m for m in Settings.from_env("/x").problems(False))        # a non-Gemini researcher needs Tavily
+    monkeypatch.setenv("TAVILY_API_KEY", "tvly-x" * 4)
+    monkeypatch.setenv("AUDITOR_MODEL", "opencode/big-pickle")
+    monkeypatch.setenv("REDACCTOR_MODEL", "opencode/big-pickle,opencode/mimo-v2.6-flash-free")
+    assert Settings.from_env("/x").problems(False) == []                                       # OpenCode needs no key
 
 
 def test_provider_routing():

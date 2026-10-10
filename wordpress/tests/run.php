@@ -522,7 +522,7 @@ if ( class_exists( 'ZipArchive' ) ) {
 ob_start();
 LNH_Admin::view( 'connect', array( 'package' => true, 'result' => null, 'https' => false, 'existing' => null ) );
 $conn_html = ob_get_clean();
-t( 'connect screen: 3 easy steps with the key field, advanced credentials tucked away', false !== strpos( $conn_html, 'name="gemini_key"' ) && false !== strpos( $conn_html, 'value="lnh_agents_package"' ) && false !== strpos( $conn_html, 'INICIAR' ) && false !== strpos( $conn_html, '<details class="lnh-card-box lnh-advanced">' ) && false !== strpos( $conn_html, 'connection key' ) );
+t( 'connect screen: engine choice, key fields, advanced credentials tucked away', false !== strpos( $conn_html, 'name="gemini_key"' ) && false !== strpos( $conn_html, 'name="engine"' ) && false !== strpos( $conn_html, 'name="tavily_key"' ) && false !== strpos( $conn_html, 'value="lnh_agents_package"' ) && false !== strpos( $conn_html, 'INICIAR' ) && false !== strpos( $conn_html, '<details class="lnh-card-box lnh-advanced">' ) && false !== strpos( $conn_html, 'connection key' ) );
 ob_start();
 LNH_Admin::view( 'connect', array( 'package' => false, 'result' => null, 'https' => true, 'existing' => null ) );
 t( 'connect screen without the bundle: no download form, manual steps remain', false === strpos( ob_get_clean(), 'name="gemini_key"' ) );
@@ -580,6 +580,12 @@ if ( ! $had_bundle ) {
 	$rm( $bundle );
 }
 
+$ocreds = array( 'rest_url' => 'http://x/wp-json', 'user' => 'lehigh-agents', 'password' => 'lnh_abc', 'mode' => 'key' );
+$oc_env = LNH_Package::env_values( $ocreds, '', false, 'opencode', 'tvly-ABCDEFGHIJKLMNOP' );
+t( 'OpenCode engine: free models with fallback, Tavily search, no Gemini needed', 'opencode/big-pickle,opencode/mimo-v2.6-flash-free' === $oc_env['REDACCTOR_MODEL'] && $oc_env['RASTREADOR_MODEL'] === $oc_env['AUDITOR_MODEL'] && 'tavily' === $oc_env['SEARCH_MODE'] && 'tvly-ABCDEFGHIJKLMNOP' === $oc_env['TAVILY_API_KEY'] && '' === $oc_env['GEMINI_API_KEY'] && '' === $oc_env['IMAGE_PROVIDER'], $oc_env );
+$ge_env = LNH_Package::env_values( $ocreds, 'AQ.key', true, 'gemini', '' );
+t( 'Gemini engine keeps `auto` and does not add Tavily unless given', 'auto' === $ge_env['REDACCTOR_MODEL'] && ! isset( $ge_env['TAVILY_API_KEY'] ) && ! isset( $ge_env['SEARCH_MODE'] ) && 'gemini' === $ge_env['IMAGE_PROVIDER'] );
+t( 'Tavily is optional extra search with the Gemini engine', 'tvly-ZZZZZZZZZZZZ' === LNH_Package::env_values( $ocreds, 'AQ.key', false, 'gemini', 'tvly-ZZZZZZZZZZZZ' )['TAVILY_API_KEY'] );
 echo "Social kit (Agent 4)\n";
 $kit_in = array(
 	'generated_at' => 1790000000, 'model' => 'gemini-2.5-flash', 'voice' => '', 'seconds' => 14.04, 'ai_image' => true, 'hook' => 'Cuatro carriles <script>alert(1)</script>',

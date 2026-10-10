@@ -205,6 +205,7 @@ final class LNH_Admin {
 			'agents_updating' => __( 'Update requested: the agents will download the new version and restart in a few seconds.', 'lehigh-news-hub' ),
 			'agents_run_now' => __( 'A run was requested: the agents will start within seconds.', 'lehigh-news-hub' ),
 			'pkg_key'         => __( 'Paste your Gemini key first (it starts with AQ. — older keys start with AIza — and is free at aistudio.google.com/apikey).', 'lehigh-news-hub' ),
+			'pkg_tavily'      => __( 'Paste your Tavily key (it starts with tvly- and is free at app.tavily.com); the OpenCode engine needs it to search the web.', 'lehigh-news-hub' ),
 			'pkg_rejected'    => __( 'Google rejected that Gemini key. Copy it again from aistudio.google.com/apikey.', 'lehigh-news-hub' ),
 			'pkg_unavailable' => __( 'This copy of the plugin does not include the agents, or the zip extension is missing on this server. Download the agents from the project page instead.', 'lehigh-news-hub' ),
 			'pkg_error'       => __( 'The agents package could not be created. Check that Application Passwords are available on this site.', 'lehigh-news-hub' ),

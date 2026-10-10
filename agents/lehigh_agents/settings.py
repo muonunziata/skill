@@ -96,6 +96,12 @@ class Settings:
     image_extra: dict
     image_label: bool
     max_revisions: int
+    tavily_api_key: str
+    tavily_queries: int
+    tavily_monthly_limit: int
+    search_mode: str
+    opencode_path: str
+    opencode_timeout: int
     mediastack_api_key: str
     mediastack_min_hours: float
     mediastack_monthly_limit: int
@@ -165,6 +171,12 @@ class Settings:
             image_extra=_json_dict(e("IMAGE_EXTRA_INPUT")),
             image_label=_bool(e("AI_IMAGE_LABEL"), True),
             max_revisions=_int(e("MAX_REVISIONS"), 1, 0, 3),
+            tavily_api_key=(e("TAVILY_API_KEY") or "").strip(),
+            tavily_queries=_int(e("TAVILY_QUERIES_PER_RUN"), 2, 1, 6),
+            tavily_monthly_limit=_int(e("TAVILY_MONTHLY_LIMIT"), 900, 1, 100000),
+            search_mode=(e("SEARCH_MODE") or "auto").strip().lower() if (e("SEARCH_MODE") or "auto").strip().lower() in ("auto", "gemini", "tavily") else "auto",
+            opencode_path=(e("OPENCODE_PATH") or "").strip(),
+            opencode_timeout=_int(e("OPENCODE_TIMEOUT"), 300, 30, 1800),
             mediastack_api_key=(e("MEDIASTACK_API_KEY") or "").strip(),
             mediastack_min_hours=float(_int(e("MEDIASTACK_MIN_HOURS"), 8, 1, 720)),
             mediastack_monthly_limit=_int(e("MEDIASTACK_MONTHLY_LIMIT"), 100, 1, 1_000_000),
@@ -210,17 +222,18 @@ class Settings:
         from .llm import provider_for
 
         out: list[str] = []
-        keys = {"gemini": self.gemini_api_key, "anthropic": self.anthropic_api_key, "openai": self.openai_api_key}
-        names = {"gemini": "GEMINI_API_KEY", "anthropic": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY"}
+        keys = {"gemini": self.gemini_api_key, "anthropic": self.anthropic_api_key, "openai": self.openai_api_key,
+                "opencode": "(no key: uses your OpenCode login)"}
+        names = {"gemini": "GEMINI_API_KEY", "anthropic": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY", "opencode": ""}
         for role, model in (("RASTREADOR_MODEL", self.rastreador_model), ("REDACCTOR_MODEL", self.redactor_model),
                             ("AUDITOR_MODEL", self.auditor_model)):
             prov = provider_for(model)
             if not keys.get(prov):
                 out.append(f"{role}={model} needs {names[prov]}")
-        if provider_for(self.rastreador_model) != "gemini":
-            out.append("RASTREADOR_MODEL must be a Gemini model (it relies on Google Search grounding)")
-        if provider_for(self.auditor_model) != "gemini":
-            out.append("AUDITOR_MODEL must be a Gemini model")
+        if provider_for(self.rastreador_model) != "gemini" and not self.tavily_api_key:
+            out.append("RASTREADOR_MODEL must be a Gemini model (Google Search grounding) unless TAVILY_API_KEY is set (Tavily does the searching)")
+        if self.search_mode == "tavily" and not self.tavily_api_key:
+            out.append("SEARCH_MODE=tavily needs TAVILY_API_KEY (free at https://app.tavily.com)")
         if self.social_enabled and not keys.get(provider_for(self.social_model)):
             out.append(f"SOCIAL_MODEL={self.social_model} needs {names[provider_for(self.social_model)]} (or set SOCIAL_ENABLED=false)")
         if self.image_provider:

@@ -65,18 +65,32 @@ final class LNH_Package {
 		return rtrim( implode( "\n", $lines ) ) . "\n";
 	}
 
-	public static function env_values( array $creds, string $gemini_key, bool $ai_images ): array {
-		return array(
+	/** Free OpenCode models used when the administrator picks the "OpenCode" engine (comma = fall back to the next one). */
+	const OPENCODE_MODELS = 'opencode/big-pickle,opencode/mimo-v2.6-flash-free';
+
+	public static function env_values( array $creds, string $gemini_key, bool $ai_images, string $engine = 'gemini', string $tavily_key = '' ): array {
+		$models = 'opencode' === $engine ? self::OPENCODE_MODELS : self::MODEL;
+		$values = array(
 			'WP_REST_URL'      => $creds['rest_url'],
 			'WP_AUTH_TOKEN'    => 'key' === ( $creds['mode'] ?? '' ) ? $creds['password'] : $creds['user'] . ':' . $creds['password'],
 			'GEMINI_API_KEY'   => $gemini_key,
-			'RASTREADOR_MODEL' => self::MODEL,
-			'REDACCTOR_MODEL'  => self::MODEL,
-			'AUDITOR_MODEL'    => self::MODEL,
+			'RASTREADOR_MODEL' => $models,
+			'REDACCTOR_MODEL'  => $models,
+			'AUDITOR_MODEL'    => $models,
 			'ARTICLE_LANGUAGE' => 0 === strpos( determine_locale(), 'es' ) ? 'es' : 'en',
 			'IMAGE_PROVIDER'   => $ai_images ? 'gemini' : '',
 			'IMAGE_MODEL'      => '', // empty = the agents' default, replaced automatically when Google retires it
 		);
+		if ( '' !== $tavily_key ) {
+			$values['TAVILY_API_KEY'] = $tavily_key;
+		}
+		if ( 'opencode' === $engine ) {
+			$values['SEARCH_MODE'] = 'tavily'; // OpenCode is not a search engine: Tavily finds the news pages
+			if ( '' === $gemini_key ) {
+				$values['IMAGE_PROVIDER'] = '';
+			}
+		}
+		return $values;
 	}
 
 	// ---------------------------------------------------------------- key check
@@ -121,7 +135,7 @@ final class LNH_Package {
 	 *
 	 * @return array{path:string,filename:string,user:string}|WP_Error
 	 */
-	public static function build( string $gemini_key, bool $ai_images ) {
+	public static function build( string $gemini_key, bool $ai_images, string $engine = 'gemini', string $tavily_key = '' ) {
 		if ( ! self::available() ) {
 			return new WP_Error( 'lnh_pkg_unavailable', __( 'This copy of the plugin does not include the agents, or the PHP zip extension is missing on this server.', 'lehigh-news-hub' ) );
 		}
@@ -131,7 +145,7 @@ final class LNH_Package {
 		}
 		$base     = self::bundle_dir();
 		$template = is_readable( $base . '/.env.example' ) ? (string) file_get_contents( $base . '/.env.example' ) : '';
-		$env      = self::build_env( $template, self::env_values( $creds, $gemini_key, $ai_images ) );
+		$env      = self::build_env( $template, self::env_values( $creds, $gemini_key, $ai_images, $engine, $tavily_key ) );
 		if ( ! function_exists( 'wp_tempnam' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
@@ -232,15 +246,25 @@ final class LNH_Package {
 		check_admin_referer( 'lnh_agents_package' );
 		$back = admin_url( 'admin.php?page=lnh-connect' );
 		$key  = isset( $_POST['gemini_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['gemini_key'] ) ) ) : '';
-		if ( ! preg_match( '/^[A-Za-z0-9._\-]{20,300}$/', $key ) ) {
+		$engine = ( isset( $_POST['engine'] ) && 'opencode' === $_POST['engine'] ) ? 'opencode' : 'gemini';
+		$tav    = isset( $_POST['tavily_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['tavily_key'] ) ) ) : '';
+		if ( '' !== $tav && ! preg_match( '/^tvly-[A-Za-z0-9._\-]{12,200}$/', $tav ) ) {
+			wp_safe_redirect( add_query_arg( 'lnh_notice', 'pkg_tavily', $back ) );
+			exit;
+		}
+		if ( 'opencode' === $engine && '' === $tav ) {
+			wp_safe_redirect( add_query_arg( 'lnh_notice', 'pkg_tavily', $back ) );
+			exit;
+		}
+		if ( ( 'gemini' === $engine || '' !== $key ) && ! preg_match( '/^[A-Za-z0-9._\-]{20,300}$/', $key ) ) {
 			wp_safe_redirect( add_query_arg( 'lnh_notice', 'pkg_key', $back ) );
 			exit;
 		}
-		if ( false === self::key_is_accepted( $key ) ) {
+		if ( '' !== $key && false === self::key_is_accepted( $key ) ) {
 			wp_safe_redirect( add_query_arg( 'lnh_notice', 'pkg_rejected', $back ) );
 			exit;
 		}
-		$built = self::build( $key, ! empty( $_POST['ai_images'] ) );
+		$built = self::build( $key, ! empty( $_POST['ai_images'] ) && '' !== $key, $engine, $tav );
 		if ( is_wp_error( $built ) ) {
 			wp_safe_redirect( add_query_arg( 'lnh_notice', 'lnh_pkg_unavailable' === $built->get_error_code() ? 'pkg_unavailable' : 'pkg_error', $back ) );
 			exit;

@@ -11,6 +11,7 @@ A news desk for **Lehigh Acres, Florida** that publishes under the **GoLehighAcr
 | # | Agent | File | Job |
 |---|---|---|---|
 | 1 | Rastreador (researcher) | `agents/rastreador.py` | Google-Search grounding (+ optional Mediastack, `news_api.py`); **opens every page it cites** and only keeps URLs it actually read. Output `Hallazgo`: `titulo_fuente, url, resumen_hechos, fecha, palabras_clave`. |
+| - | Engines | `opencode.py`, `search_api.py`, `llm.py` | Models: `auto`/gemini-*, claude-*, gpt-*, or `opencode/<model>[,<fallback>]`; search: Gemini grounding, Tavily, Mediastack. |
 | 2 | Redactor (writer) | `agents/redactor.py` | Gutenberg HTML article, SEO fields, media placeholders, English photorealism prompt -> AI featured image (`imagegen.py`) -> `featured_image_url`. |
 | 3 | Auditor | `agents/auditor.py` + `checks.py` | Fact check vs. the finding and source text, links, unsafe HTML, invented figures, copy overlap. Approved drafts are POSTed to WordPress (`wordpress.py`). |
 | 4 | Social designer | `social/designer.py` | Instagram + TikTok carousels (PNG) and a 9:16 video (MP4) from an approved article, plus captions/hashtags. Never fatal to the article. |

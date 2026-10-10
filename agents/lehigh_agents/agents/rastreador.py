@@ -10,7 +10,7 @@ import logging
 from urllib.parse import urlsplit
 
 from .. import prompts
-from ..llm import LLM, LLMError
+from ..llm import LLM, LLMError, provider_for
 from ..media import parse_page
 from ..net import FetchError, Fetcher
 from ..news_api import NewsAPIError
@@ -33,9 +33,10 @@ def _domain(url: str) -> str:
 class Rastreador:
     name = "rastreador"
 
-    def __init__(self, settings: Settings, llm: LLM, fetcher: Fetcher, store: Store, events, news_api=None):
+    def __init__(self, settings: Settings, llm: LLM, fetcher: Fetcher, store: Store, events, news_api=None, search_api=None):
         self.s, self.llm, self.fetcher, self.store, self.events = settings, llm, fetcher, store, events
         self.news_api = news_api
+        self.search_api = search_api   # Tavily (optional)
 
     def _ev(self, type_: str, message: str, **kw) -> None:
         self.events(self.name, type_, message, **kw)
@@ -45,13 +46,16 @@ class Rastreador:
         s = self.s
         today = dt.date.today().isoformat()
         self._ev("step", f"Buscando novedades de {s.topic} ({', '.join(s.focus)})")
-        grounded = self.llm.grounded_search(
-            s.rastreador_model, prompts.RASTREADOR_SEARCH_SYSTEM,
-            prompts.RASTREADOR_SEARCH.format(today=today, days=s.freshness_days, topic=s.topic, focus=", ".join(s.focus)),
-        )
-        for q in grounded.queries:
-            self._ev("search", f"Búsqueda en Google: {q}", queries=[q])
-        sources = list(grounded.sources)
+        sources: list[dict[str, str]] = []
+        if self._uses_gemini_search():
+            grounded = self.llm.grounded_search(
+                s.rastreador_model, prompts.RASTREADOR_SEARCH_SYSTEM,
+                prompts.RASTREADOR_SEARCH.format(today=today, days=s.freshness_days, topic=s.topic, focus=", ".join(s.focus)),
+            )
+            for q in grounded.queries:
+                self._ev("search", f"Búsqueda en Google: {q}", queries=[q])
+            sources += list(grounded.sources)
+        sources += self._tavily_sources()
         sources += self._extra_sources()
         if not sources:
             self._ev("warn", "La búsqueda no devolvió fuentes citables", level="warn")
@@ -62,18 +66,47 @@ class Rastreador:
         if not pages:
             return []
 
-        listing = "\n\n".join(
-            f"[P{i}] URL: {p['url']}\nTítulo: {p['title']}\nPublicada: {p['published'] or 'desconocida'}\n"
-            f"Texto: {p['text'][:4500]}" for i, p in enumerate(pages, 1)
-        )
-        raw = self.llm.json(
-            s.rastreador_model, prompts.RASTREADOR_STRUCTURE_SYSTEM,
-            prompts.RASTREADOR_STRUCTURE.format(topic=s.topic, today=today, days=s.freshness_days, pages=listing,
-                                                n=s.max_items * 2, language=prompts.LANG.get(s.language, s.language)),
-            validate=validate_hallazgos, max_tokens=8192, label="rastreador",
-        )
-        items = raw.get("hallazgos", []) if isinstance(raw, dict) else raw
+        items: list[dict] = []
+        for batch in self._batches(pages):
+            listing = "\n\n".join(
+                f"[P{i}] URL: {p['url']}\nTítulo: {p['title']}\nPublicada: {p['published'] or 'desconocida'}\n"
+                f"Texto: {p['text'][:batch.chars]}" for i, p in enumerate(batch.pages, 1)
+            )
+            raw = self.llm.json(
+                s.rastreador_model, prompts.RASTREADOR_STRUCTURE_SYSTEM,
+                prompts.RASTREADOR_STRUCTURE.format(topic=s.topic, today=today, days=s.freshness_days, pages=listing,
+                                                    n=s.max_items * 2, language=prompts.LANG.get(s.language, s.language)),
+                validate=validate_hallazgos, max_tokens=8192, label="rastreador",
+            )
+            items += raw.get("hallazgos", []) if isinstance(raw, dict) else raw
         return self._to_hallazgos(items, pages)
+
+    # ───────────────────────── search mode ─────────────────────────
+    def _uses_gemini_search(self) -> bool:
+        """Gemini + Google Search grounding, unless the user chose Tavily (or the model is not a Gemini one)."""
+        s = self.s
+        if s.search_mode == "tavily" or provider_for(s.rastreador_model) != "gemini":
+            return False
+        if s.search_mode == "auto" and self.search_api is not None and self.search_api.enabled and not s.gemini_api_key:
+            return False
+        return True
+
+    def _tavily_sources(self) -> list[dict[str, str]]:
+        if self.search_api is None or not self.search_api.enabled:
+            return []
+        hits = self.search_api.find(self._ev)
+        return [{"uri": h.url, "title": h.title, "domain": h.title[:40]} for h in hits]
+
+    def _batches(self, pages: list[dict[str, str]]):
+        """Split the pages so one prompt fits the engine (OpenCode takes ~20k characters per request)."""
+        from types import SimpleNamespace
+
+        limit = self.llm.max_prompt_chars(self.s.rastreador_model)
+        if not limit:
+            return [SimpleNamespace(pages=pages, chars=4500)]
+        per_page = 2500
+        fit = max(1, limit // (per_page + 300))
+        return [SimpleNamespace(pages=pages[i:i + fit], chars=per_page) for i in range(0, len(pages), fit)]
 
     # ───────────────────────── steps ─────────────────────────
     def _extra_sources(self) -> list[dict[str, str]]:

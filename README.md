@@ -111,6 +111,8 @@ Mientras trabajan verás una **animación**: los cuatro agentes como estaciones 
 | `SOCIAL_ENABLED`, `SOCIAL_FORMATS`, `SOCIAL_VIDEO`, `SOCIAL_THEME`, `SOCIAL_VOICE`, `SOCIAL_WEBHOOK_URL`, `BRAND_*` | Agente 4 y marca (ver `.env.example`) |
 | `AUDIT_MIN_SCORE`, `MAX_REVISIONS`, `POST_FLAGGED`, … | Comportamiento (ver `.env.example`) |
 
+> **Sin Gemini: OpenCode + Tavily.** Si ya tienes [OpenCode](https://opencode.ai) con modelos gratis (p. ej. *Big Pickle* y *MiMo-V2.6-Flash*), en *Configurar mis agentes* elige el motor **OpenCode** y pega una clave gratuita de [Tavily](https://app.tavily.com) (1.000 búsquedas al mes, sin tarjeta; es la que busca las noticias). Los agentes llaman a `opencode run` para redactar, auditar y diseñar, y si un modelo gratis llega a su límite pasan solos al siguiente. Mantienen la misma verificación: solo usan páginas que realmente abrieron. Requiere tener OpenCode instalado y con sesión iniciada en el mismo computador (`python main.py check` lo comprueba). Los modelos gratis de OpenCode pueden usar tus textos para entrenar; las noticias son públicas, así que pesa poco.
+
 > **Cuota de Gemini (error 429):** el plan gratuito es pequeño. Los agentes espaciaron sus llamadas (`GEMINI_RPM=8` por minuto; pon `0` si tu plan es de pago), esperan lo que Google pide cuando el límite es por minuto, y si la cuota de un modelo se agota **cambian a otro Flash** (cada modelo tiene su propia cuota). Si todos se agotan, el mensaje del panel te dice qué hacer: esperar, activar facturación en https://aistudio.google.com/ o gastar menos (`MAX_ITEMS_PER_RUN`, `SOCIAL_ENABLED=false`, un intervalo mayor).
 
 > **Modelos:** Google retira nombres de modelo cada pocos meses (p. ej. `gemini-1.5-flash`, y luego `gemini-2.5-flash`). Por eso el valor por defecto es **`auto`**: los agentes eligen el Gemini Flash más nuevo que la API sirve y, si un nombre fijo deja de existir, **cambian solos** al siguiente (y avisan en el registro). Puedes fijar uno (`gemini-…`, `claude-…`, `gpt-…`) en `RASTREADOR_MODEL`, `REDACCTOR_MODEL` o `AUDITOR_MODEL`.
@@ -157,9 +159,9 @@ agents/                      Agentes en Python (Gemini · Claude · OpenAI · im
   lehigh_agents/agents/        rastreador.py · redactor.py · auditor.py
   lehigh_agents/               llm.py · imagegen.py · pipeline.py · wordpress.py · checks.py · net.py …
   lehigh_agents/social/        Agente 4: plan · plantillas · render · video · voz · marca
-  tests/                       150 pruebas (las de navegador/ffmpeg se saltan si no están)
+  tests/                       165 pruebas (las de navegador/ffmpeg se saltan si no están)
 wordpress/lehigh-news-hub/   Plugin de WordPress (instalable)
-wordpress/tests/run.php      173 comprobaciones dentro de WordPress
+wordpress/tests/run.php      176 comprobaciones dentro de WordPress
 wordpress/tools/             Extracción de cadenas y compilación de traducciones
 brand/                       Logos oficiales de GoLehighAcres.org y guía de marca
 plugins/lehigh-news-hub/     Plugin de Claude Code: skills y subagentes

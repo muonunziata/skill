@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php if ( ! is_array( $result ) ) : ?>
 	<section class="lnh-card-box lnh-easy">
-		<header><h2>🚀 <?php esc_html_e( 'Set up your agents in 3 steps', 'lehigh-news-hub' ); ?></h2></header>
+		<header><h2>🚀 <?php esc_html_e( 'Set up your agents', 'lehigh-news-hub' ); ?></h2></header>
 		<?php if ( ! $https ) : ?>
 			<div class="notice notice-info inline"><p><?php esc_html_e( 'This site does not use HTTPS, so WordPress Application Passwords are off. No problem: the plugin creates its own private connection key for the agents instead. (Enabling HTTPS is still recommended: it encrypts the connection.)', 'lehigh-news-hub' ); ?></p></div>
 		<?php endif; ?>
@@ -15,9 +15,17 @@ defined( 'ABSPATH' ) || exit;
 				<input type="hidden" name="action" value="lnh_agents_package"><?php wp_nonce_field( 'lnh_agents_package' ); ?>
 				<ol class="lnh-bigsteps">
 					<li>
-						<strong><?php esc_html_e( 'Paste your Gemini key', 'lehigh-news-hub' ); ?></strong>
+						<strong><?php esc_html_e( 'Choose the AI engine', 'lehigh-news-hub' ); ?></strong>
+						<label class="lnh-engine"><input type="radio" name="engine" value="gemini" checked> <span><strong>Gemini</strong> — <?php esc_html_e( 'Google’s free API (small daily quota).', 'lehigh-news-hub' ); ?></span></label>
+						<label class="lnh-engine"><input type="radio" name="engine" value="opencode"> <span><strong>OpenCode</strong> — <?php esc_html_e( 'uses the free models of the OpenCode you already have installed (Big Pickle, MiMo). It also needs a free Tavily key to search the web.', 'lehigh-news-hub' ); ?></span></label>
+					</li>
+					<li>
+						<strong><?php esc_html_e( 'Paste your keys', 'lehigh-news-hub' ); ?></strong>
+						<span class="lnh-muted"> — <?php esc_html_e( 'Tavily (free, 1,000 searches a month, no card):', 'lehigh-news-hub' ); ?> <a href="https://app.tavily.com" target="_blank" rel="noopener">app.tavily.com</a></span>
+						<div class="lnh-easy__row"><input type="password" name="tavily_key" class="regular-text" placeholder="tvly-…" spellcheck="false" autocomplete="off"></div>
+						<strong><?php esc_html_e( 'Gemini key (needed for the Gemini engine, optional with OpenCode)', 'lehigh-news-hub' ); ?></strong>
 						<span class="lnh-muted"> — <?php printf( /* translators: %s: link */ esc_html__( 'it is free: get it at %s (sign in with Google, press “Create API key”).', 'lehigh-news-hub' ), '<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>' ); ?></span>
-						<div class="lnh-easy__row"><input type="password" name="gemini_key" class="regular-text" placeholder="AQ.…" required spellcheck="false" autocomplete="off">
+						<div class="lnh-easy__row"><input type="password" name="gemini_key" class="regular-text" placeholder="AQ.…" spellcheck="false" autocomplete="off">
 							<button class="button button-primary button-hero"><?php esc_html_e( 'Download my agents', 'lehigh-news-hub' ); ?></button></div>
 						<label class="lnh-small"><input type="checkbox" name="ai_images" value="1"> <?php esc_html_e( 'Also create AI featured images with this key (needs a Google plan that allows image generation).', 'lehigh-news-hub' ); ?></label>
 					</li>

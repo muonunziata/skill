@@ -26,6 +26,8 @@ class LLMError(Exception):
 
 def provider_for(model: str) -> str:
     m = (model or "").lower().strip()
+    if m.startswith("opencode/"):
+        return "opencode"      # one or several OpenCode models ("opencode/a,opencode/b")
     if m.startswith("claude"):
         return "anthropic"
     if m.startswith(("gpt", "chatgpt", "o1", "o3", "o4")):
@@ -184,11 +186,34 @@ class LLM:
 
     def _call(self, model: str, system: str, prompt: str, max_tokens: int, want_json: bool = True) -> str:
         provider = provider_for(model)
+        if provider == "opencode":
+            return self._opencode(model, system, prompt)
         if provider == "gemini":
             return self._gemini(model, system, prompt, max_tokens, want_json)
         if provider == "anthropic":
             return self._anthropic(model, system, prompt, max_tokens)
         return self._openai(model, system, prompt, max_tokens, want_json)
+
+    # ───────────────────────── OpenCode ─────────────────────────
+    def max_prompt_chars(self, model: str) -> int:
+        """Longest prompt the engine takes (0 = no practical limit); callers split big inputs into batches."""
+        from .opencode import MAX_ARG_CHARS
+
+        return MAX_ARG_CHARS - 4000 if provider_for(model) == "opencode" else 0
+
+    def _opencode(self, model: str, system: str, prompt: str) -> str:
+        from .opencode import OpenCodeError, OpenCodeRunner
+
+        runner = self._clients.get("opencode")
+        if runner is None:
+            runner = self._clients["opencode"] = OpenCodeRunner(getattr(self.s, "opencode_path", ""),
+                                                                getattr(self.s, "opencode_timeout", 300))
+        try:
+            text, used = runner.complete(model, system, prompt)
+        except OpenCodeError as exc:
+            raise LLMError(f"OpenCode: {exc}", retryable=exc.limit) from exc
+        self._track(used, (len(system) + len(prompt)) // 4, len(text) // 4)
+        return text
 
     # ───────────────────────── Gemini ─────────────────────────
     def _gemini_error(self, exc: Exception, model: str) -> LLMError:
