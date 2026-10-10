@@ -70,6 +70,12 @@ def search_places(configured: str = "") -> list[str]:
                str(home / "AppData/Roaming/npm/opencode.cmd"), str(home / "scoop/shims/opencode.exe"),
                str(Path(local) / "Microsoft/WinGet/Links/opencode.exe") if local else "", r"C:\ProgramData\chocolatey\bin\opencode.exe",
                "/usr/local/bin/opencode", "/opt/homebrew/bin/opencode", str(home / ".local/bin/opencode")]
+    # The OpenCode *desktop app* (…\\Programs\\@opencode-aidesktop\\OpenCode.exe) is a window, not the command-line tool: look for the
+    # command-line binary it may ship with, but never return the GUI executable itself.
+    for programs in ([Path(local) / "Programs"] if local else []) + [home / "AppData/Local/Programs"]:
+        if programs.is_dir():
+            for pattern in ("*opencode*/resources/**/opencode-cli*", "*opencode*/resources/**/opencode.exe", "*opencode*/**/opencode-cli*.exe"):
+                places += [str(p) for p in sorted(programs.glob(pattern))[:5]]
     for root in _npm_roots():
         for pkg in _PLATFORM_PACKAGES:
             places += [str(root / pkg / "bin" / "opencode"), str(root / pkg / "bin" / "opencode.exe")]
