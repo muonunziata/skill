@@ -72,7 +72,7 @@ def test_runner_calls_the_cli_in_an_empty_folder_with_json_output(tmp_path):
     text, used = r.complete("opencode/big-pickle", "SISTEMA", "PREGUNTA")
     cmd, kw = r._run.calls[0]
     assert text == '{"a": 1}' and used == "opencode/big-pickle"
-    assert cmd[1:5] == ["run", "-m", "opencode/big-pickle", "--format"] and cmd[5] == "json"
+    assert cmd[-6:-2] == ["run", "-m", "opencode/big-pickle", "--format"] and cmd[-2] == "json"
     assert "SISTEMA" in cmd[-1] and "PREGUNTA" in cmd[-1] and "No uses herramientas" in cmd[-1]
     assert kw["cwd"] and "lehigh-opencode-" in kw["cwd"] and kw["stdin"] == subprocess.DEVNULL
 
@@ -95,7 +95,8 @@ def test_a_failing_or_limited_model_hands_over_to_the_next_and_cools_down(tmp_pa
 
 def test_missing_binary_timeout_and_oversized_prompts_have_clear_errors(tmp_path, monkeypatch):
     monkeypatch.setattr("lehigh_agents.opencode.find_binary", lambda hint="": None)
-    with pytest.raises(OpenCodeError, match="npm i -g opencode-ai"):
+    monkeypatch.setenv("OPENCODE_AUTO_INSTALL", "false")
+    with pytest.raises(OpenCodeError, match="npm install -g opencode-ai"):
         OpenCodeRunner().complete("opencode/big-pickle", "s", "p")
     r = runner({"opencode/big-pickle": subprocess.TimeoutExpired("x", 5)}, tmp_path)
     monkeypatch.setattr("lehigh_agents.opencode.find_binary", lambda hint="": str(tmp_path / "opencode"))
@@ -201,3 +202,44 @@ def test_find_binary_honours_the_configured_path(tmp_path):
     exe = tmp_path / "oc"
     exe.write_text("x")
     assert find_binary(str(exe)) == str(exe)
+
+
+def test_windows_cmd_shim_is_replaced_by_node_and_the_script(tmp_path, monkeypatch):
+    from lehigh_agents import opencode as oc
+
+    npm_dir = tmp_path / "npm"
+    script = npm_dir / "node_modules/opencode-ai/bin/opencode"
+    script.parent.mkdir(parents=True)
+    script.write_text("#!/usr/bin/env node\n")
+    shim = npm_dir / "opencode.cmd"
+    shim.write_text("@echo off")
+    monkeypatch.setattr(oc.shutil, "which", lambda n: "/usr/bin/node" if n.startswith("node") else None)
+    assert oc.launcher(str(shim)) == ["/usr/bin/node", str(script)]
+    assert oc.launcher("/usr/local/bin/opencode") == ["/usr/local/bin/opencode"]
+
+
+def test_missing_opencode_is_installed_once_with_npm_then_found(tmp_path, monkeypatch):
+    from lehigh_agents import opencode as oc
+
+    exe = tmp_path / "opencode"
+    exe.write_text("#!/bin/sh\n")
+    found = {"now": False}
+    monkeypatch.setattr(oc, "find_binary", lambda hint="": str(exe) if found["now"] else None)
+    installs = []
+    monkeypatch.setattr(oc, "try_install", lambda *a, **k: installs.append(1) or found.__setitem__("now", True) or True)
+    r = OpenCodeRunner()
+    assert r.binary() == str(exe) and installs == [1]
+    monkeypatch.setenv("OPENCODE_AUTO_INSTALL", "false")
+    found["now"] = False
+    r2 = OpenCodeRunner()
+    with pytest.raises(OpenCodeError, match="OPENCODE_PATH") as ei:
+        r2.binary()
+    assert "busqué en" in str(ei.value) and installs == [1]                 # auto-install can be switched off
+
+
+def test_search_places_cover_windows_mac_linux_and_npm(monkeypatch):
+    from lehigh_agents import opencode as oc
+
+    monkeypatch.setattr(oc, "_npm_roots", lambda: [oc.Path("/r/node_modules")])
+    places = " ".join(oc.search_places("/custom/oc"))
+    assert "/custom/oc" in places and ".opencode" in places and "opencode.cmd" in places and "/r/node_modules/opencode-windows-x64/bin/opencode.exe" in places

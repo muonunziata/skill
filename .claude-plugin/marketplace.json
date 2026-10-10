@@ -9,7 +9,7 @@
       "name": "lehigh-news-hub",
       "source": "./plugins/lehigh-news-hub",
       "description": "Skills and subagents to run, audit and extend the 4-agent news pipeline and its Instagram/TikTok social designer, always on the GoLehighAcres.org brand.",
-      "version": "1.6.0",
+      "version": "1.6.1",
       "category": "productivity"
     }
   ]

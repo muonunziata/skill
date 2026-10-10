@@ -3,7 +3,7 @@
  * Plugin Name:       Lehigh News Hub
  * Plugin URI:        https://github.com/muonunziata/skill
  * Description:       Editorial hub for AI news agents: review queue with audit scores, live view of what the Researcher, Writer and Auditor agents did, one-click publishing, and a fully configurable latest-news shortcode.
- * Version:           1.6.0
+ * Version:           1.6.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Lehigh News Hub
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LNH_VERSION', '1.6.0' );
+define( 'LNH_VERSION', '1.6.1' );
 define( 'LNH_FILE', __FILE__ );
 define( 'LNH_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LNH_URL', plugin_dir_url( __FILE__ ) );

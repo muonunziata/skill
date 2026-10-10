@@ -26,7 +26,7 @@ def _check_engines(s: Settings) -> None:
         if binary:
             print(f"  ✓ OpenCode encontrado ({binary}); modelos: {', '.join(names)}")
         else:
-            print("  ✗ No encuentro OpenCode. Instálalo desde https://opencode.ai (npm i -g opencode-ai) o define OPENCODE_PATH en el .env.")
+            print("  ✗ No encuentro OpenCode. Instálalo desde https://opencode.ai (npm install -g opencode-ai) o define OPENCODE_PATH en el .env.")
     if s.tavily_api_key:
         from .search_api import SearchError, TavilyClient
 
