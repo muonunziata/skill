@@ -213,6 +213,8 @@ zip -r veloxforge-golehighacres.zip veloxforge-golehighacres
 
 ---
 
+> **Versión del plugin: 1.1.0.** Si WordPress sigue mostrando algo viejo, es caché: ver «Actualizar desde una versión anterior» en el README del plugin.
+
 ## 9. Pendientes sugeridos
 
 **Contenido**

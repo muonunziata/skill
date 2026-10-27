@@ -9,6 +9,13 @@ Módulo de VeloxForge que convierte cada sección de GoLehighAcres.org en un **b
 3. En VeloxForge → Módulos aparece **GoLehighAcres** (se puede apagar y encender).
 4. Al activarlo por primera vez, si el sitio aún no tenía un sistema de diseño guardado, se cargan los colores de la marca y las tipografías (títulos Poppins, texto Arial). Si ya tenías uno, no se toca.
 
+## Actualizar desde una versión anterior
+
+1. **Plugins → Añadir nuevo → Subir plugin** y elige el zip. Cuando WordPress diga que ya está instalado, pulsa **«Reemplazar el actual con el subido»**.
+2. Comprueba la versión: en **Plugins** debe decir **1.1.0**, y en **VeloxForge → Módulos** el nombre es «GoLehighAcres · v1.1.0».
+3. Vacía las cachés (plugin de caché, CDN/Cloudflare, caché del navegador con Ctrl+Shift+R). Desde la 1.1.0 los archivos se recargan solos cuando cambian.
+4. Los bloques que ya estaban en tus páginas se conservan; los controles nuevos aparecen con sus valores por defecto.
+
 ## Bloques (categoría «GoLehighAcres» en el constructor)
 
 | Bloque | Qué edita el panel |
@@ -69,6 +76,12 @@ Mientras un bloque no tenga imagen muestra un recuadro de color con su número (
 ## Tipografías
 
 Se cargan Poppins desde Google Fonts. Para desactivarlo (por privacidad): `add_filter( 'glh_google_fonts', '__return_false' );`
+
+## Cambios de la 1.1.0
+
+- Logo real de la marca incluido (antes el símbolo de respaldo salía incompleto en el header).
+- Fondo de video, capas al 5 %, punto focal, perfil de negocio y correcciones responsive.
+- Versión visible y recarga automática de estilos y scripts.
 
 ## Estructura
 

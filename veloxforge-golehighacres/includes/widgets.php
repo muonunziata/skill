@@ -47,7 +47,7 @@ class GLH_Widgets {
 
 		/* ======================= 1. CABECERA ======================= */
 		self::reg( 'glh-header', 'Cabecera GoLehighAcres', '🧭', array(
-			self::c( 'logo', 'Símbolo del logo (imagen)', 'image', 'content', array( 'group' => 'Marca' ) ),
+			self::c( 'logo', 'Símbolo del logo (imagen; vacío = el símbolo de la marca incluido en el plugin)', 'image', 'content', array( 'group' => 'Marca' ) ),
 			GLH::t( 'brand_go', 'Marca: parte en color', 'GO', 'text', 'Marca' ),
 			GLH::t( 'brand_name', 'Marca: nombre', 'LehighAcres', 'text', 'Marca' ),
 			GLH::t( 'brand_tld', 'Marca: final', '.org', 'text', 'Marca' ),
@@ -79,9 +79,10 @@ class GLH_Widgets {
 			GLH::size( 'brand_size', 'Tamaño del nombre (px)', '.glh-logo', 14, 48 ),
 		), function ( $s, $ctx ) {
 			$logo = GLH::img_url( self::v( $s, 'logo', array() ), 'medium' );
-			$mark = $logo !== ''
-				? '<img src="' . esc_url( $logo, array( 'http', 'https' ) ) . '" alt="" height="36">'
-				: '<svg viewBox="0 0 44 24" aria-hidden="true" fill="none" stroke-width="5"><path d="M12 3a9 9 0 0 0-9 9" stroke="#2E7D55"/><path d="M3 12a9 9 0 0 0 9 9" stroke="#6BAA85"/><path d="M12 21h3" stroke="#A4D19B"/><path d="M31 3a9 9 0 0 1 9 9" stroke="#7A4A9A"/><path d="M40 12a9 9 0 0 1-9 9" stroke="#2B8ED0"/><path d="M31 3h-3" stroke="#E3A92B"/><path d="M14 12h14" stroke="#0F5A3C" stroke-width="4"/></svg>';
+			if ( $logo === '' ) {
+				$logo = GLH_URL . 'assets/logo-simbolo.png'; // símbolo del logo de la marca, incluido en el plugin
+			}
+			$mark = '<img src="' . esc_url( $logo, array( 'http', 'https' ) ) . '" alt="" height="36">';
 			$nav = '';
 			foreach ( array_values( (array) self::v( $s, 'items', array() ) ) as $it ) {
 				$nav .= '<li><a href="' . GLH::url( isset( $it['url'] ) ? $it['url'] : '#' ) . '"' . ( ! empty( $it['active'] ) ? ' aria-current="page"' : '' ) . '>' . esc_html( isset( $it['label'] ) ? $it['label'] : '' ) . '</a></li>';

@@ -12,7 +12,7 @@ class GLH {
 
 	public static function register_module() {
 		VF_Modules::register( 'golehighacres', array(
-			'name' => 'GoLehighAcres',
+			'name' => 'GoLehighAcres · v' . GLH_VER,
 			'desc' => 'Secciones de GoLehighAcres.org como bloques editables del constructor: cabecera, portada, carrusel 3D, cifras, directorio con buscador, recorrido, negocios fundadores, cita, cinta y pared de videos.',
 			'icon' => '🏡',
 			'boot' => array( __CLASS__, 'boot' ),
@@ -31,11 +31,13 @@ class GLH {
 			return;
 		}
 		self::$assets = true;
-		wp_enqueue_style( 'glh', GLH_URL . 'assets/glh.css', array(), GLH_VER );
+		$v_css = GLH_VER . '.' . (int) @filemtime( GLH_DIR . 'assets/glh.css' ); // cambia solo cuando cambia el archivo: evita ver una versión vieja en caché
+		$v_js  = GLH_VER . '.' . (int) @filemtime( GLH_DIR . 'assets/glh.js' );
+		wp_enqueue_style( 'glh', GLH_URL . 'assets/glh.css', array(), $v_css );
 		if ( apply_filters( 'glh_google_fonts', true ) ) {
 			wp_enqueue_style( 'glh-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap', array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 		}
-		wp_enqueue_script( 'glh', GLH_URL . 'assets/glh.js', array(), GLH_VER, true );
+		wp_enqueue_script( 'glh', GLH_URL . 'assets/glh.js', array(), $v_js, true );
 	}
 
 	/* ---------- Controles ---------- */
