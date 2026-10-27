@@ -34,7 +34,7 @@ veloxforge-golehighacres/        código fuente del plugin + README.md propio
   media/                         (dentro de paginas/) video de fondo y su imagen fija
     fondo-azul.mp4               animado, 1280x720, 1,4 MB, sin audio
     fondo-azul-poster.jpg        imagen fija del fondo
-    torre-agua.jpg               (falta) foto del héroe; ver sección 9
+    torre-agua.jpg               PROVISIONAL (recorte de tu captura, 584 px); reemplazar por el original
 referencias/
   logo-simbolo.png               símbolo del logo (verde + multicolor)
   logo-nombre.png                «GOLehighAcres.org» en su tipografía
@@ -216,7 +216,7 @@ zip -r veloxforge-golehighacres.zip veloxforge-golehighacres
 ## 9. Pendientes sugeridos
 
 **Contenido**
-- **Imagen original de la torre de agua** (sin recortar, p. ej. `torre-agua.jpg`) en `paginas/media/`, y ajustar `data-fx` al centro de la torre (fracción del ancho de la imagen). Solo se tenía un recorte dentro de una captura, así que el centrado está listo pero sin la foto real.
+- **Imagen original de la torre de agua** (hoy hay un recorte provisional de 584 px sacado de una captura: queda centrada, pero se ve de baja resolución) (sin recortar, p. ej. `torre-agua.jpg`) en `paginas/media/`, y ajustar `data-fx` al centro de la torre (fracción del ancho de la imagen). Solo se tenía un recorte dentro de una captura, así que el centrado está listo pero sin la foto real.
 - Fotos y videos reales; logo en alta; textos finales de cada sección.
 - Directorio real (nombres, direcciones, teléfonos, horarios, fotos). Hoy todo es de ejemplo y está marcado *Sample*.
 - URL real del canal de WhatsApp (los botones apuntan a `#whatsapp`).

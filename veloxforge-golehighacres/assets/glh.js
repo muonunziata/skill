@@ -38,7 +38,9 @@
 			function run() {
 				var cw = img.clientWidth, ch = img.clientHeight, iw = img.naturalWidth, ih = img.naturalHeight;
 				if (!iw || !cw) { return; }
-				var sc = Math.max(cw / iw, ch / ih), w = iw * sc, h = ih * sc;
+				var narrow = iw / ih < cw / ch;
+				var sc = narrow ? ch / ih : Math.max(cw / iw, ch / ih), w = iw * sc, h = ih * sc;
+				img.style.objectFit = narrow ? 'contain' : 'cover';
 				img.style.objectPosition = (cw / 2 - fx * w) + 'px ' + Math.min(0, Math.max(ch - h, ch / 2 - fy * h)) + 'px';
 			}
 			function start() {
