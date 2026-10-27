@@ -12,9 +12,14 @@ paginas/
   paginas/media/ trae el video de fondo (fondo-azul.mp4) y su imagen fija; ahi va torre-agua.jpg.
   Se abren con doble clic. Las fotos son recuadros numerados (FOTO 01... / VIDEO 01...).
 
-veloxforge-golehighacres.zip    Plugin listo para instalar en WordPress (requiere VeloxForge 1.3+).
-veloxforge-golehighacres/       Mismo plugin con codigo fuente y README.md.
+golehighacres-blocks-1.2.0.zip  Plugin listo para instalar en WordPress. Version 1.2.0: independiente,
+                                con su propio editor (menu GoLehighAcres). YA NO necesita VeloxForge.
+golehighacres-blocks/           Mismo plugin con codigo fuente, README.md y CHANGELOG.md.
+legacy/                         Modulo antiguo para VeloxForge (1.1.1), solo como referencia.
 referencias/                    Logo (simbolo y nombre).
 dev/                            Pruebas automaticas y herramientas (ver dev/README.md).
 
-Pendiente principal: probar el plugin en un WordPress real con el editor visual abierto.
+Instalar: Plugins > Anadir nuevo > Subir plugin > golehighacres-blocks-1.2.0.zip > Activar.
+Luego: menu GoLehighAcres > titulo + plantilla Explore > Crear y editar.
+
+Pendiente principal: foto original de la torre de agua y probar el plugin en el sitio real.

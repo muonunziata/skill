@@ -11,7 +11,7 @@ Resumen de todo lo construido, por qué se decidió así y cómo continuarlo en 
 Lo que se construyó en esta sesión:
 
 1. **Dos páginas HTML completas** (diseño y comportamiento): *Explore* (inicio) y *News & Events* (pared de videos).
-2. **Un plugin de VeloxForge** que convierte cada sección en un **bloque editable del constructor visual**.
+2. **Un plugin de WordPress independiente, «GoLehighAcres Blocks»**, que convierte cada sección en un **bloque editable con su propio editor**. Desde la 1.2.0 ya no necesita VeloxForge; el módulo anterior para VeloxForge (1.1.1) queda en `legacy/`.
 3. Versiones previas en español (referencia).
 
 Todo el sitio quedó **en inglés**, con fondo blanco y la identidad del logo.
@@ -29,8 +29,8 @@ paginas/
   golehighacres-immersion.html   primera página inmersiva (español)  ← solo referencia
   golehighacres-feature.html     versión editorial (español)         ← solo referencia
   golehighacres.html             primera página de la propuesta      ← solo referencia
-veloxforge-golehighacres.zip     plugin listo para instalar en WordPress
-veloxforge-golehighacres/        código fuente del plugin + README.md propio
+golehighacres-blocks-1.2.0.zip   plugin listo para instalar en WordPress (no necesita VeloxForge)
+golehighacres-blocks/            código fuente del plugin + README.md y CHANGELOG.md propios
   media/                         (dentro de paginas/) video de fondo y su imagen fija
     fondo-azul.mp4               animado, 1280x720, 1,4 MB, sin audio
     fondo-azul-poster.jpg        imagen fija del fondo
@@ -40,8 +40,9 @@ referencias/
   logo-nombre.png                «GOLehighAcres.org» en su tipografía
 dev/
   README.md, smoke-pages.mjs     pruebas automáticas de las páginas
-  harness-veloxforge.php         valida el plugin con las clases reales de VeloxForge
-  ensamblar.py                   arma páginas abribles a partir de lo que genera el arnés
+  release.sh                     publica una versión nueva del plugin
+  ensamblar.py                   arma páginas abribles (herramienta antigua)
+legacy/                          módulo antiguo para VeloxForge (1.1.1), su zip y su banco de pruebas
 ```
 
 Las páginas se abren con doble clic (cada una busca su video en `paginas/media/`; si mueves una página, mueve también esa carpeta). Los enlaces del menú son marcadores (`#directory`, `#jobs`…): no saltan entre páginas porque se publicaron por separado.
@@ -108,41 +109,47 @@ Para poner videos reales, editar el arreglo `TILES` al inicio del script: `video
 
 ---
 
-## 5. Plugin de VeloxForge (`veloxforge-golehighacres`)
+## 5. Plugin «GoLehighAcres Blocks» (`golehighacres-blocks`)
 
-### 5.1 Qué es VeloxForge (lo que se averiguó leyendo el código)
+### 5.1 Por qué es independiente
 
-Plugin de WordPress (PHP 7.4+, v1.3.0) modular: formularios, templates, popups, flotantes y un **constructor visual** independiente de Elementor. El constructor guarda un árbol de contenedores y bloques; cada bloque se registra con `VF_Builder_Widgets::register( slug, [title, icon, cat, controls, render] )` y cada control puede mapear a CSS (`css => [[selector, propiedad, sufijo]]`). El sistema de diseño expone variables `--vfb-c-*` y `--vfb-font-*`. El `veloxforge-hub` es el servidor de licencias/actualizaciones: **no se tocó**.
+Hasta la 1.1.1 era un módulo de **VeloxForge** (un constructor visual para WordPress): los bloques se registraban con `VF_Builder_Widgets::register` y se editaban en el constructor de VeloxForge. En la 1.2.0 se separó por completo: el plugin trae su **propio registro de bloques, su propio editor y su propio guardado**. VeloxForge ya no hace falta para estas páginas.
 
-### 5.2 Cómo se integra (sin modificar VeloxForge)
+### 5.2 Cómo está hecho
 
-| Gancho | Para qué |
+| Parte | Qué hace |
 |---|---|
-| `veloxforge_register_modules` | registra el módulo **GoLehighAcres** (se enciende/apaga en VeloxForge → Módulos) |
-| `veloxforge_builder_register_widgets` | registra los bloques |
-| `vf_builder_presets` | añade secciones y páginas completas a la biblioteca |
+| `core/` | Núcleo **sin WordPress**: `GLH_Registry` (registrar bloques, esquema de campos, saneado, CSS por escritorio/tablet/celular, dibujado), los 12 bloques, las plantillas y `compat.php` (funciones mínimas cuando no hay WordPress). Se carga con `core/load.php` desde cualquier sistema PHP. |
+| `wordpress/` | Adaptador de WordPress: guarda los bloques en el campo `_glh_blocks` de la página (JSON `[{id, type, settings}]`), muestra la página (pantalla completa o dentro del tema), códigos cortos, menú **GoLehighAcres** y el editor (`admin.js` / `admin.css`). |
+| `assets/` | `glh.css`, `glh.js`, logo, video azul de fondo y foto de la torre (provisional). |
 
-El plugin se engancha en `plugins_loaded` con prioridad 10 (VeloxForge carga sus módulos en la 20). Los recursos (`glh.css`, `glh.js`, Poppins de Google Fonts) solo se cargan en páginas que usan un bloque; `glh_google_fonts` (filtro) desactiva la fuente externa.
+El editor está en **GoLehighAcres → Páginas** o en el enlace **«Editar con GoLehighAcres»** de cada página. Tiene una lista de bloques, un formulario por bloque (Contenido / Estilo / Bloque), valores por tamaño de pantalla, biblioteca de medios, repetidores y una **vista previa en vivo** que muestra los cambios antes de guardar. Los recursos (`glh.css`, `glh.js`, Poppins) solo se cargan en páginas que usan bloques; el filtro `glh_google_fonts` desactiva la fuente externa.
 
 ### 5.3 Bloques
 
-`Fondo de video de toda la página`, `Cabecera`, `Portada`, `Carrusel 3D`, `Ciudad y cifras`, `Directorio con buscador`, `Perfil de negocio`, `Recorrido`, `Negocios fundadores`, `Cita`, `Cinta de palabras`, `Pared de videos infinita`. Cada uno trae sus textos en inglés por defecto y todo se edita desde el panel, además de los controles comunes de VeloxForge (fondo, espacios, bordes, sombra, animación de entrada, visibilidad por dispositivo, condiciones, CSS propio).
+`Fondo de video de toda la página`, `Cabecera`, `Portada`, `Carrusel 3D`, `Ciudad y cifras`, `Directorio con buscador`, `Perfil de negocio`, `Recorrido`, `Negocios fundadores`, `Cita`, `Cinta de palabras`, `Pared de videos infinita`. Cada uno trae sus textos en inglés por defecto y todo se edita desde el panel. La pestaña **Bloque** de cada uno da fondo, capa de color al 5 %, ancho máximo, espacios, ancla, ocultar en celular o escritorio, clases y CSS propio.
 
-- Los colores y tamaños se aplican como **variables CSS** del bloque (`--glh-*`): cambian desde el panel sin tocar código.
-- **Fotos marcadas**: mientras no hay imagen, un recuadro de color con su número (`FOTO 01`…). «Primer número de foto» y «Rótulo» son editables por bloque.
-- **Directorio**: 18 categorías con sus tipos (editables). Sin «Negocios reales», se generan ejemplos (uno por tipo, con etiqueta *Sample*). Cada negocio real tiene los campos del perfil y hasta 6 fotos.
-- **Perfil de negocio** como módulo propio: el mismo diseño de la ventana emergente, en una página, con datos estructurados `LocalBusiness`.
-- **Pared de videos**: filas/columnas, movimiento solo, segundos de vista previa, ventana emergente, cursor y colores, todo desde el panel.
-- **Biblioteca**: una entrada por bloque + 2 páginas completas (*Explore* y *News & Events*).
-- Al activar por primera vez, si el sitio no tenía sistema de diseño guardado, se cargan los colores y tipografías de la marca.
+- Los colores y tamaños se aplican como **variables CSS** del bloque (`--glh-*`).
+- **Fotos marcadas**: mientras no hay imagen, un recuadro de color con su número (`FOTO 01`…).
+- **Directorio**: 18 categorías con sus tipos (editables); sin «Negocios reales», se generan ejemplos marcados *Sample*.
+- **Perfil de negocio**: el mismo diseño de la ventana emergente, en una página, con datos estructurados `LocalBusiness`.
+- **Plantillas**: *Explore* (inicio, con capas de color al 5 % y la torre centrada), *News & Events* y *Perfil de negocio*.
 
-Detalle completo en `veloxforge-golehighacres/README.md`.
+Detalle completo en `golehighacres-blocks/README.md`.
 
-### 5.4 Cómo se validó (y qué falta)
+### 5.4 Cómo se validó
 
-- Con las **clases reales** de VeloxForge 1.3.0 sobre funciones de WordPress simuladas: 0 problemas en valores por defecto de controles; las 13 secciones de la biblioteca se sanean, generan CSS y renderizan.
-- En Chromium: numeración de fotos, menú desplegable, perfil (negocio real y de ejemplo), bloque independiente, datos estructurados, recorrido, carrusel, pared (arrastre, movimiento solo, vista previa, click real, cursor) y celular.
-- **Falta**: probarlo dentro de un **WordPress real con el editor visual abierto** (la pared se muestra como cuadrícula estática en el editor a propósito, para no pelear con la selección de bloques).
+- `tests/core-test.php`: el núcleo **sin WordPress** dibuja los 12 bloques y las 3 plantillas y sanea bien (CSS propio sin etiquetas, opciones no válidas descartadas, números acotados).
+- `tests/wp-e2e.mjs` en un **WordPress 6.5 real** (de prueba, con SQLite) y Chromium, 19 de 19 comprobaciones:
+  - al activarlo desactiva el módulo antiguo;
+  - crea *Explore* desde la plantilla;
+  - el editor muestra los cambios en la vista previa sin guardar;
+  - se editan números por dispositivo y la capa de color, se añade un elemento a un repetidor, y se publica;
+  - la página publicada sale a pantalla completa con sus 9 bloques en escritorio y celular, sin scroll horizontal y sin rastro de VeloxForge;
+  - los códigos cortos funcionan dentro del tema.
+  No quedó ningún aviso de PHP del plugin.
+- En esa prueba apareció un fallo que también estaba en la 1.1.x: el relleno difuminado tapaba la foto de la portada. Quedó corregido.
+- **Falta**: probarlo en el sitio real (su tema, sus plugins de caché).
 
 ---
 
@@ -164,6 +171,8 @@ Detalle completo en `veloxforge-golehighacres/README.md`.
 | 12 | Plugin de **VeloxForge** con todo editable |
 | 13 | **Perfil de negocio** con logo, descripción, galería, contacto, horario y **Google Maps** |
 | 14 | **Video de fondo** de toda la página, **capas al 5 %** por sección y **optimización responsive**; héroe con **punto focal** para centrar la torre de agua |
+| 15 | Versiones numeradas (1.1.1, 1.1.2…) con historial y script de publicación |
+| 16 | **Separarlo de VeloxForge**: plugin independiente 1.2.0 con editor propio y núcleo sin WordPress |
 
 Errores encontrados y corregidos durante las pruebas: el click sobre un video no abría el reproductor (el foco recentraba la pared; ahora solo recentra con teclado); el botón de WhatsApp se cortaba a 1280 px; un parche duplicó código y se restauró desde el último commit; las cifras de la ciudad se cortaban en celular.
 
@@ -197,33 +206,22 @@ El plugin repite esta numeración (cada bloque tiene su «Primer número de foto
 ### 8.2 Con WordPress (recomendado para el sitio final)
 
 1. Crea un sitio local (LocalWP, wp-env, Docker…).
-2. Instala y activa **VeloxForge ≥ 1.3** y luego `veloxforge-golehighacres.zip`.
-3. Crea una página con el constructor visual (plantilla *Canvas* si quieres sin tema) y en «Secciones» inserta *Página completa: Explore*; otra con *News & Events*.
-4. Cabecera: el bloque *Cabecera* va en una plantilla de tipo cabecera (o dentro de cada página).
-5. Directorio real: carga los negocios en «Negocios reales» del bloque *Directorio* (o crea una página por negocio con *Perfil de negocio*).
-6. Valida con `dev/harness-veloxforge.php` (ver `dev/README.md`) antes de empaquetar de nuevo.
+2. Instala y activa `golehighacres-blocks-1.2.0.zip` (no hace falta VeloxForge).
+3. **GoLehighAcres → Páginas**: crea *Explore* desde su plantilla y otra con *News & Events*. Para que *Explore* sea la portada: **Ajustes → Lectura → Una página estática**.
+4. Directorio real: carga los negocios en «Negocios reales» del bloque *Directorio* (o crea una página por negocio con la plantilla *Perfil de negocio*).
+5. Pruebas: `php golehighacres-blocks/tests/core-test.php` y `node golehighacres-blocks/tests/wp-e2e.mjs URL usuario contraseña` (ver `dev/README.md`).
 
-### 8.3 Volver a empaquetar el plugin
+### 8.3 Versionado y empaquetado del plugin
 
-Desde la carpeta que contiene `veloxforge-golehighacres/`:
-
-```
-zip -r veloxforge-golehighacres.zip veloxforge-golehighacres
-```
-
----
-
-> **Versión del plugin: 1.1.1.** Si WordPress sigue mostrando algo viejo, es caché: ver «Actualizar desde una versión anterior» en el README del plugin.
-
-### Versionado del plugin
-
-Cada cambio sube el último número (1.1.1 → 1.1.2 → 1.1.3…) y queda anotado en `veloxforge-golehighacres/CHANGELOG.md`. Para publicar una versión nueva (desde la raíz del proyecto):
+Cada cambio sube el último número (1.2.0 → 1.2.1 → 1.2.2…) y queda anotado en `golehighacres-blocks/CHANGELOG.md`. Para publicar una versión nueva (desde la raíz del proyecto):
 
 ```
-dev/release.sh 1.1.2 "Qué cambió"
+dev/release.sh 1.2.1 "Qué cambió"
 ```
 
-Sube el número en la cabecera del plugin y en `GLH_VER`, añade la nota al historial y genera `dist/veloxforge-golehighacres-1.1.2.zip` (más una copia sin número, `dist/veloxforge-golehighacres.zip`). La versión se ve en **Plugins** y en **VeloxForge → Módulos**.
+Sube el número en la cabecera del plugin y en `GLH_VER`, añade la nota al historial, ejecuta la prueba del núcleo y genera `dist/golehighacres-blocks-1.2.1.zip` (más una copia sin número, `dist/golehighacres-blocks.zip`). La versión se ve en **Plugins**, en el menú **GoLehighAcres** y en la barra del editor.
+
+> **Versión del plugin: 1.2.0.** Si WordPress sigue mostrando algo viejo, es caché: vacía la del plugin de caché y la de Cloudflare.
 
 ## 9. Pendientes sugeridos
 
@@ -241,7 +239,8 @@ Sube el número en la cabecera del plugin y en `GLH_VER`, añade la nota al hist
 - Pasar el directorio a un tipo de contenido propio de WordPress si crece (hoy los negocios viven dentro del bloque).
 
 **Calidad**
-- Probar el plugin en un WordPress real (editor visual, popups, plantillas, varias páginas a la vez).
+- Probar el plugin en el sitio real (su tema y sus plugins de caché).
+- Adaptadores para **Wakoo** y **PrimeBase**: el núcleo (`core/`) ya no depende de WordPress; falta saber cómo guardan y muestran páginas esos sistemas.
 - Revisión de accesibilidad con lector de pantalla y de rendimiento (Lighthouse).
 - En táctil, la pared solo desplaza horizontalmente por defecto (el scroll vertical es de la página); revisar si se quiere pantalla completa con captura total.
 

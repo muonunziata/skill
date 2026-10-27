@@ -10,14 +10,20 @@ PAGES=../paginas node smoke-pages.mjs
 
 Comprueba en un navegador real: menú desplegable de categorías, perfil de negocio (ventana emergente, galería, enlaces a Google Maps, teclado), pared de videos (arrastre, click real que abre el reproductor, cursor de flechas y «GO!») y que no haya scroll horizontal en celular.
 
-## 2. Plugin de VeloxForge (`harness-veloxforge.php`)
-
-Carga las clases **reales** de VeloxForge (registro de bloques, generador de CSS y renderizador) sobre funciones de WordPress simuladas. Valida los valores por defecto de cada control, que todas las secciones de la biblioteca se sanean y se renderizan, y escribe el HTML y el CSS resultantes.
+## 2. Plugin GoLehighAcres Blocks
 
 ```
-VF_SRC=/ruta/a/veloxforge  GLH_SRC=../veloxforge-golehighacres  OUT_DIR=./out  php harness-veloxforge.php
+php ../golehighacres-blocks/tests/core-test.php
+node ../golehighacres-blocks/tests/wp-e2e.mjs http://localhost:8080 usuario contraseña
 ```
 
-`VF_SRC` es la carpeta del plugin VeloxForge (la que contiene `modules/builder`). Para verlo en el navegador, une `front.css` de VeloxForge + `assets/glh.css` + el `.css` generado + el `.html` generado + `assets/glh.js` en una sola página (el script `ensamblar.py` lo hace).
+- `core-test.php`: carga el núcleo **sin WordPress**, dibuja los 12 bloques y las plantillas y comprueba el saneado.
+- `wp-e2e.mjs`: prueba de punta a punta en un **WordPress real** (de prueba, nunca el sitio en vivo): activa el plugin, crea la página Explore desde la plantilla, edita en el editor con vista previa en vivo, publica y revisa la página en escritorio y celular.
 
-Nota: es una simulación. No sustituye una prueba dentro de un WordPress real con el editor visual abierto.
+## 3. Publicar una versión
+
+```
+dev/release.sh 1.2.1 "Qué cambió"
+```
+
+El módulo antiguo para VeloxForge (1.1.1) y su banco de pruebas están en `legacy/`.
