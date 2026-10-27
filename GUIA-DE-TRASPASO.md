@@ -213,7 +213,17 @@ zip -r veloxforge-golehighacres.zip veloxforge-golehighacres
 
 ---
 
-> **Versión del plugin: 1.1.0.** Si WordPress sigue mostrando algo viejo, es caché: ver «Actualizar desde una versión anterior» en el README del plugin.
+> **Versión del plugin: 1.1.1.** Si WordPress sigue mostrando algo viejo, es caché: ver «Actualizar desde una versión anterior» en el README del plugin.
+
+### Versionado del plugin
+
+Cada cambio sube el último número (1.1.1 → 1.1.2 → 1.1.3…) y queda anotado en `veloxforge-golehighacres/CHANGELOG.md`. Para publicar una versión nueva (desde la raíz del proyecto):
+
+```
+dev/release.sh 1.1.2 "Qué cambió"
+```
+
+Sube el número en la cabecera del plugin y en `GLH_VER`, añade la nota al historial y genera `dist/veloxforge-golehighacres-1.1.2.zip` (más una copia sin número, `dist/veloxforge-golehighacres.zip`). La versión se ve en **Plugins** y en **VeloxForge → Módulos**.
 
 ## 9. Pendientes sugeridos
 

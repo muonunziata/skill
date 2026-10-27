@@ -2,7 +2,7 @@
 /**
  * Plugin Name: VeloxForge · GoLehighAcres
  * Description: Módulo de VeloxForge con las secciones de GoLehighAcres.org como bloques editables del constructor visual: cabecera, portada, carrusel 3D, cifras, directorio con buscador, recorrido, negocios fundadores, cita, cinta y pared de videos.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: GoLehighAcres
@@ -10,7 +10,7 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-define( 'GLH_VER', '1.1.0' );
+define( 'GLH_VER', '1.1.1' );
 define( 'GLH_FILE', __FILE__ );
 define( 'GLH_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GLH_URL', plugin_dir_url( __FILE__ ) );

@@ -1,5 +1,7 @@
 # VeloxForge · GoLehighAcres
 
+**Versión actual: 1.1.1** · historial en `CHANGELOG.md`
+
 Módulo de VeloxForge que convierte cada sección de GoLehighAcres.org en un **bloque editable del constructor visual**. No modifica el código de VeloxForge: se registra con sus propios ganchos (`veloxforge_register_modules`, `veloxforge_builder_register_widgets` y `vf_builder_presets`).
 
 ## Instalación
