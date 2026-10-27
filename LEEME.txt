@@ -9,6 +9,7 @@ paginas/
   golehighacres-immersion.html  primera version (espanol)         <- referencia
   golehighacres-feature.html    version editorial (espanol)       <- referencia
   golehighacres.html            primera pagina (espanol)          <- referencia
+  paginas/media/ trae el video de fondo (fondo-azul.mp4) y su imagen fija; ahi va torre-agua.jpg.
   Se abren con doble clic. Las fotos son recuadros numerados (FOTO 01... / VIDEO 01...).
 
 veloxforge-golehighacres.zip    Plugin listo para instalar en WordPress (requiere VeloxForge 1.3+).

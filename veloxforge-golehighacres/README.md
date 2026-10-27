@@ -22,6 +22,7 @@ Módulo de VeloxForge que convierte cada sección de GoLehighAcres.org en un **b
 | Negocios fundadores | Texto, botón, fotos de cada columna; las dos columnas son espejo (interruptor de simetría) |
 | Cita | Frase, palabra destacada, autor, foto de fondo, altura |
 | Cinta de palabras | Palabras, separador, velocidad |
+| Fondo de video de toda la página | Video MP4/WebM, imagen fija, punto focal, color de respaldo y capa de color; se muestra detrás de toda la página y pasa a imagen fija con «reducir movimiento» o ahorro de datos |
 | Perfil de negocio | Nombre, categoría, logo, descripción, galería de fotos, dirección, enlace propio de Google Maps, teléfono, correo, sitio web, horario, etiquetas, puntuación, insignia de fundador, redes, datos estructurados LocalBusiness para Google, y todos los textos |
 | Pared de videos infinita | Videos (portada, archivo, título, categoría, orientación), filas y columnas, movimiento solo, vista previa, ventana emergente, cursor |
 
@@ -35,6 +36,13 @@ Al hacer click en un negocio del directorio se abre su perfil: ventana emergente
 - **Negocios de ejemplo:** usan los textos de «Perfil: datos de ejemplo» y llevan un aviso que se puede ocultar.
 - **Página propia de cada negocio:** el bloque «Perfil de negocio» muestra el mismo diseño dentro de una página y añade datos estructurados `LocalBusiness` para buscadores.
 - Para desactivar la ventana emergente: interruptor «Abrir el perfil del negocio al hacer click».
+
+## Fondo de video, capas al 5 % y punto focal
+
+- **Fondo de video:** pon el bloque «Fondo de video de toda la página» al principio de la página. Queda fijo a pantalla completa (`object-fit: cover`) detrás de todo. Si el tema del sitio pinta un fondo sólido en un contenedor propio, ese contenedor lo tapará.
+- **Capas al 5 %:** añade la clase `glh-tint-1` … `glh-tint-6` en «Clases CSS adicionales» de cualquier contenedor para separar secciones con un color translúcido al 5 % y un borde fino (verde, naranja, azul, morado, dorado, celeste). La página completa *Explore* ya las trae.
+- **Zonas de lectura:** con el fondo de video activo, la cabecera, la tabla y los resultados del directorio pasan a paneles blancos translúcidos para que se lean.
+- **Punto focal:** «Portada» y «Cita» tienen *Punto focal horizontal/vertical (%)*. Indica dónde está el sujeto de la foto (por ejemplo la torre de agua) y queda **centrado en cualquier pantalla**; si no hay margen para moverla (escritorio ancho), el hueco se rellena con una copia difuminada de la misma foto. En «Portada», «dejar el texto a la izquierda» evita que el titular tape al sujeto centrado.
 
 ## Biblioteca
 

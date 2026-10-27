@@ -108,12 +108,16 @@ class GLH {
 	 * Foto del bloque o, si aún no hay imagen, un recuadro de color numerado («FOTO 07») para saber cuál va en cada sitio.
 	 * $fill = ocupa todo el contenedor (sin proporción propia).
 	 */
-	public static function photo( $img, $n, $k, $ratio = '4/3', $alt = '', $prefix = 'FOTO', $fill = false ) {
+	public static function photo( $img, $n, $k, $ratio = '4/3', $alt = '', $prefix = 'FOTO', $fill = false, $focus = null ) {
 		$url   = self::img_url( $img );
 		$style = $fill ? '' : ' style="aspect-ratio:' . esc_attr( str_replace( '/', ' / ', self::ratio( $ratio ) ) ) . '"';
 		$k     = ( ( (int) $k - 1 ) % 6 ) + 1;
 		if ( $url !== '' ) {
-			return '<div class="glh-ph glh-has' . ( $fill ? ' glh-fill' : '' ) . '"' . $style . '><img src="' . esc_url( $url, array( 'http', 'https' ) ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" decoding="async"></div>';
+			$fa = '';
+			if ( is_array( $focus ) && count( $focus ) === 2 ) {
+				$fa = ' class="glh-focus" data-fx="' . esc_attr( max( 0, min( 1, (float) $focus[0] ) ) ) . '" data-fy="' . esc_attr( max( 0, min( 1, (float) $focus[1] ) ) ) . '"';
+			}
+			return '<div class="glh-ph glh-has' . ( $fill ? ' glh-fill' : '' ) . '"' . $style . '><img' . $fa . ' src="' . esc_url( $url, array( 'http', 'https' ) ) . '" alt="' . esc_attr( $alt ) . '" loading="' . ( $fa !== '' ? 'eager' : 'lazy' ) . '" decoding="async"></div>';
 		}
 		return '<div class="glh-ph glh-k' . (int) $k . ( $fill ? ' glh-fill' : '' ) . '"' . $style . '><span class="glh-no">' . esc_html( $prefix . ' ' . str_pad( (string) (int) $n, 2, '0', STR_PAD_LEFT ) ) . '</span>' . ( $fill ? '' : '<span class="glh-sz">' . esc_html( str_replace( '/', ':', self::ratio( $ratio ) ) ) . '</span>' ) . '</div>';
 	}

@@ -16,6 +16,44 @@
 		els.forEach(function (el) { io.observe(el); });
 	}
 
+
+	/* ---------- Fondo de video de la página ---------- */
+	function bgv(r) {
+		q('[data-glh="bgv"]', r).forEach(function (el) {
+			if (!once(el, 'bg')) { return; }
+			d.body.classList.add('glh-has-bgv');
+			var v = el.querySelector('video'); if (!v) { return; }
+			var save = navigator.connection && navigator.connection.saveData;
+			if (el.getAttribute('data-still') === '1' && (reduce || save)) { v.pause(); v.removeAttribute('autoplay'); v.innerHTML = ''; v.preload = 'none'; v.style.display = 'none'; return; }
+			var pr = v.play(); if (pr && pr.catch) { pr.catch(function () { /* queda la imagen fija */ }); }
+		});
+	}
+
+	/* ---------- Punto focal: el sujeto de la foto (p. ej. la torre) queda centrado en cualquier pantalla ---------- */
+	function focus(r) {
+		q('img.glh-focus', r).forEach(function (img) {
+			if (!once(img, 'fc')) { return; }
+			var fx = parseFloat(img.getAttribute('data-fx')), fy = parseFloat(img.getAttribute('data-fy'));
+			if (isNaN(fx)) { fx = 0.5; } if (isNaN(fy)) { fy = 0.5; }
+			function run() {
+				var cw = img.clientWidth, ch = img.clientHeight, iw = img.naturalWidth, ih = img.naturalHeight;
+				if (!iw || !cw) { return; }
+				var sc = Math.max(cw / iw, ch / ih), w = iw * sc, h = ih * sc;
+				img.style.objectPosition = (cw / 2 - fx * w) + 'px ' + Math.min(0, Math.max(ch - h, ch / 2 - fy * h)) + 'px';
+			}
+			function start() {
+				if (!img.parentNode.querySelector('.glh-focus-fill')) {
+					var f = img.cloneNode(false);
+					['data-fx', 'data-fy', 'alt', 'class'].forEach(function (k) { f.removeAttribute(k); });
+					f.alt = ''; f.className = 'glh-focus-fill'; f.setAttribute('aria-hidden', 'true'); img.parentNode.insertBefore(f, img);
+				}
+				if ('ResizeObserver' in window) { new ResizeObserver(run).observe(img); } else { window.addEventListener('resize', run); }
+				run();
+			}
+			if (img.complete && img.naturalWidth) { start(); } else { img.addEventListener('load', start, { once: true }); }
+		});
+	}
+
 	/* ---------- Revelado suave ---------- */
 	function rise(r) {
 		var els = q('[data-glh-rise]', r).filter(function (e) { return once(e, 'rs'); });
@@ -125,10 +163,13 @@
 	function parallax(r) {
 		q('[data-glh-par]', r).forEach(function (el) { if (once(el, 'pa')) { pars.push(el); } });
 		if (reduce || !pars.length) { return; }
+		if (window.innerWidth <= 860) { pars.forEach(function (el) { el.style.translate = ''; }); }
 		function update() {
 			var vh = window.innerHeight;
+			var small = window.innerWidth <= 860;
 			pars.forEach(function (el) {
 				if (!d.body.contains(el)) { return; }
+				if (small) { el.style.translate = ''; return; }
 				var b = el.getBoundingClientRect();
 				el.style.translate = '0 ' + ((b.top + b.height / 2 - vh / 2) * parseFloat(el.getAttribute('data-glh-par'))).toFixed(1) + 'px';
 			});
@@ -486,7 +527,7 @@
 
 	function init(r) {
 		r = r || d;
-		rise(r); header(r); business(r); stats(r); carousel(r); journey(r); parallax(r); directory(r); wall(r);
+		rise(r); bgv(r); focus(r); header(r); business(r); stats(r); carousel(r); journey(r); parallax(r); directory(r); wall(r);
 	}
 	window.GLH = { init: init };
 	if (d.readyState === 'loading') { d.addEventListener('DOMContentLoaded', function () { init(); }); } else { init(); }

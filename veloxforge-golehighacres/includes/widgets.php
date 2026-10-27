@@ -108,11 +108,15 @@ class GLH_Widgets {
 			GLH::col( 'c_overlay', 'Capa sobre la foto', '--glh-overlay' ),
 			GLH::col( 'c_text', 'Color del texto', '--glh-hero-ink' ),
 			GLH::col( 'c_btn', 'Color del botón circular', '--glh-btn-bg' ),
+			GLH::num( 'focus_x', 'Punto focal horizontal de la foto (%): el sujeto (p. ej. la torre) queda centrado', 'content', 50, 0, 100, array( 'group' => 'Fondo' ) ),
+			GLH::num( 'focus_y', 'Punto focal vertical de la foto (%)', 'content', 50, 0, 100, array( 'group' => 'Fondo' ) ),
+			GLH::sw( 'keep_clear', 'En escritorio, dejar el texto en la parte izquierda para no tapar el sujeto centrado', 1, 'Fondo' ),
 			GLH::size( 'title_size', 'Tamaño del titular (px)', '.glh-hero__title', 24, 160 ),
 		), self::ph_controls( 1 ) ), function ( $s, $ctx ) {
 			$btn = self::v( $s, 'btn_text', '' );
-			$h   = '<section class="glh glh-hero" data-glh="hero">';
-			$h  .= '<div class="glh-hero__bg">' . GLH::photo( self::v( $s, 'bg', array() ), (int) self::v( $s, 'ph_start', 1 ), 1, '16/9', '', self::v( $s, 'ph_prefix', 'FOTO' ), true ) . '<span class="glh-hero__shade"></span></div>';
+			$has = GLH::img_url( self::v( $s, 'bg', array() ) ) !== '';
+			$h   = '<section class="glh glh-hero' . ( $has && ! empty( $s['keep_clear'] ) ? ' glh-hero--subject' : '' ) . '" data-glh="hero">';
+			$h  .= '<div class="glh-hero__bg">' . GLH::photo( self::v( $s, 'bg', array() ), (int) self::v( $s, 'ph_start', 1 ), 1, '16/9', '', self::v( $s, 'ph_prefix', 'FOTO' ), true, array( (float) self::v( $s, 'focus_x', 50 ) / 100, (float) self::v( $s, 'focus_y', 50 ) / 100 ) ) . '<span class="glh-hero__shade"></span></div>';
 			$h  .= '<div class="glh-hero__in"><p class="glh-label">' . esc_html( self::v( $s, 'eyebrow', '' ) ) . '</p><h1 class="glh-hero__title">' . esc_html( self::v( $s, 'title', '' ) ) . '</h1><p class="glh-hero__lead">' . esc_html( self::v( $s, 'lead', '' ) ) . '</p></div>';
 			if ( $btn !== '' ) {
 				$h .= '<a class="glh-start" href="' . GLH::url( self::v( $s, 'btn_url', '#' ) ) . '">' . esc_html( $btn ) . '</a>';
@@ -365,9 +369,11 @@ class GLH_Widgets {
 			GLH::col( 'c_overlay', 'Capa sobre la foto', '--glh-overlay' ),
 			GLH::col( 'c_text', 'Color del texto', '--glh-hero-ink' ),
 			GLH::col( 'c_accent', 'Color de la palabra destacada', '--glh-quote-accent' ),
+			GLH::num( 'focus_x', 'Punto focal horizontal de la foto (%)', 'content', 50, 0, 100, array( 'group' => 'Fondo' ) ),
+			GLH::num( 'focus_y', 'Punto focal vertical de la foto (%)', 'content', 50, 0, 100, array( 'group' => 'Fondo' ) ),
 			GLH::size( 'text_size', 'Tamaño de la frase (px)', '.glh-quote__text', 20, 160 ),
 		), self::ph_controls( 25 ) ), function ( $s, $ctx ) {
-			return '<section class="glh glh-quote" data-glh="quote"><div class="glh-quote__bg">' . GLH::photo( self::v( $s, 'bg', array() ), (int) self::v( $s, 'ph_start', 25 ), 3, '16/9', '', self::v( $s, 'ph_prefix', 'FOTO' ), true ) . '<span class="glh-hero__shade"></span></div><div class="glh-quote__in"><blockquote class="glh-quote__text">' . esc_html( self::v( $s, 'text', '' ) ) . ' <span class="glh-quote__acc">' . esc_html( self::v( $s, 'accent', '' ) ) . '</span></blockquote><cite>' . esc_html( self::v( $s, 'cite', '' ) ) . '</cite></div></section>';
+			return '<section class="glh glh-quote" data-glh="quote"><div class="glh-quote__bg">' . GLH::photo( self::v( $s, 'bg', array() ), (int) self::v( $s, 'ph_start', 25 ), 3, '16/9', '', self::v( $s, 'ph_prefix', 'FOTO' ), true, array( (float) self::v( $s, 'focus_x', 50 ) / 100, (float) self::v( $s, 'focus_y', 50 ) / 100 ) ) . '<span class="glh-hero__shade"></span></div><div class="glh-quote__in"><blockquote class="glh-quote__text">' . esc_html( self::v( $s, 'text', '' ) ) . ' <span class="glh-quote__acc">' . esc_html( self::v( $s, 'accent', '' ) ) . '</span></blockquote><cite>' . esc_html( self::v( $s, 'cite', '' ) ) . '</cite></div></section>';
 		} );
 
 		/* ======================= 9. CINTA ======================= */
@@ -389,6 +395,29 @@ class GLH_Widgets {
 				$one .= '<span>' . esc_html( $word ) . '</span><i aria-hidden="true">' . esc_html( self::v( $s, 'sep', '•' ) ) . '</i>';
 			}
 			return '<div class="glh glh-marquee' . ( ! empty( $s['pause_hover'] ) ? ' is-pausable' : '' ) . '" data-glh="marquee" aria-hidden="true" style="--glh-dur:' . (int) self::v( $s, 'speed', 30 ) . 's"><div class="glh-track"><div class="glh-run">' . str_repeat( $one, 4 ) . '</div><div class="glh-run">' . str_repeat( $one, 4 ) . '</div></div></div>';
+		} );
+
+
+		/* ======================= 11. FONDO DE VIDEO DE LA PÁGINA ======================= */
+		self::reg( 'glh-pagebg', 'Fondo de video de toda la página', '🌊', array(
+			self::c( 'video', 'Archivo de video (URL .mp4 o .webm, sin sonido)', 'url', 'content', array( 'group' => 'Video' ) ),
+			self::c( 'poster', 'Imagen fija (portada y modo sin movimiento)', 'image', 'content', array( 'group' => 'Video' ) ),
+			GLH::num( 'fx', 'Punto focal horizontal (%)', 'content', 50, 0, 100, array( 'group' => 'Encuadre' ) ),
+			GLH::num( 'fy', 'Punto focal vertical (%)', 'content', 50, 0, 100, array( 'group' => 'Encuadre' ) ),
+			GLH::sw( 'still_reduced', 'Mostrar solo la imagen fija si el visitante pide «reducir movimiento» o ahorro de datos', 1, 'Comportamiento' ),
+			GLH::col( 'c_fallback', 'Color de respaldo mientras carga', '--glh-bgv-color' ),
+			GLH::col( 'c_veil', 'Capa de color sobre el video (opcional)', '--glh-bgv-veil' ),
+		), function ( $s, $ctx ) {
+			$vid    = self::v( $s, 'video', '' );
+			$poster = GLH::img_url( self::v( $s, 'poster', array() ), 'large' );
+			$edit   = ! empty( $ctx['editor'] );
+			$pos    = max( 0, min( 100, (float) self::v( $s, 'fx', 50 ) ) ) . '% ' . max( 0, min( 100, (float) self::v( $s, 'fy', 50 ) ) ) . '%';
+			$v      = '';
+			if ( $vid !== '' && ! $edit ) {
+				$v = '<video autoplay muted loop playsinline preload="metadata" disablepictureinpicture' . ( $poster !== '' ? ' poster="' . esc_url( $poster, array( 'http', 'https' ) ) . '"' : '' ) . ' style="object-position:' . esc_attr( $pos ) . '"><source src="' . esc_url( $vid, array( 'http', 'https' ) ) . '" type="' . ( preg_match( '/\.webm(\?|$)/i', $vid ) ? 'video/webm' : 'video/mp4' ) . '"></video>';
+			}
+			return '<div class="glh glh-bgv' . ( $edit ? ' is-editor' : '' ) . '" data-glh="bgv" data-still="' . ( ! empty( $s['still_reduced'] ) ? 1 : 0 ) . '" aria-hidden="true" style="' . ( $poster !== '' ? 'background-image:url(' . esc_url( $poster, array( 'http', 'https' ) ) . ');' : '' ) . 'background-position:' . esc_attr( $pos ) . '">' . $v . '<span class="glh-bgv__veil"></span></div>'
+				. ( $edit ? '<div class="vfb-ph">🌊 Fondo de video (se ve en la página publicada). Pon este bloque al principio de la página.</div>' : '' );
 		} );
 
 		/* ======================= 10. PARED DE VIDEOS ======================= */

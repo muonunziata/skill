@@ -44,17 +44,20 @@ class GLH_Presets {
 		$add( 'glh-marquee', 'Cinta de palabras', $c, '〰️', 'Palabras que se desplazan sin fin.', array( self::S( array( self::W( 'glh-marquee' ) ) ) ) );
 		$add( 'glh-videowall', 'Pared de videos infinita', $c, '🎬', 'Videos que se arrastran en todas direcciones, con vista previa y reproductor.', array( self::S( array( self::W( 'glh-videowall' ) ) ) ) );
 
-		$add( 'glh-page-home', 'Página completa: Explore (inicio)', $c, '🏡', 'Portada, carrusel, ciudad, directorio, recorrido, negocios, cita y cinta.', array(
+		$add( 'glh-pagebg', 'Fondo de video de toda la página', $c, '🌊', 'Video a pantalla completa detrás de toda la página (ponlo al principio).', array( self::S( array( self::W( 'glh-pagebg' ) ) ) ) );
+
+		$add( 'glh-page-home', 'Página completa: Explore (inicio)', $c, '🏡', 'Portada, carrusel, ciudad, directorio, recorrido, negocios, cita y cinta, con capas de color al 5 % que separan las secciones.', array(
+			self::S( array( self::W( 'glh-pagebg' ) ) ),
 			self::S( array( self::W( 'glh-hero' ) ) ),
-			self::S( array( self::W( 'glh-carousel' ) ), array( 'padding' => array( 'desktop' => array( 'top' => 96, 'right' => 0, 'bottom' => 64, 'left' => 0, 'unit' => 'px' ) ) ) ),
-			self::B( array( self::W( 'glh-stats' ) ) ),
-			self::B( array( self::W( 'glh-directory' ) ) ),
-			self::B( array( self::W( 'glh-journey' ) ) ),
+			self::S( array( self::W( 'glh-carousel' ) ), array( 'css_class' => 'glh-tint-1', 'padding' => array( 'desktop' => array( 'top' => 96, 'right' => 0, 'bottom' => 64, 'left' => 0, 'unit' => 'px' ) ) ) ),
+			self::B( array( self::W( 'glh-stats' ) ), array( 'css_class' => 'glh-tint-2' ) ),
+			self::B( array( self::W( 'glh-directory' ) ), array( 'css_class' => 'glh-tint-3' ) ),
+			self::B( array( self::W( 'glh-journey' ) ), array( 'css_class' => 'glh-tint-4' ) ),
 			self::S( array( self::W( 'glh-founding' ) ), array( 'bg_color' => '#0B2F22' ) ),
 			self::S( array( self::W( 'glh-quote' ) ) ),
-			self::S( array( self::W( 'glh-marquee' ) ) ),
+			self::S( array( self::W( 'glh-marquee' ) ), array( 'css_class' => 'glh-tint-5' ) ),
 		) );
-		$add( 'glh-page-news', 'Página completa: News & Events (pared de videos)', $c, '🎬', 'Pared de videos a pantalla completa.', array( self::S( array( self::W( 'glh-videowall' ) ) ) ) );
+		$add( 'glh-page-news', 'Página completa: News & Events (pared de videos)', $c, '🎬', 'Pared de videos a pantalla completa.', array( self::S( array( self::W( 'glh-pagebg' ) ) ), self::S( array( self::W( 'glh-videowall' ) ) ) ) );
 
 		return $p;
 	}

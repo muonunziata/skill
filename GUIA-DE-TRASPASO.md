@@ -31,6 +31,10 @@ paginas/
   golehighacres.html             primera página de la propuesta      ← solo referencia
 veloxforge-golehighacres.zip     plugin listo para instalar en WordPress
 veloxforge-golehighacres/        código fuente del plugin + README.md propio
+  media/                         (dentro de paginas/) video de fondo y su imagen fija
+    fondo-azul.mp4               animado, 1280x720, 1,4 MB, sin audio
+    fondo-azul-poster.jpg        imagen fija del fondo
+    torre-agua.jpg               (falta) foto del héroe; ver sección 9
 referencias/
   logo-simbolo.png               símbolo del logo (verde + multicolor)
   logo-nombre.png                «GOLehighAcres.org» en su tipografía
@@ -40,7 +44,7 @@ dev/
   ensamblar.py                   arma páginas abribles a partir de lo que genera el arnés
 ```
 
-Las páginas se abren con doble clic. Los enlaces del menú son marcadores (`#directory`, `#jobs`…): no saltan entre páginas porque se publicaron por separado.
+Las páginas se abren con doble clic (cada una busca su video en `paginas/media/`; si mueves una página, mueve también esa carpeta). Los enlaces del menú son marcadores (`#directory`, `#jobs`…): no saltan entre páginas porque se publicaron por separado.
 
 ---
 
@@ -80,6 +84,12 @@ Secciones, de arriba hacia abajo (la numeración de fotos está en la sección 7
 9. **Cita** a pantalla completa y **cinta** de palabras que se desplaza.
 10. **Pie** con la nota de transparencia.
 
+**Fondo de video y capas (octubre):** el video `fondo_azup.mp4` es un fondo animado de formas azul claro (no es la torre). Va fijo a pantalla completa detrás de toda la página (`.bgv`, `object-fit: cover`: nunca se ve recortado ni con bandas). Cada sección lleva una capa translúcida al **5 %** de un color distinto (`.tint-1` … `.tint-6`) con borde fino para delimitarla; cabecera, tabla y resultados son paneles blancos translúcidos para mantener la lectura. Con «reducir movimiento» o ahorro de datos solo se muestra la imagen fija.
+
+**Héroe con punto focal:** si existe `paginas/media/torre-agua.jpg`, el héroe la usa y centra el punto indicado en `data-fx` / `data-fy` (0–1) en cualquier pantalla; si no hay margen, el hueco se rellena con una copia difuminada. Verificado midiendo la posición de una marca en 1440, 1920, 768 y 390 px.
+
+**Responsive (celular):** botón START fuera del texto, tabla sin corte (la columna «Area» se oculta), pasos del recorrido legibles, tarjeta del recorrido compacta, sin movimiento de columnas, buscador con texto corto, botones a todo el ancho en pantallas muy angostas.
+
 Extras: guía lateral con número y nombre de sección, cursor propio que se vuelve un **«GO!» pequeño y semitransparente** sobre enlaces.
 
 ### 4.2 News & Events (`golehighacres-menu.html`)
@@ -116,7 +126,7 @@ El plugin se engancha en `plugins_loaded` con prioridad 10 (VeloxForge carga sus
 
 ### 5.3 Bloques
 
-`Cabecera`, `Portada`, `Carrusel 3D`, `Ciudad y cifras`, `Directorio con buscador`, `Perfil de negocio`, `Recorrido`, `Negocios fundadores`, `Cita`, `Cinta de palabras`, `Pared de videos infinita`. Cada uno trae sus textos en inglés por defecto y todo se edita desde el panel, además de los controles comunes de VeloxForge (fondo, espacios, bordes, sombra, animación de entrada, visibilidad por dispositivo, condiciones, CSS propio).
+`Fondo de video de toda la página`, `Cabecera`, `Portada`, `Carrusel 3D`, `Ciudad y cifras`, `Directorio con buscador`, `Perfil de negocio`, `Recorrido`, `Negocios fundadores`, `Cita`, `Cinta de palabras`, `Pared de videos infinita`. Cada uno trae sus textos en inglés por defecto y todo se edita desde el panel, además de los controles comunes de VeloxForge (fondo, espacios, bordes, sombra, animación de entrada, visibilidad por dispositivo, condiciones, CSS propio).
 
 - Los colores y tamaños se aplican como **variables CSS** del bloque (`--glh-*`): cambian desde el panel sin tocar código.
 - **Fotos marcadas**: mientras no hay imagen, un recuadro de color con su número (`FOTO 01`…). «Primer número de foto» y «Rótulo» son editables por bloque.
@@ -153,6 +163,7 @@ Detalle completo en `veloxforge-golehighacres/README.md`.
 | 11 | Cursor «**GO!**» rojo → pequeño y semitransparente; cursor de la pared con **flechas en 4 direcciones** |
 | 12 | Plugin de **VeloxForge** con todo editable |
 | 13 | **Perfil de negocio** con logo, descripción, galería, contacto, horario y **Google Maps** |
+| 14 | **Video de fondo** de toda la página, **capas al 5 %** por sección y **optimización responsive**; héroe con **punto focal** para centrar la torre de agua |
 
 Errores encontrados y corregidos durante las pruebas: el click sobre un video no abría el reproductor (el foco recentraba la pared; ahora solo recentra con teclado); el botón de WhatsApp se cortaba a 1280 px; un parche duplicó código y se restauró desde el último commit; las cifras de la ciudad se cortaban en celular.
 
@@ -205,6 +216,7 @@ zip -r veloxforge-golehighacres.zip veloxforge-golehighacres
 ## 9. Pendientes sugeridos
 
 **Contenido**
+- **Imagen original de la torre de agua** (sin recortar, p. ej. `torre-agua.jpg`) en `paginas/media/`, y ajustar `data-fx` al centro de la torre (fracción del ancho de la imagen). Solo se tenía un recorte dentro de una captura, así que el centrado está listo pero sin la foto real.
 - Fotos y videos reales; logo en alta; textos finales de cada sección.
 - Directorio real (nombres, direcciones, teléfonos, horarios, fotos). Hoy todo es de ejemplo y está marcado *Sample*.
 - URL real del canal de WhatsApp (los botones apuntan a `#whatsapp`).

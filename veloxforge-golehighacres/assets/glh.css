@@ -1,8 +1,8 @@
 /* VeloxForge · GoLehighAcres — estilos de los bloques. Los colores y tamaños se cambian desde el panel del constructor (variables --glh-*). */
 :root {
 	--glh-ink: #14181A;
-	--glh-muted: #66706A;
-	--glh-line: #E3E7E0;
+	--glh-muted: #3F4A45;
+	--glh-line: rgba(20, 24, 26, .16);
 	--glh-gold: #E3A92B;
 	--glh-coral: #FF5A5F;
 	--glh-deep: #0B2F22;
@@ -106,7 +106,7 @@ body.admin-bar .glh-header.is-sticky { top: 32px; }
 @media (max-width: 700px) { .glh-car { --glh-card-w: 62vw !important; } }
 
 /* ---------- Ciudad y cifras ---------- */
-.glh-stats { display: grid; justify-items: center; text-align: center; }
+.glh-stats { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
 .glh-stats .glh-label { justify-content: center; }
 .glh-stats .glh-label::after { content: ''; width: 44px; height: 1px; background: currentColor; }
 .glh-stats__lead { max-width: 30ch; margin: 24px auto 0; font-size: clamp(1.3rem, 3vw, 2.2rem); line-height: 1.5; }
@@ -362,3 +362,63 @@ html.glh-lock, html.glh-lock body { overflow: hidden; }
 
 .glh-pf-arrow { border: 0; padding: 0; }
 .glh-pm__box button { font: inherit; }
+
+/* ---------- Fondo de video de toda la página ---------- */
+.glh-bgv { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--glh-bgv-color, #A6E8F3) center / cover no-repeat; }
+.glh-bgv video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.glh-bgv__veil { position: absolute; inset: 0; background: var(--glh-bgv-veil, transparent); }
+.glh-bgv.is-editor { position: relative; z-index: 0; height: 80px; }
+body.glh-has-bgv { background: transparent !important; }
+/* sobre el video, las zonas de lectura pasan a paneles translúcidos */
+body.glh-has-bgv .glh-header { background: rgba(255, 255, 255, .74); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); }
+body.glh-has-bgv .glh-tbl, body.glh-has-bgv .glh-found { border-radius: 12px; background: rgba(255, 255, 255, .72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+body.glh-has-bgv .glh-tbl { padding: 4px 16px; }
+body.glh-has-bgv .glh-found { margin-top: 12px; padding: 4px 20px 20px; }
+
+/* ---------- Capas de color al 5 % que separan las secciones (clase CSS adicional del contenedor) ---------- */
+.glh-tint-1 { background: rgba(46, 125, 85, .05); border-block: 1px solid rgba(46, 125, 85, .14); }
+.glh-tint-2 { background: rgba(204, 122, 58, .05); border-block: 1px solid rgba(204, 122, 58, .16); }
+.glh-tint-3 { background: rgba(43, 91, 168, .05); border-block: 1px solid rgba(43, 91, 168, .16); }
+.glh-tint-4 { background: rgba(122, 74, 154, .05); border-block: 1px solid rgba(122, 74, 154, .16); }
+.glh-tint-5 { background: rgba(201, 154, 34, .05); border-block: 1px solid rgba(201, 154, 34, .2); }
+.glh-tint-6 { background: rgba(43, 142, 208, .05); border-block: 1px solid rgba(43, 142, 208, .16); }
+
+/* ---------- Punto focal de las fotos (el sujeto queda centrado; el hueco se rellena con una copia difuminada) ---------- */
+.glh-has img.glh-focus { object-fit: cover; }
+.glh-focus-fill { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(26px) saturate(1.15); }
+
+/* ---------- Ajustes responsive ---------- */
+.glh-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 38%, rgba(8, 24, 18, .5)); pointer-events: none; }
+.glh-hero__in { z-index: 1; }
+@media (min-width: 1100px) {
+	.glh-hero--subject .glh-hero__in { padding-right: 56%; }
+	.glh-hero--subject .glh-hero__title { max-width: 11ch; font-size: clamp(2.4rem, 4.2vw, 4.2rem); }
+	.glh-hero--subject .glh-hero__lead { max-width: 30ch; }
+}
+@media (max-width: 860px) {
+	.glh-hero { min-height: min(var(--glh-hero-h, 86vh), 720px); }
+	.glh-hero__in { padding: 96px var(--glh-gutter) 36px; }
+	.glh-start { position: relative; right: auto; bottom: auto; justify-self: start; margin: 0 var(--glh-gutter) 32px; width: 84px; height: 84px; }
+	.glh-st { opacity: .7; }
+	.glh-jcard { padding: 14px; } .glh-jstack { aspect-ratio: 16 / 10; }
+	.glh-carousel:not(.is-full) .glh-car, .glh-car { --glh-card-w: 54vw !important; margin-top: 24px; }
+}
+@media (max-width: 700px) {
+	.glh-tbl table { min-width: 0; }
+	.glh-tbl td:nth-child(4) { display: none; }
+	.glh-tbl td { padding: 12px 8px; }
+	.glh-thumb { width: 78px; }
+	.glh-tbl td:nth-child(3) { font-size: .8rem; color: var(--glh-muted); }
+	.glh-label { gap: 12px; letter-spacing: .18em; } .glh-label::before { width: 28px; }
+}
+@media (max-width: 420px) {
+	:root { --glh-gutter: 18px; }
+	.glh-btn-l, .glh-pill { width: 100%; justify-content: center; text-align: center; }
+	.glh-pill { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .glh-bgv video { display: none; } }
+
+/* VeloxForge fuerza «img { max-width:100%; height:auto }» dentro de .vfb-root: estas reglas mantienen las fotos de los bloques a su tamaño. */
+.vfb-root .glh-has img, .vfb-root .glh-focus-fill, .vfb-root .glh-tile img, .vfb-root .glh-pf-slide img, .vfb-root .glh-pf-th img, .vfb-root .glh-pf-logo img { width: 100%; height: 100%; max-width: none; }
+.vfb-root .glh-focus-fill { width: 112%; height: 112%; }
+.vfb-root .glh-logo img { width: auto; height: 36px; max-width: none; }
